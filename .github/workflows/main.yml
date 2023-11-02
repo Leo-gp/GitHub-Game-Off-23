@@ -29,6 +29,13 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
+      # Coverage
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Coverage results
+          path: ${{ steps.myTestStep.outputs.coveragePath }}
+
   build:
     name: Build my project ✨
     runs-on: ubuntu-latest
