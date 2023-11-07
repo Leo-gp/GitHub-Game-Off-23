@@ -24,14 +24,14 @@ namespace main.entity.Card_Management
         ///     Instead, each card has this field briefly describing the card.
         ///     For example, "Draw 1 card and deal 1 damage".
         /// </summary>
-        [InfoBox("The description of the card as it will be rendered on the view.")] [SerializeField]
+        [Space(20)] [InfoBox("The description of the card as it will be rendered on the view.")] [SerializeField]
         private string _cardDescription;
 
         /// <summary>
         ///     The sprite of the card as it will be rendered on the view.
         ///     Assigned in the Editor on the ScriptableObject.
         /// </summary>
-        [InfoBox("The sprite of the card as it will be rendered on the view")] [SerializeField]
+        [Space(20)] [InfoBox("The sprite of the card as it will be rendered on the view")] [SerializeField]
         private Sprite _cardSprite;
 
         /// <summary>
@@ -39,6 +39,7 @@ namespace main.entity.Card_Management
         ///     Right now, it is limited to 10, but feel free to change depending on the GDD.
         ///     Assigned in the Editor on the ScriptableObject.
         /// </summary>
+        [Space(20)]
         [FormerlySerializedAs("_timeCost")]
         [FormerlySerializedAs("_requiredTime")]
         [FormerlySerializedAs("_requiredMana")]
@@ -52,7 +53,10 @@ namespace main.entity.Card_Management
         ///     Index zero will always be executed before index one, and so on.
         ///     Must be created as a ScriptableObject first and then set as a reference on this card.
         /// </summary>
-        [InfoBox("All card effects IN THE SAME ORDER as they should be executed in-game")] [Expandable] [SerializeField]
+        [Space(20)]
+        [InfoBox("All card effects IN THE SAME ORDER as they should be executed in-game")]
+        [Expandable]
+        [SerializeField]
         private CardEffect[] _cardEffects;
     }
 }

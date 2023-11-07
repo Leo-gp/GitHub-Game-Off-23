@@ -7,6 +7,7 @@ namespace main.entity.Card_Management
     ///     The CardPool entity is used to provide access to all in-game cards.
     ///     The hash set is filled by its own repository.
     /// </summary>
+    /// TODO: Replace by the version
     public class CardPool
     {
         /// <summary>
