@@ -1,22 +1,17 @@
-using System.Collections.Generic;
-using CardManagement;
+﻿using System.Collections.Generic;
 
 namespace main.entity.Card_Management
 {
     /// <summary>
-    ///     The CardPool entity is used to provide access to all in-game cards.
-    ///     The hash set is filled by its own repository.
+    ///     This entity is used to track discovered cards.
+    ///     At the start of the game, this should be the relative component set of the card vault and the starter deck.
     /// </summary>
-    /// TODO: Replace by the version
     public class CardPool
     {
         /// <summary>
-        ///     Contains the pool of all cards that are available in the game, whether the player
-        ///     already has them or not.
-        ///     The set is created automatically and filled by the repository.
+        ///     Contains the pool of discovered cards as a list.
+        ///     The instance is created automatically.
         /// </summary>
-        /// <returns>A non-null hash set of all game cards</returns>
-        public HashSet<Card> AllGameCards { private set; get; } =
-            new(new CardPoolRepository().GetAll());
+        public List<Card> Pool { get; private set; } = new();
     }
 }

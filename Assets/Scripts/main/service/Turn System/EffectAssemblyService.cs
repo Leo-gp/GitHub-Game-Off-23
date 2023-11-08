@@ -1,8 +1,6 @@
-﻿using CardManagement;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Turn_System;
-using UnityEngine.Assertions;
 
 namespace main.service.Turn_System
 {
@@ -11,7 +9,7 @@ namespace main.service.Turn_System
     ///     card classes to add effects that should all be executed at the end of the turn. Then, once all card effects
     ///     have been executed, the list is cleared for the next turn.
     /// </summary>
-    public class EffectAssemblyService
+    public class EffectAssemblyService : Service
     {
         /// <summary>
         ///     The non-null <see cref="EffectAssembly" /> entity.
@@ -24,10 +22,8 @@ namespace main.service.Turn_System
         /// </summary>
         public EffectAssemblyService()
         {
-            Assert.IsNull(Instance, "There already is a service singleton instance! Should not try to " +
-                                    "create a new instance of a singleton!");
-
-            Instance = this;
+            Instance ??= this;
+            LogInfo("Successfully set the EffectAssemblyService's singleton instance");
         }
 
         /// <summary>

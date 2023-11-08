@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace main.entity.Card_Management
 {
@@ -9,11 +12,38 @@ namespace main.entity.Card_Management
     public class CardPile
     {
         /// <summary>
+        ///     Provides a way to create a new card pile and instantly fill it with a set amount of cards
+        /// </summary>
+        /// <param name="cardsToFill">The non-null, non-empty list of cards to fill it with</param>
+        /// <param name="shuffle">Determines if the content added to the pile should be randomly added or not</param>
+        public CardPile([NotNull] List<Card> cardsToFill, bool shuffle)
+        {
+            Assert.IsTrue(cardsToFill.Count > 0, "Should not try to fill card pile with an empty list.");
+
+            if (shuffle)
+                while (cardsToFill.Count > 0)
+                {
+                    var indexToAddNext = Random.Range(0, cardsToFill.Count);
+                    Pile.Push(cardsToFill[indexToAddNext]);
+                    cardsToFill.RemoveAt(indexToAddNext);
+                }
+            else
+                cardsToFill.ForEach(Pile.Push);
+        }
+
+        /// <summary>
+        ///     Creates a new empty pile
+        /// </summary>
+        public CardPile()
+        {
+        }
+
+        /// <summary>
         ///     The non-null stack containing the cards of the pile.
         ///     The pile can only be accessed, but not rewritten.
         ///     A new empty stack is created automatically.
         /// </summary>
         /// <returns>The non-null stack containing all cards in the pile</returns>
-        public Stack<Card> Pile { private set; get; } = new();
+        public Stack<Card> Pile { get; } = new();
     }
 }

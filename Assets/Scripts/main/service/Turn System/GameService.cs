@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using main.entity.Turn_System;
+using main.service.Card_Management;
 using UnityEngine.Assertions;
 
 namespace main.service.Turn_System
@@ -7,7 +8,7 @@ namespace main.service.Turn_System
     /// <summary>
     ///     This service provides the business logic for the game entity, including a way to end the current turn.
     /// </summary>
-    public class GameService
+    public class GameService : Service
     {
         /// <summary>
         ///     The non-null game entity created automatically when the service is instantiated.
@@ -15,14 +16,14 @@ namespace main.service.Turn_System
         [NotNull] private readonly Game _game = new();
 
         /// <summary>
-        ///     Creates the singleton of this service if it does not exist
+        ///     Creates the singleton of this service if it does not exist and then starts the game
         /// </summary>
         public GameService()
         {
-            Assert.IsNull(Instance, "There already is a service singleton instance! Should not try to " +
-                                    "create a new instance of a singleton!");
+            Instance ??= this;
+            LogInfo("Successfully set the GameService's singleton instance");
 
-            Instance = this;
+            StartNewGame();
         }
 
         /// <summary>
@@ -35,6 +36,7 @@ namespace main.service.Turn_System
         /// </summary>
         public void EndTurn()
         {
+            LogInfo("Now ending the current turn");
             Assert.IsTrue(_game.currentGameState is GameState.PLAY_CARDS, "Should currently be in the play" +
                                                                           "cards state!");
 
@@ -59,6 +61,33 @@ namespace main.service.Turn_System
             // At the end, start the new turn
             _game.currentGameState = GameState.TURN_START;
             // TODO: Do view stuff 
+        }
+
+        private void StartNewGame()
+        {
+            LogInfo("Now starting a new game");
+
+            CreateServices();
+            LoadDeck();
+        }
+
+        private void CreateServices()
+        {
+            LogInfo("Now creating all service singleton instances");
+
+            new EffectAssemblyService();
+            LogInfo("EffectAssemblyService has been instantiated");
+
+            new DeckService();
+            LogInfo("DeckService has been instantiated");
+
+            // TODO: Create all services here
+
+            LogInfo("Successfully created all services");
+        }
+
+        private void LoadDeck()
+        {
         }
 
         private void HandleGameOver()
