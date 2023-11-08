@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
 
 namespace main.service.Turn_System

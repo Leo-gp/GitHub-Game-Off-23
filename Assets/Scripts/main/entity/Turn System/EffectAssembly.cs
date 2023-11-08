@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 
 namespace main.entity.Turn_System
 {

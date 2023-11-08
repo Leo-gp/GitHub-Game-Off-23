@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using UnityEngine.Assertions;
 
 namespace main.service.Card_Management

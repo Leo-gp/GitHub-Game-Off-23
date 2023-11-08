@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
@@ -48,6 +49,15 @@ namespace main.service.Card_Management
             var refExisted = _cardPool.Pool.Remove(cardToRemove);
             Assert.IsTrue(refExisted, "Trying to remove a card from the card pool, which does not exist there");
             LogInfo($"Removed card '{cardToRemove}' from the card pool");
+        }
+
+        /// <summary>
+        ///     Yields the amount of cards in the pool
+        /// </summary>
+        /// <returns>The amount of cards as an integer</returns>
+        public int Size()
+        {
+            return _cardPool.Pool.Count;
         }
     }
 }
