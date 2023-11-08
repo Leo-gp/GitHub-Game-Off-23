@@ -4,17 +4,45 @@ using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
 {
-    // TODO
+    /// <summary>
+    ///     This services provides the business logic for the card pool entity, which stores available cards.
+    ///     At the start of the game, it should load all cards from the card vault and add them to the pool.
+    ///     Then, all cards from the starter deck should be removed from the card pool.
+    /// </summary>
     public class CardPoolService : Service
     {
+        /// <summary>
+        ///     The card pool entity containing discovered / available cards
+        /// </summary>
         private readonly CardPool _cardPool = new();
 
+        /// <summary>
+        ///     Creates the singleton instance
+        /// </summary>
+        public CardPoolService()
+        {
+            Instance ??= this;
+        }
+
+        /// <summary>
+        ///     The instance of the service singleton
+        /// </summary>
+        public static CardPoolService Instance { get; private set; }
+
+        /// <summary>
+        ///     Adds a non-null card to the pool of discovered cards
+        /// </summary>
+        /// <param name="cardToAdd">The non-null that should be added to the pool</param>
         public void AddCard([NotNull] Card cardToAdd)
         {
             _cardPool.Pool.Add(cardToAdd);
-            LogInfo($"$Added card '{cardToAdd}' to the card pool");
+            LogInfo($"Added card '{cardToAdd}' to the card pool");
         }
 
+        /// <summary>
+        ///     Removes a non-null card instance from the pool of discovered cards
+        /// </summary>
+        /// <param name="cardToRemove">The non-null card reference to remove</param>
         public void RemoveCard([NotNull] Card cardToRemove)
         {
             var refExisted = _cardPool.Pool.Remove(cardToRemove);

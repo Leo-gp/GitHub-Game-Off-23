@@ -1,5 +1,6 @@
 using main.entity.Card_Management;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Localization.Settings;
 
 namespace main.repository
@@ -15,6 +16,7 @@ namespace main.repository
         /// <returns>All cards of the game as an array</returns>
         public Card[] GetAll()
         {
+            Assert.IsFalse(LocalizationSettings.SelectedLocale is null, "There is no locale selected");
             return Resources.LoadAll<Card>(LocalizationSettings.SelectedLocale.Identifier + "/Cards");
         }
     }

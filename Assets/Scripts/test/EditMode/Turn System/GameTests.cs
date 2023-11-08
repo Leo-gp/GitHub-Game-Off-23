@@ -1,14 +1,18 @@
-﻿using main.service.Turn_System;
-using NUnit.Framework;
+﻿using System.Collections;
+using main.service.Turn_System;
+using UnityEngine.TestTools;
 
 namespace test.EditMode.Turn_System
 {
     public class GameTests
     {
-        [Test]
-        public void Sample()
+        [UnityTest]
+        public IEnumerator Sample()
         {
+            // Create a new game
             new GameService();
+
+            yield return null;
         }
     }
 }
