@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407fcea2a3eb47509f5c7be0289d8bef, type: 3}
+  m_Name: Deba
+  m_EditorClassIdentifier: 
+  _cardName: Deba
+  _cardSprite: {fileID: 0}
+  _cardClass: 0
+  _cardRarity:
+    _rarity: 1
+  _unitTimeCost:
+    _time: 2
+  _cardEffects: []
+  _numberOfCopiesInPool: 7

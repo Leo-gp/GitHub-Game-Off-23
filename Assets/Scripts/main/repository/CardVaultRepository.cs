@@ -1,4 +1,4 @@
-using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Localization.Settings;

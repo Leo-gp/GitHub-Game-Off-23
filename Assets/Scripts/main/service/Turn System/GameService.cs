@@ -106,12 +106,16 @@ namespace main.service.Turn_System
             // Fill the card pool with all cards from the vault
             LogInfo("Filling the card pool with all cards from the vault");
             var cardsInVault = CardVaultService.Instance.GetAll();
-            foreach (var card in cardsInVault) CardPoolService.Instance.AddCard(card);
+            foreach (var card in cardsInVault)
+                for (var i = 0; i < card.NumberOfCopiesInPool; i++)
+                    CardPoolService.Instance.AddCard(card);
+            LogInfo($"In total, there are {CardPoolService.Instance.Size()} cards in the pool");
 
             // Remove the starter deck cards from the card pool
             LogInfo("Removing all cards from the starter deck from the card pool");
             var cardsInStarterDeck = DeckService.Instance.GetDeck().Pile;
             foreach (var card in cardsInStarterDeck) CardPoolService.Instance.RemoveCard(card);
+            LogInfo($"After removal, in total, there are {CardPoolService.Instance.Size()} cards in the pool");
         }
 
         /// <summary>
