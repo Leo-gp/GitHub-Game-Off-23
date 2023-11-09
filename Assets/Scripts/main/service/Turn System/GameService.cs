@@ -91,6 +91,9 @@ namespace main.service.Turn_System
             new CardPoolService();
             LogInfo("CardPoolService has been instantiated");
 
+            new PlayerHandService();
+            LogInfo("PlayerHandService has been instantiated");
+
             // TODO: Create all services here
 
             LogInfo("Successfully created all services");
@@ -113,7 +116,7 @@ namespace main.service.Turn_System
 
             // Remove the starter deck cards from the card pool
             LogInfo("Removing all cards from the starter deck from the card pool");
-            var cardsInStarterDeck = DeckService.Instance.GetDeck().Pile;
+            var cardsInStarterDeck = DeckService.Instance.GetDeck().Pile; // <-- This is pretty bad, let's review this!
             foreach (var card in cardsInStarterDeck) CardPoolService.Instance.RemoveCard(card);
             LogInfo($"After removal, in total, there are {CardPoolService.Instance.Size()} cards in the pool");
         }
@@ -124,7 +127,7 @@ namespace main.service.Turn_System
         private void DrawStartingHand()
         {
             LogInfo("Now drawing starting hand");
-            // TODO
+            PlayerHandService.Instance.Draw(5);
         }
 
         private void HandleGameOver()

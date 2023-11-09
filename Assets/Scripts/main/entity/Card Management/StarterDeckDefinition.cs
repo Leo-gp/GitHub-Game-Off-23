@@ -2,6 +2,7 @@
 using main.entity.Card_Management.Card_Data;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace main.entity.Card_Management
 {
@@ -24,6 +25,7 @@ namespace main.entity.Card_Management
         /// <returns>The starter deck as a copied list of cards</returns>
         public List<Card> Get()
         {
+            Assert.IsFalse(_starterDeck is null, "The start deck should be set up in the Unity editor");
             List<Card> cards = new();
             foreach (var pair in _starterDeck)
                 for (var i = 0; i < pair.NumberOfCopies; i++)
