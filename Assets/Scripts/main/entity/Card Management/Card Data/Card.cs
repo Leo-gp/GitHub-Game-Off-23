@@ -72,5 +72,15 @@ namespace main.entity.Card_Management.Card_Data
         ///     Yields the number of copies this card should have in the card pool
         /// </summary>
         public int NumberOfCopiesInPool => _numberOfCopiesInPool;
+
+        /// <summary>
+        ///     Yields the rarity of the card as an integer
+        /// </summary>
+        public int Rarity => _cardRarity.Rarity;
+
+        /// <summary>
+        ///     Yields the name of the card as a string
+        /// </summary>
+        public string Name => _cardName;
     }
 }
