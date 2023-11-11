@@ -14,7 +14,7 @@ namespace test.EditMode.Turn_System
             LocalizationSettings.SelectedLocale ??= LocalizationSettings.AvailableLocales.Locales[0];
 
             // Create a new game
-            new GameService();
+            new GameService().EndTurn();
 
             yield return null;
         }

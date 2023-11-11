@@ -71,5 +71,18 @@ namespace main.service.Card_Management
                 _playerHand.HandCards.Add(drawnCard);
             }
         }
+
+        /// <summary>
+        ///     Removes all cards from the player's hand and adds them to the discard pile
+        /// </summary>
+        public void DiscardHand()
+        {
+            LogInfo("Discarding the entire player hand");
+
+            foreach (var playerHandHandCard in _playerHand.HandCards)
+                DiscardPileService.Instance.AddToPile(playerHandHandCard);
+
+            _playerHand.HandCards.Clear();
+        }
     }
 }

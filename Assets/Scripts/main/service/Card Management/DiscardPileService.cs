@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace main.service.Card_Management
         /// <param name="card">The card instance that should be pushed to the discard pile stack</param>
         public void AddToPile([NotNull] Card card)
         {
-            LogInfo($"$Discarding card '{card}'");
+            LogInfo($"Discarding card '{card}'");
             _discardPile.Pile.Push(card);
         }
 
@@ -61,6 +62,15 @@ namespace main.service.Card_Management
                 DeckService.Instance.AddCard(asList[nextIndexToRemove]);
                 asList.RemoveAt(nextIndexToRemove);
             }
+        }
+
+        /// <summary>
+        ///     Yields the discard pile as a list of cards
+        /// </summary>
+        /// <returns>The discard pile stack converted to a list</returns>
+        public List<Card> ToList()
+        {
+            return _discardPile.Pile.ToList();
         }
     }
 }

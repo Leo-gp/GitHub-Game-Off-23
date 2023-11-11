@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.repository;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -29,7 +31,7 @@ namespace main.service.Card_Management
             LogInfo("Successfully set the DeckService's singleton instance");
 
             LogInfo("Now retrieving starter deck definition");
-            _deck = new CardPile(StarterDeckDefinition.instance.Get(), true);
+            _deck = new CardPile(new StarterDeckDefinitionRepository().GetAll(), true);
             LogInfo("Deck has been set and shuffled");
 
             LogInfo("Deck consists of these cards:");
@@ -42,13 +44,12 @@ namespace main.service.Card_Management
         public static DeckService Instance { get; private set; }
 
         /// <summary>
-        ///     Yields the deck
+        ///     Yields the deck as a list of cards
         /// </summary>
-        /// <returns>The deck as a CardPile</returns>
-        public CardPile GetDeck()
+        /// <returns>The deck of cards converted to a list</returns>
+        public List<Card> ToList()
         {
-            LogInfo("Yielding the deck pile");
-            return _deck;
+            return _deck.Pile.ToList();
         }
 
         /// <summary>

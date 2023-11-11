@@ -1,4 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Linq;
+using JetBrains.Annotations;
+using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
 using main.service.Card_Management;
 using UnityEngine.Assertions;
@@ -7,6 +10,7 @@ namespace main.service.Turn_System
 {
     /// <summary>
     ///     This service provides the business logic for the game entity, including a way to end the current turn.
+    ///     TODO: I feel like this class is responsible for too much, let's review it!
     /// </summary>
     public class GameService : Service
     {
@@ -46,6 +50,7 @@ namespace main.service.Turn_System
 
             // Now apply all end-of-turn effects
             _game.currentGameState = GameState.END_OF_TURN_EFFECT_EXECUTION;
+            LogInfo("Now executing all end of turn effects");
             EffectAssemblyService.Instance.ExecuteAll();
 
             // If the game is now over, handle the end of the run
@@ -56,6 +61,7 @@ namespace main.service.Turn_System
 
             // Increment tracking variables
             _game.elapsedTurns++;
+            LogInfo($"Incrementing turn number. It now is: {_game.elapsedTurns}");
             // TODO: Refresh available time
 
             // At the end, start the new turn
@@ -63,6 +69,10 @@ namespace main.service.Turn_System
             // TODO: Do view stuff 
         }
 
+        /// <summary>
+        ///     Starts the current game by creating all required services (resetting the old ones if they existed
+        ///     already), loading the deck, pool, discard pile, etc. and then drawing the starter hand
+        /// </summary>
         private void StartNewGame()
         {
             LogInfo("Now starting a new game");
@@ -70,6 +80,12 @@ namespace main.service.Turn_System
             CreateServices();
             LoadDeck();
             DrawStartingHand();
+
+            LogInfo("Successfully started the game, now waiting for player actions");
+
+            // Reset the game variables
+            _game.fishHasBeenScaledThisOrLastTurn = true;
+            _game.currentGameState = GameState.PLAY_CARDS;
         }
 
         /// <summary>
@@ -94,7 +110,8 @@ namespace main.service.Turn_System
             new PlayerHandService();
             LogInfo("PlayerHandService has been instantiated");
 
-            // TODO: Create all services here
+            new DiscardPileService();
+            LogInfo("DiscardPileService has been instantiated");
 
             LogInfo("Successfully created all services");
         }
@@ -116,7 +133,7 @@ namespace main.service.Turn_System
 
             // Remove the starter deck cards from the card pool
             LogInfo("Removing all cards from the starter deck from the card pool");
-            var cardsInStarterDeck = DeckService.Instance.GetDeck().Pile; // <-- This is pretty bad, let's review this!
+            var cardsInStarterDeck = DeckService.Instance.ToList();
             foreach (var card in cardsInStarterDeck) CardPoolService.Instance.RemoveCard(card);
             LogInfo($"After removal, in total, there are {CardPoolService.Instance.Size()} cards in the pool");
         }
@@ -134,6 +151,8 @@ namespace main.service.Turn_System
         {
             Assert.IsTrue(_game.currentGameState is GameState.GAME_OVER_CHECK,
                 "Should currently be in the game over check state!");
+
+            LogInfo("Game over. Now ending the game");
             _game.currentGameState = GameState.GAME_OVER;
 
             // TODO: Do the roguelike end of game stuff from the diagram
@@ -145,7 +164,86 @@ namespace main.service.Turn_System
                 "Should currently be in the game over check state!");
             _game.currentGameState = GameState.CARDS_SWAP;
 
-            // TODO: Discard remaining cards, search for lowest rarity, etc.
+            LogInfo("Game is still ongoing, therefore doing the card swap now");
+
+            // First, discarding all hand cards
+            PlayerHandService.Instance.DiscardHand();
+
+            // If there are more than three cards sharing the least rarity, it should be randomised
+            var random = new Random();
+
+            /**
+             * TODO
+             * If the player would be offered the same 3 card pool cards two turns in a row, randomly swap one of the
+             * offered card pool cards with another type (either of equal rarity or the next highest rarity).
+             */
+
+            // Getting the lowest rarity cards from the deck, whilst ignoring duplicates
+            // Note that there are less than three cards in the deck, one or more values will be null.
+            var deckResult = DeckService
+                .Instance
+                .ToList()
+                .Distinct(new CardComparer())
+                .OrderBy(_ => random.Next())
+                .ThenBy(it => it.Rarity)
+                .Take(3)
+                .ToList();
+
+            // Now doing the same for the discard pile
+            var discardPileResult = DiscardPileService
+                .Instance
+                .ToList()
+                .Distinct(new CardComparer())
+                .OrderBy(_ => random.Next())
+                .ThenBy(it => it.Rarity)
+                .Take(3)
+                .ToList();
+
+            // Now combining both result sets, whilst again ignoring duplicates, and taking the three least rare cards
+            deckResult.AddRange(discardPileResult);
+            var finalResult = deckResult
+                .Distinct(new CardComparer())
+                .OrderBy(_ => random.Next())
+                .ThenBy(it => it.Rarity)
+                .Take(3)
+                .ToList();
+
+            // In any case, there should definitely be three elements now
+            Assert.IsNotNull(finalResult[0]);
+            Assert.IsNotNull(finalResult[1]);
+            Assert.IsNotNull(finalResult[2]);
+
+            LogInfo("The three lowest rarity cards to swap now are: " +
+                    $"\n- {finalResult[0]}" +
+                    $"\n- {finalResult[1]}" +
+                    $"\n- {finalResult[2]}");
+
+            var maximumRarity = _game.elapsedTurns;
+            LogInfo($"Maximum rarity available is {maximumRarity}");
+
+            LogInfo("Now randomly selecting three cards from the card pool up to the maximum rarity");
+            var selectedCards = CardPoolService
+                .Instance
+                .ToList()
+                .Distinct(new CardComparer())
+                .Where(card => card.Rarity <= maximumRarity)
+                .OrderBy(_ => random.Next())
+                .Take(3)
+                .ToList();
+
+            Assert.IsNotNull(selectedCards[0]);
+            Assert.IsNotNull(selectedCards[1]);
+            Assert.IsNotNull(selectedCards[2]);
+
+            LogInfo("The three cards chosen from the pool to swap are: " +
+                    $"\n- {selectedCards[0]}" +
+                    $"\n- {selectedCards[1]}" +
+                    $"\n- {selectedCards[2]}");
+
+            LogInfo("Now waiting for the player to select one card to exchange");
+            // TODO impl the player selection
+
+            LogInfo("Handled the card swap");
         }
 
         /// <summary>
@@ -156,6 +254,7 @@ namespace main.service.Turn_System
         /// <returns>true - if the game is over; false - if the game is not yet over</returns>
         private bool GameIsOver()
         {
+            LogInfo("Now checking if the game is over");
             _game.currentGameState = GameState.GAME_OVER_CHECK;
             return !_game.fishHasBeenScaledThisOrLastTurn || _game.elapsedTurns >= Game.TURNS_IN_A_GAME;
         }
