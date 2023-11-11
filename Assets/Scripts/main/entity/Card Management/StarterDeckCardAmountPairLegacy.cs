@@ -10,7 +10,7 @@ namespace main.entity.Card_Management
     ///     added to the starter deck
     /// </summary>
     [Serializable]
-    public class StarterDeckCardAmountPair
+    public class StarterDeckCardAmountPairLegacy
     {
         /// <summary>
         ///     The card reference to the card that should be in the starter deck

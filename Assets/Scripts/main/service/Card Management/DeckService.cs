@@ -31,7 +31,7 @@ namespace main.service.Card_Management
             LogInfo("Successfully set the DeckService's singleton instance");
 
             LogInfo("Now retrieving starter deck definition");
-            _deck = new CardPile(new StarterDeckDefinitionRepository().GetAll(), true);
+            _deck = new CardPile(new StarterDeckDefinitionRepositoryLegacy().GetAll(), true);
             LogInfo("Deck has been set and shuffled");
 
             LogInfo("Deck consists of these cards:");

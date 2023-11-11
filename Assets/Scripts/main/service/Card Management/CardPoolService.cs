@@ -16,7 +16,7 @@ namespace main.service.Card_Management
         /// <summary>
         ///     The card pool entity containing discovered / available cards
         /// </summary>
-        private readonly CardPool _cardPool = new();
+        //private readonly CardPool _cardPool = new();
 
         /// <summary>
         ///     Creates the singleton instance
@@ -37,7 +37,7 @@ namespace main.service.Card_Management
         /// <param name="cardToAdd">The non-null that should be added to the pool</param>
         public void AddCard([NotNull] Card cardToAdd)
         {
-            _cardPool.Pool.Add(cardToAdd);
+            //_cardPool.Pool.Add(cardToAdd);
             LogInfo($"Added card '{cardToAdd}' to the card pool");
         }
 
@@ -47,8 +47,8 @@ namespace main.service.Card_Management
         /// <param name="cardToRemove">The non-null card reference to remove</param>
         public void RemoveCard([NotNull] Card cardToRemove)
         {
-            var refExisted = _cardPool.Pool.Remove(cardToRemove);
-            Assert.IsTrue(refExisted, "Trying to remove a card from the card pool, which does not exist there");
+            //var refExisted = _cardPool.Pool.Remove(cardToRemove);
+            //Assert.IsTrue(refExisted, "Trying to remove a card from the card pool, which does not exist there");
             LogInfo($"Removed card '{cardToRemove}' from the card pool");
         }
 
@@ -58,7 +58,8 @@ namespace main.service.Card_Management
         /// <returns>a copy of the card pool list</returns>
         public List<Card> ToList()
         {
-            return new List<Card>(_cardPool.Pool);
+            return null;
+            //return new List<Card>(_cardPool.Pool);
         }
 
         /// <summary>
@@ -67,7 +68,8 @@ namespace main.service.Card_Management
         /// <returns>The amount of cards as an integer</returns>
         public int Size()
         {
-            return _cardPool.Pool.Count;
+            return 0;
+            //return _cardPool.Pool.Count;
         }
     }
 }

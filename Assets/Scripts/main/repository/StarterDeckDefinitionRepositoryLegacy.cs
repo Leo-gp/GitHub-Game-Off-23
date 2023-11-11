@@ -10,7 +10,7 @@ namespace main.repository
     /// <summary>
     ///     Loads the starter deck definition by using the asset provided at the desired localized resource path
     /// </summary>
-    public class StarterDeckDefinitionRepository : IAssetRepository<List<Card>>
+    public class StarterDeckDefinitionRepositoryLegacy : IAssetRepository<List<Card>>
     {
         /// <summary>
         ///     Loads the starter deck definition scriptable object from the resource folder and adds the duplicates
@@ -20,7 +20,7 @@ namespace main.repository
         {
             Assert.IsNotNull(LocalizationSettings.SelectedLocale, "There is no locale selected");
 
-            var definition = Resources.LoadAll<StarterDeckDefinition>
+            var definition = Resources.LoadAll<StarterDeckDefinitionLegacy>
             (
                 LocalizationSettings.SelectedLocale.Identifier + "/Starter Deck"
             );

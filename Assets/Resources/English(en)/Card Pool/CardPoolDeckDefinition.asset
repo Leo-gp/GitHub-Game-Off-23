@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b31f39613be340d881b2508dad788c3d, type: 3}
-  m_Name: StarterDeckDefinition
+  m_Script: {fileID: 11500000, guid: 8e092ae2f648429b9496ce1457d2a54d, type: 3}
+  m_Name: CardPoolDeckDefinition
   m_EditorClassIdentifier: 
   cardCopiesList: []
