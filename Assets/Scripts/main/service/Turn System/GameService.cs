@@ -69,8 +69,12 @@ namespace main.service.Turn_System
 
             CreateServices();
             LoadDeck();
+            DrawStartingHand();
         }
 
+        /// <summary>
+        ///     Creates the singletons of all service classes
+        /// </summary>
         private void CreateServices()
         {
             LogInfo("Now creating all service singleton instances");
@@ -78,16 +82,49 @@ namespace main.service.Turn_System
             new EffectAssemblyService();
             LogInfo("EffectAssemblyService has been instantiated");
 
+            new CardVaultService();
+            LogInfo("CardVaultService has been instantiated");
+
             new DeckService();
             LogInfo("DeckService has been instantiated");
+
+            new CardPoolService();
+            LogInfo("CardPoolService has been instantiated");
 
             // TODO: Create all services here
 
             LogInfo("Successfully created all services");
         }
 
+        /// <summary>
+        ///     Loads the deck piles and sets up the card pool
+        /// </summary>
         private void LoadDeck()
         {
+            LogInfo("Now loading the deck collections");
+
+            // Fill the card pool with all cards from the vault
+            LogInfo("Filling the card pool with all cards from the vault");
+            var cardsInVault = CardVaultService.Instance.GetAll();
+            foreach (var card in cardsInVault)
+                for (var i = 0; i < card.NumberOfCopiesInPool; i++)
+                    CardPoolService.Instance.AddCard(card);
+            LogInfo($"In total, there are {CardPoolService.Instance.Size()} cards in the pool");
+
+            // Remove the starter deck cards from the card pool
+            LogInfo("Removing all cards from the starter deck from the card pool");
+            var cardsInStarterDeck = DeckService.Instance.GetDeck().Pile;
+            foreach (var card in cardsInStarterDeck) CardPoolService.Instance.RemoveCard(card);
+            LogInfo($"After removal, in total, there are {CardPoolService.Instance.Size()} cards in the pool");
+        }
+
+        /// <summary>
+        ///     Draws the required amount of cards the player starts with
+        /// </summary>
+        private void DrawStartingHand()
+        {
+            LogInfo("Now drawing starting hand");
+            // TODO
         }
 
         private void HandleGameOver()

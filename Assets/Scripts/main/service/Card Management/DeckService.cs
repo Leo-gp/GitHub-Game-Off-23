@@ -37,5 +37,15 @@ namespace main.service.Card_Management
         ///     The non-thread-safe singleton of the service
         /// </summary>
         public static DeckService Instance { get; private set; }
+
+        /// <summary>
+        ///     Yields the deck
+        /// </summary>
+        /// <returns>The deck as a CardPile</returns>
+        public CardPile GetDeck()
+        {
+            LogInfo("Yielding the deck pile");
+            return _deck;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using main.entity.Card_Management.Card_Data;
 using UnityEngine;
 using UnityEngine.Assertions;
 

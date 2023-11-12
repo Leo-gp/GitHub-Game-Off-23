@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using main.entity.Card_Management.Card_Data;
 
 namespace main.entity.Card_Management
 {

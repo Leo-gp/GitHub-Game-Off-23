@@ -1,6 +1,8 @@
+using main.entity.Turn_System;
+using NaughtyAttributes;
 using UnityEngine;
 
-namespace main.entity.Card_Management
+namespace main.entity.Card_Management.Card_Data
 {
     /// <summary>
     ///     The CardEffect ScriptableObject is used to provide data that determines what happens when a
@@ -10,6 +12,12 @@ namespace main.entity.Card_Management
     /// </summary>
     public abstract class CardEffect : ScriptableObject
     {
+        /// <summary>
+        ///     Determines the game state in which the effects should be executed
+        /// </summary>
+        [Space(20)] [InfoBox("Determines the game state in which the effects should be executed")] [SerializeField]
+        protected GameState _gameStateToExecuteIn;
+
         /// <summary>
         ///     Determines the behaviour of the card effect.
         ///     An example execution could be a card effect that prints a message to the console.
