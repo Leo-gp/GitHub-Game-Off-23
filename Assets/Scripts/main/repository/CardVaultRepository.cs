@@ -8,7 +8,7 @@ namespace main.repository
     /// <summary>
     ///     Used to load the card pool by using the asset at the desired localized resource path
     /// </summary>
-    public class CardVaultRepository : IAssetRepository<Card[]>
+    public class CardVaultRepository : IAssetRepository<Card>
     {
         /// <summary>
         ///     Loads all card scriptable objects from the resource folder

@@ -4,6 +4,6 @@ namespace main.repository.Card_Management.Deck_Definition
 {
     public interface IDeckDefinitionRepository
     {
-        DeckDefinition Load();
+        DeckDefinition LoadDeckDefinition();
     }
 }

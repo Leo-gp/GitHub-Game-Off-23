@@ -12,6 +12,6 @@ namespace main.repository
         ///     Used to retrieve all values T
         /// </summary>
         /// <returns>All values as T</returns>
-        T GetAll();
+        T[] GetAll();
     }
 }
