@@ -1,3 +1,4 @@
+using main.entity.Card_Management.Card_Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 
