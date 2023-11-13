@@ -10,19 +10,19 @@ namespace main.repository
     /// <summary>
     ///     Loads the starter deck definition by using the asset provided at the desired localized resource path
     /// </summary>
-    public class StarterDeckDefinitionRepository : IAssetRepository<List<Card>>
+    public class StarterDeckDefinitionRepositoryLegacy : IAssetRepository<Card>
     {
         /// <summary>
         ///     Loads the starter deck definition scriptable object from the resource folder and adds the duplicates
         /// </summary>
         /// <returns>The definition as a list of cards including all duplicates</returns>
-        public List<Card> GetAll()
+        public Card[] GetAll()
         {
             Assert.IsNotNull(LocalizationSettings.SelectedLocale, "There is no locale selected");
 
-            var definition = Resources.LoadAll<StarterDeckDefinition>
+            var definition = Resources.LoadAll<StarterDeckDefinitionLegacy>
             (
-                LocalizationSettings.SelectedLocale.Identifier + "/Starter Deck"
+                "Legacy/" + LocalizationSettings.SelectedLocale.Identifier + "/Starter Deck"
             );
 
             Assert.AreEqual(definition.Length, 1,
@@ -34,7 +34,7 @@ namespace main.repository
                 for (var i = 0; i < pair.NumberOfCopies; i++)
                     returnList.Add(pair.Card);
 
-            return returnList;
+            return returnList.ToArray();
         }
     }
 }
