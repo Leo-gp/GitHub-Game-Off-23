@@ -1,4 +1,5 @@
 ﻿using main.entity.Card_Management;
+using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
 {
@@ -25,6 +26,26 @@ namespace main.service.Card_Management
         ///     The singleton instance of the service
         /// </summary>
         public static PlayerHandService Instance { get; private set; }
+
+        /// <summary>
+        ///     Plays the card at the specified index and then discards it
+        /// </summary>
+        /// <param name="index">the positive index of the cards within bounds</param>
+        public void PlayCardAt(int index)
+        {
+            Assert.IsTrue(_playerHand.HandCards.Count > index && index >= 0,
+                "The view should check if the card to play is within bounds!");
+
+            var card = _playerHand.HandCards[index];
+            LogInfo($"Playing card '{card}'");
+
+            // TODO card effect implementation
+
+            _playerHand.HandCards.RemoveAt(index);
+            DiscardPileService.Instance.AddToPile(card);
+
+            LogInfo("Successfully played the card");
+        }
 
         /// <summary>
         ///     Draws the specified amount of cards. If the amount is larger than the amount of cards left in the deck,
