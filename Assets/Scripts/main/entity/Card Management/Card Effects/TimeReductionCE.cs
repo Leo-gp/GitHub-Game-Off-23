@@ -19,9 +19,9 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] private int _halfAmountInstead;
         //public CardClass requiredCardClass;
         //public T requiredCardType;
-        //public T amountOfCardsToAffect
+        [SerializeField] private bool _affectsAllCards;
 
-        public override void Execute()
+        public override void Execute(int multiplier)
         {
             Debug.Log("My message is " + _message);
         }

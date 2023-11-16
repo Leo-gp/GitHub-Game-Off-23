@@ -15,10 +15,10 @@ namespace main.entity.Card_Management.Card_Effects
         [FormerlySerializedAs("message")] [SerializeField]
         private string _message;
         [SerializeField] private int _amountOfScalesBoost;
-        //public CardClass classToAffect;
-        //public ItemCard asLongAsItemOnBoard;
+        [SerializeField] private CardClass _classToAffect;
+        [SerializeField] private ItemCard _asLongAsItemOnBoard;
 
-        public override void Execute()
+        public override void Execute(int multiplier)
         {
             Debug.Log("My message is " + _message);
         }

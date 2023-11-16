@@ -16,7 +16,7 @@ namespace main.entity.Card_Management.Card_Effects
         private string _message;
         [SerializeField] private int _amountOfCardsToDraw;
 
-        public override void Execute()
+        public override void Execute(int multiplier)
         {
             Debug.Log("My message is " + _message);
         }

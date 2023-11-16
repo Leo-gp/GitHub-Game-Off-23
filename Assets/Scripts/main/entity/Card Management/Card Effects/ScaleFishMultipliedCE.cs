@@ -20,7 +20,7 @@ namespace main.entity.Card_Management.Card_Effects
         //public Card playedCardRef;
         [SerializeField] private int _multiplicationLimit;
 
-        public override void Execute()
+        public override void Execute(int multiplier)
         {
             Debug.Log("My message is " + _message);
         }
