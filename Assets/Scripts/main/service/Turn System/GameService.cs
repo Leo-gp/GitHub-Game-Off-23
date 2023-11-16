@@ -301,8 +301,9 @@ namespace main.service.Turn_System
         {
             LogInfo("Checking if the swap system can be used or not because of the current turn");
             LogInfo($"Cards should only be swapped, starting in turn {Game.TURN_TO_START_SWAPPING_CARDS}" +
+                    $" until turn {Game.TURN_TO_STOP_SWAPPING_CARDS}" +
                     $" and now is turn {_game.elapsedTurns}");
-            return _game.elapsedTurns >= Game.TURN_TO_START_SWAPPING_CARDS;
+            return _game.elapsedTurns is >= Game.TURN_TO_START_SWAPPING_CARDS and <= Game.TURN_TO_STOP_SWAPPING_CARDS;
         }
 
         /// <summary>

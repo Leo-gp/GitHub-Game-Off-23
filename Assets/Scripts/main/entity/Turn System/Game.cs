@@ -21,6 +21,12 @@ namespace main.entity.Turn_System
         public const int TURN_TO_START_SWAPPING_CARDS = 3;
 
         /// <summary>
+        ///     Defines the turn in which the card system will stop.
+        ///     This turn is still INCLUDED in the swapping mechanic, only after that turn will it stop.
+        /// </summary>
+        public const int TURN_TO_STOP_SWAPPING_CARDS = 17;
+
+        /// <summary>
         ///     Determines the non-null state that the game is in right now.
         ///     The GameService should be responsible for setting the correct game state and classes should assert as
         ///     often as possible if the current game state is the correct state to be in.
