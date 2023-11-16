@@ -16,7 +16,7 @@ MonoBehaviour:
   _cardSprite: {fileID: 0}
   _cardClass: 0
   _cardRarity:
-    _rarity: 9
+    _rarity: 4
   _unitTimeCost:
     _time: 4
   _cardEffects: []
