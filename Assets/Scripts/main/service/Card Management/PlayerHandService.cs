@@ -1,5 +1,7 @@
 ﻿using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 namespace main.service.Card_Management
 {
@@ -15,11 +17,29 @@ namespace main.service.Card_Management
         private readonly PlayerHand _playerHand = new();
 
         /// <summary>
+        ///     Triggered when a card from the player's hand has been discarded.
+        ///     If multiple cards are discarded, this event is triggered once per each card.
+        ///     The index of the discarded card is its parameter.
+        /// </summary>
+        public readonly UnityEvent<int> OnCardDiscarded = new();
+
+        /// <summary>
+        ///     Triggered when a new card has been drawn.
+        ///     If multiple cards are drawn, this event is triggered once per each card.
+        /// </summary>
+        public readonly UnityEvent<Card> OnCardDrawn = new();
+
+        /// <summary>
+        ///     Triggered when the entire hand has been discarded.
+        /// </summary>
+        public readonly UnityEvent OnHandDiscarded = new();
+
+        /// <summary>
         ///     Creates the singleton instance
         /// </summary>
         public PlayerHandService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the PlayerHandService's singleton instance");
         }
 
@@ -44,6 +64,7 @@ namespace main.service.Card_Management
 
             _playerHand.HandCards.RemoveAt(index);
             DiscardPileService.Instance.AddToPile(card);
+            OnCardDiscarded.Invoke(index);
 
             LogInfo("Successfully played the card");
         }
@@ -91,6 +112,9 @@ namespace main.service.Card_Management
             {
                 var drawnCard = DeckService.Instance.DrawFromTop();
                 _playerHand.HandCards.Add(drawnCard);
+
+                OnCardDrawn.Invoke(drawnCard);
+                LogInfo("Triggered the OnCardDrawn event");
             }
         }
 
@@ -105,6 +129,8 @@ namespace main.service.Card_Management
                 DiscardPileService.Instance.AddToPile(playerHandHandCard);
 
             _playerHand.HandCards.Clear();
+
+            OnHandDiscarded.Invoke();
         }
     }
 }

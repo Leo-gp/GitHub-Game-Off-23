@@ -21,7 +21,7 @@ namespace main.service.Card_Management
         /// </summary>
         public CardVaultService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the EffectAssemblyService's singleton instance");
 
             Assert.IsFalse(_cardVault.AllGameCards.Count is 0, "Card vault should not be empty");
