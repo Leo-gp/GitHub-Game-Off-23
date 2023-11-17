@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
 using main.service.Card_Management;
+using main.service.Fish_Management;
 using UnityEngine.Assertions;
 
 namespace main.service.Turn_System
@@ -38,6 +39,22 @@ namespace main.service.Turn_System
         // TODO: Remove after player selections are implemented 
         public bool GameIsRunningJustForTest =>
             _game is { fishHasBeenScaledThisOrLastTurn: true, elapsedTurns: < Game.TURNS_IN_A_GAME };
+
+        /// <summary>
+        ///     Starts the current game by creating all required services (resetting the old ones if they existed
+        ///     already), loading the deck, pool, discard pile, etc. and then drawing the starter hand
+        /// </summary>
+        private void StartNewGame()
+        {
+            LogInfo("Now starting a new game");
+
+            CreateServices();
+            RegisterEvents();
+            LoadDeck();
+            ResetGameVariables();
+
+            LogInfo("Successfully started the game, now waiting for player actions");
+        }
 
         /// <summary>
         ///     Ends the current turn when the end turn button view is clicked.
@@ -93,21 +110,6 @@ namespace main.service.Turn_System
         }
 
         /// <summary>
-        ///     Starts the current game by creating all required services (resetting the old ones if they existed
-        ///     already), loading the deck, pool, discard pile, etc. and then drawing the starter hand
-        /// </summary>
-        private void StartNewGame()
-        {
-            LogInfo("Now starting a new game");
-
-            CreateServices();
-            LoadDeck();
-            ResetGameVariables();
-
-            LogInfo("Successfully started the game, now waiting for player actions");
-        }
-
-        /// <summary>
         ///     After the start of the game, the game should not instantly expect scaling a fish, and it should be in
         ///     the play card state, and there should be no last offered cards
         /// </summary>
@@ -143,7 +145,18 @@ namespace main.service.Turn_System
             new DiscardPileService();
             LogInfo("DiscardPileService has been instantiated");
 
+            new FishService();
+            LogInfo("FishService has been instantiated");
+
             LogInfo("Successfully created all services");
+        }
+
+        /// <summary>
+        ///     Registers all events that the game service is interested in
+        /// </summary>
+        private void RegisterEvents()
+        {
+            FishService.Instance.OnFishHasBeenScaled.AddListener(() => _game.fishHasBeenScaledThisOrLastTurn = true);
         }
 
         /// <summary>

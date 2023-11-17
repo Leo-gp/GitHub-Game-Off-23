@@ -20,6 +20,7 @@ namespace main.service.Card_Management
         public PlayerHandService()
         {
             Instance ??= this;
+            LogInfo("Successfully set the PlayerHandService's singleton instance");
         }
 
         /// <summary>

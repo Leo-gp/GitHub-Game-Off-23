@@ -24,6 +24,7 @@ namespace main.service.Card_Management
         public CardPoolService()
         {
             Instance ??= this;
+            LogInfo("Successfully set the CardPoolService's singleton instance");
         }
 
         /// <summary>
