@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
@@ -20,6 +21,14 @@ namespace main.service.Turn_System
         ///     The non-null game entity created automatically when the service is instantiated.
         /// </summary>
         [NotNull] private readonly Game _game = new();
+
+        /// <summary>
+        ///     Triggered once the card swap has selected three cards from the players deck.
+        ///     The player must choose one of these cards and remove it from the deck.
+        ///     The first argument list is for the cards that are taken from the deck, where one must be removed.
+        ///     The second argument list is for the cards that are offered to the player, where one must be added.
+        /// </summary>
+        public readonly UnityEvent<List<Card>, List<Card>> OnCardSwap = new();
 
         /// <summary>
         ///     Triggered once the game is over because there have been two turns without scaling a fish,
@@ -284,7 +293,9 @@ namespace main.service.Turn_System
                         $"\n- {selectedCards[2]}");
 
                 LogInfo("Now waiting for the player to select one card to exchange");
-                // TODO impl the player selection
+                LogInfo("Triggering the OnCardSwap event");
+                OnCardSwap.Invoke(finalResult, selectedCards);
+
                 // TODO remove player give choice from card pool
             }
             else
@@ -293,6 +304,12 @@ namespace main.service.Turn_System
             }
 
             LogInfo("Handled the card swap");
+        }
+
+        public void RegisterCardSwapSelections([NotNull] Card cardToRemoveFromDeck, [NotNull] Card cardToAddToDeck)
+        {
+            LogInfo($"Registered the selection made by the player. Removing card '{cardToRemoveFromDeck}'" +
+                    $" and adding card '{cardToAddToDeck}'");
         }
 
         /// <summary>
