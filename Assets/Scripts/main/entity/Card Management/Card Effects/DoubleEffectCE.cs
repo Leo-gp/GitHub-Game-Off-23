@@ -14,7 +14,7 @@ namespace main.entity.Card_Management.Card_Effects
     {
         [FormerlySerializedAs("message")] [SerializeField]
         private string _message;
-        //public Card handCardTarget
+        private Card _handCardTarget; //not serialized because it is only set at runtime
         [SerializeField] private bool _affectsAllCardsThisTurn;
         [SerializeField] private CardClass _classToAffect;
         [SerializeField] private bool _affectsActionCards;

@@ -17,8 +17,9 @@ namespace main.entity.Card_Management.Card_Effects
 
         [SerializeField] private int _reductionAmount;
         [SerializeField] private int _halfAmountInstead;
-        //public CardClass requiredCardClass;
-        //public T requiredCardType;
+        [SerializeField] private CardClass requiredCardClass;
+        [SerializeField] private bool _affectsActionCards;
+        [SerializeField] private bool _affectsItemCards;
         [SerializeField] private bool _affectsAllCards;
 
         public override void Execute(int multiplier)
