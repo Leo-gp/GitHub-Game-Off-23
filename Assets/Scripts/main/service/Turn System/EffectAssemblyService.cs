@@ -39,6 +39,7 @@ namespace main.service.Turn_System
         {
             _effectAssembly.Effects.ForEach(effect => effect.effectBase.Execute(effect.multiplier));
             Clear();
+            LogInfo("Successfully executed all end-of-turn effects");
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace main.service.Turn_System
         /// <param name="effect">The non-null <see cref="CardEffectInPlay" /> that should be executed at the end</param>
         public void AddEffect([NotNull] CardEffectInPlay effect)
         {
+            LogInfo($"Adding a new card effect to the end-of-turn effects: '{effect}'");
             _effectAssembly.Effects.Add(effect);
         }
 

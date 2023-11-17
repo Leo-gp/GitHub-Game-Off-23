@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407fcea2a3eb47509f5c7be0289d8bef, type: 3}
   m_Name: Winding Crank
   m_EditorClassIdentifier: 
-  _cardName: 
+  _cardName: Winding Crank
   _cardSprite: {fileID: 0}
-  _cardClass: 0
+  _cardClass: 2
   _cardRarity:
     _rarity: 0
   _unitTimeCost:

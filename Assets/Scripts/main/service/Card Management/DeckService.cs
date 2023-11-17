@@ -1,6 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
+using main.repository;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
 {
@@ -26,7 +31,7 @@ namespace main.service.Card_Management
             LogInfo("Successfully set the DeckService's singleton instance");
 
             LogInfo("Now retrieving starter deck definition");
-            _deck = new CardPile(StarterDeckDefinition.instance.Get(), true);
+            _deck = new CardPile(new StarterDeckDefinitionRepositoryLegacy().GetAll().ToList(), true);
             LogInfo("Deck has been set and shuffled");
 
             LogInfo("Deck consists of these cards:");
@@ -39,13 +44,56 @@ namespace main.service.Card_Management
         public static DeckService Instance { get; private set; }
 
         /// <summary>
-        ///     Yields the deck
+        ///     Yields the deck as a list of cards
         /// </summary>
-        /// <returns>The deck as a CardPile</returns>
-        public CardPile GetDeck()
+        /// <returns>The deck of cards converted to a list</returns>
+        public List<Card> ToList()
         {
-            LogInfo("Yielding the deck pile");
-            return _deck;
+            return _deck.Pile.ToList();
+        }
+
+        /// <summary>
+        ///     Removes the card at the top of the deck and returns it.
+        /// </summary>
+        /// <returns>the card at the top of the deck as a <see cref="Card" /></returns>
+        public Card DrawFromTop()
+        {
+            Assert.IsTrue(_deck.Pile.Count > 0, "Should never try to draw when the deck is empty. " +
+                                                "Classes should check this first");
+
+            var topCard = _deck.Pile.Pop();
+            LogInfo($"Drew '{topCard}' as the top card");
+
+            return topCard;
+        }
+
+        /// <summary>
+        ///     Adds a card to the top of the deck
+        /// </summary>
+        /// <param name="card">The non-null instance of the <see cref="Card" /> that should be added to the deck</param>
+        public void AddCard([NotNull] Card card)
+        {
+            LogInfo($"Added card '{card}' to the deck");
+            _deck.Pile.Push(card);
+        }
+
+        /// <summary>
+        ///     Yields the amount of cards in the deck
+        /// </summary>
+        /// <returns>The size as an integer</returns>
+        public int Size()
+        {
+            return _deck.Pile.Count;
+        }
+
+        /// <summary>
+        ///     Utility method to check if the deck is empty or not.
+        ///     Note that this is just syntactic sugar for checking if the size method yields zero.
+        /// </summary>
+        /// <returns>true - if the deck is empty; false - if the deck contains at least one card</returns>
+        public bool IsEmpty()
+        {
+            return Size() is 0;
         }
     }
 }
