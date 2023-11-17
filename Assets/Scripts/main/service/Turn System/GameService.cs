@@ -208,39 +208,17 @@ namespace main.service.Turn_System
                 // If there are more than three cards sharing the least rarity, it should be randomised
                 var random = new Random();
 
-                // Getting the lowest rarity cards from the deck, whilst ignoring duplicates
-                // Note that there are less than three cards in the deck, one or more values will be null.s
-                var deckResult =
-                    DeckService
-                        .Instance
-                        .ToList()
-                        .Distinct(new CardComparer())
-                        .OrderBy(it => it.Rarity)
-                        .ThenBy(_ => random.Next())
-                        .Take(3)
-                        .ToList();
+                var maximumRarity = _game.elapsedTurns;
+                LogInfo($"Maximum rarity available is {maximumRarity}");
 
-                LogInfo("The three lowest rarity cards in the deck are: " + string.Join(",", deckResult));
-
-                // Now doing the same for the discard pile
-                var discardPileResult = DiscardPileService
+                // Randomly select 3 cards of the player's current rarity (i.e. turn number) - 2  or less
+                var finalResult = DeckService
                     .Instance
                     .ToList()
+                    .Concat(DiscardPileService.Instance.ToList())
                     .Distinct(new CardComparer())
-                    .OrderBy(it => it.Rarity)
-                    .ThenBy(_ => random.Next())
-                    .Take(3)
-                    .ToList();
-
-                LogInfo("The three lowest rarity cards in the discard pile are: " +
-                        string.Join(",", discardPileResult));
-
-                // Now combining both result sets, whilst again ignoring duplicates, and taking the three least rare cards
-                deckResult.AddRange(discardPileResult);
-                var finalResult = deckResult
-                    .Distinct(new CardComparer())
-                    .OrderBy(it => it.Rarity)
-                    .ThenBy(_ => random.Next())
+                    .Where(card => card.Rarity <= maximumRarity - 2)
+                    .OrderBy(_ => random.Next())
                     .Take(3)
                     .ToList();
 
@@ -249,11 +227,8 @@ namespace main.service.Turn_System
                 Assert.IsNotNull(finalResult[1]);
                 Assert.IsNotNull(finalResult[2]);
 
-                LogInfo("The three lowest rarity cards in both piles combined are: " +
+                LogInfo("The three random cards in both piles up to current rarity - 2 are: " +
                         string.Join(",", finalResult));
-
-                var maximumRarity = _game.elapsedTurns;
-                LogInfo($"Maximum rarity available is {maximumRarity}");
 
                 LogInfo("Now randomly selecting three cards from the card pool up to the maximum rarity");
                 var selectedCards = CardPoolService
@@ -314,8 +289,9 @@ namespace main.service.Turn_System
         {
             LogInfo("Checking if the swap system can be used or not because of the current turn");
             LogInfo($"Cards should only be swapped, starting in turn {Game.TURN_TO_START_SWAPPING_CARDS}" +
+                    $" until turn {Game.TURN_TO_STOP_SWAPPING_CARDS}" +
                     $" and now is turn {_game.elapsedTurns}");
-            return _game.elapsedTurns >= Game.TURN_TO_START_SWAPPING_CARDS;
+            return _game.elapsedTurns is >= Game.TURN_TO_START_SWAPPING_CARDS and <= Game.TURN_TO_STOP_SWAPPING_CARDS;
         }
 
         /// <summary>
