@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e092ae2f648429b9496ce1457d2a54d, type: 3}
   m_Name: CardPoolDeckDefinition
   m_EditorClassIdentifier: 
-  cardCopiesList: []
+  cardCopiesList:
+  - card: {fileID: 11400000, guid: b1829a43ada2be44684adb0026d62edd, type: 2}
+    numberOfCopies: 10

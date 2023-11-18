@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.entity.Card_Management.Deck_Definition;
 using main.entity.Turn_System;
+using main.infrastructure;
+using main.repository;
+using main.repository.Card_Management.Deck_Definition;
 using main.service.Card_Management;
 using main.service.Fish_Management;
 using UnityEngine.Assertions;
@@ -147,6 +152,8 @@ namespace main.service.Turn_System
         /// </summary>
         private void CreateServices()
         {
+            //InitializeDependencies();
+            
             LogInfo("Now creating all service singleton instances");
 
             new EffectAssemblyService();
@@ -171,6 +178,21 @@ namespace main.service.Turn_System
             LogInfo("FishService has been instantiated");
 
             LogInfo("Successfully created all services");
+        }
+
+        private static void InitializeDependencies()
+        {
+            var localizationSettingsWrapper = new LocalizationSettingsWrapper();
+            
+            var starterDeckDefinitionResourceLoader = new ResourceLoader<DeckDefinition>(localizationSettingsWrapper, ResourcePath.StarterDeck);
+
+            var starterDeckDefinitionRepository = new DeckDefinitionRepository(starterDeckDefinitionResourceLoader);
+
+            var starterDeck = new StarterDeck();
+
+            new StarterDeckService(starterDeck, starterDeckDefinitionRepository);
+            
+            // TODO: set Card Pool
         }
 
         /// <summary>

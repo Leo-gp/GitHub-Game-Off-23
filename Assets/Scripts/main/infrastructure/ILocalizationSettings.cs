@@ -4,6 +4,6 @@ namespace main.infrastructure
 {
     public interface ILocalizationSettings
     {
-        Locale SelectedLocale { get; }
+        LocaleIdentifier SelectedLocaleIdentifier { get; }
     }
 }

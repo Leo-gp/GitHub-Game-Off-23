@@ -2,6 +2,8 @@
 using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.entity.Card_Management.Deck_Definition;
+using main.repository.Card_Management.Deck_Definition;
 using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
@@ -16,11 +18,17 @@ namespace main.service.Card_Management
         /// <summary>
         ///     The card pool entity containing discovered / available cards
         /// </summary>
-        private readonly CardPool _cardPool = new();
-
-        /// <summary>
-        ///     Creates the singleton instance
-        /// </summary>
+        private readonly CardPool cardPool;
+        private readonly DeckDefinitionRepository deckDefinitionRepository;
+        private readonly StarterDeck starterDeck;
+        
+        public CardPoolService(CardPool cardPool, DeckDefinitionRepository deckDefinitionRepository, StarterDeck starterDeck)
+        {
+            this.cardPool = cardPool;
+            this.deckDefinitionRepository = deckDefinitionRepository;
+            this.starterDeck = starterDeck;
+        }
+        
         public CardPoolService()
         {
             Instance = this;
@@ -38,7 +46,7 @@ namespace main.service.Card_Management
         /// <param name="cardToAdd">The non-null that should be added to the pool</param>
         public void AddCard([NotNull] Card cardToAdd)
         {
-            _cardPool.Pool.Add(cardToAdd);
+            cardPool.Pool.Add(cardToAdd);
             LogInfo($"Added card '{cardToAdd}' to the card pool");
         }
 
@@ -48,7 +56,7 @@ namespace main.service.Card_Management
         /// <param name="cardToRemove">The non-null card reference to remove</param>
         public void RemoveCard([NotNull] Card cardToRemove)
         {
-            var refExisted = _cardPool.Pool.Remove(cardToRemove);
+            var refExisted = cardPool.Pool.Remove(cardToRemove);
             Assert.IsTrue(refExisted, "Trying to remove a card from the card pool, which does not exist there");
             LogInfo($"Removed card '{cardToRemove}' from the card pool");
         }
@@ -59,7 +67,7 @@ namespace main.service.Card_Management
         /// <returns>a copy of the card pool list</returns>
         public List<Card> ToList()
         {
-            return new List<Card>(_cardPool.Pool);
+            return new List<Card>(cardPool.Pool);
         }
 
         /// <summary>
@@ -68,7 +76,7 @@ namespace main.service.Card_Management
         /// <returns>The amount of cards as an integer</returns>
         public int Size()
         {
-            return _cardPool.Pool.Count;
+            return cardPool.Pool.Count;
         }
     }
 }
