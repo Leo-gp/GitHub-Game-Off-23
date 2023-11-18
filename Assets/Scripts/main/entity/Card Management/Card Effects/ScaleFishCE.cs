@@ -12,15 +12,10 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "ScaleFishCE", menuName = "Data/Effects/New ScaleFishCE")]
     public class ScaleFishCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
-        [SerializeField] private int _amountOfScalesBoost;
-        [SerializeField] private CardClass _classToAffect;
-        [SerializeField] private ItemCard _asLongAsItemOnBoard;
+        [SerializeField] private int _amountOfScalesToRemove;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

@@ -12,15 +12,12 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "ScaleAllFishThisTurnCE", menuName = "Data/Effects/New ScaleAllFishThisTurnCE")]
     public class ScaleAllFishThisTurnCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _baseAmountOfScales;
         [SerializeField] private float _relativeAmountOfScales;
         [SerializeField] private ItemCard _asLongAsItemOnBoard;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

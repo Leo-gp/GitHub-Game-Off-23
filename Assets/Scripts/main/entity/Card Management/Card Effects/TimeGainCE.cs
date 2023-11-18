@@ -12,13 +12,10 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "TimeGainCE", menuName = "Data/Effects/New TimeGainCE")]
     public class TimeGainCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _amountOfTimeToGain;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

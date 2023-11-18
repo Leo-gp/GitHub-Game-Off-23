@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace main.entity.Card_Management.Card_Data
@@ -12,5 +11,9 @@ namespace main.entity.Card_Management.Card_Data
     {
         public int multiplier;
         public CardEffect effectBase;
+
+        public void Execute(){
+            effectBase.Execute(multiplier);
+        }
     }
 }

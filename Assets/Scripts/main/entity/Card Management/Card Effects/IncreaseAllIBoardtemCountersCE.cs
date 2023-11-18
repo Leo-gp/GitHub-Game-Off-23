@@ -12,13 +12,10 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "IncreaseAllIBoardtemCountersCE", menuName = "Data/Effects/New IncreaseAllIBoardtemCountersCE")]
     public class IncreaseAllIBoardtemCountersCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _amountOfTurnsToLastLonger;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

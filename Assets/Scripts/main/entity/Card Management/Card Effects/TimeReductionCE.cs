@@ -12,19 +12,15 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "TimeReductionCE", menuName = "Data/Effects/New TimeReductionCE")]
     public class TimeReductionCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
-
         [SerializeField] private int _reductionAmount;
-        [SerializeField] private int _halfAmountInstead;
-        [SerializeField] private CardClass requiredCardClass;
+        [SerializeField] private bool _halfAmountInstead;
+        [SerializeField] private CardClass _requiredCardClass;
         [SerializeField] private bool _affectsActionCards;
         [SerializeField] private bool _affectsItemCards;
         [SerializeField] private bool _affectsAllCards;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

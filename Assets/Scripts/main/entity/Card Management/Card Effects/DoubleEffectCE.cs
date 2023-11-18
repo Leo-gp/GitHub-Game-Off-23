@@ -12,8 +12,6 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "DoubleEffectCE", menuName = "Data/Effects/New DoubleEffectCE")]
     public class DoubleEffectCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         private Card _handCardTarget; //not serialized because it is only set at runtime
         [SerializeField] private bool _affectsAllCardsThisTurn;
         [SerializeField] private CardClass _classToAffect;
@@ -22,7 +20,6 @@ namespace main.entity.Card_Management.Card_Effects
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

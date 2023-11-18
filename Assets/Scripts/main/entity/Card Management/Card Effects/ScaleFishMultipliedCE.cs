@@ -12,17 +12,14 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "ScaleFishMultipliedCE", menuName = "Data/Effects/New ScaleFishMultipliedCE")]
     public class ScaleFishMultipliedCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _baseAmountOfScales;
         [SerializeField] private int _incrementAmountOfScales;
         [SerializeField] private bool _multiplyOnceForEachCardNamePlayed;
-        //public Card playedCardRef;
+        [SerializeField] public Card playedCardRef;
         [SerializeField] private int _multiplicationLimit;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

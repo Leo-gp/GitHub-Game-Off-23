@@ -12,14 +12,11 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "ScaleFishWithItemOnBoardBonusCE", menuName = "Data/Effects/New ScaleFishWithItemOnBoardBonusCE")]
     public class ScaleFishWithItemOnBoardBonusCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _baseAmountOfScales;
         [SerializeField] private int _bonusAmountForEachItemOnBoard;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

@@ -12,13 +12,10 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "TimeBuffWhileOnBoardCE", menuName = "Data/Effects/New TimeBuffWhileOnBoardCE")]
     public class TimeBuffWhileOnBoardCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _amountOfTimeToAddEachTurn;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

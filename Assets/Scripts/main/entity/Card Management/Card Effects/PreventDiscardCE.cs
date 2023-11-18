@@ -12,12 +12,9 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "PreventDiscardCE", menuName = "Data/Effects/New PreventDiscardCE")]
     public class PreventDiscardCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

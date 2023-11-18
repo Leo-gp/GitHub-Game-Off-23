@@ -37,7 +37,7 @@ namespace main.service.Turn_System
         /// </summary>
         public void ExecuteAll()
         {
-            _effectAssembly.Effects.ForEach(effect => effect.effectBase.Execute(effect.multiplier));
+            _effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
             Clear();
             LogInfo("Successfully executed all end-of-turn effects");
         }

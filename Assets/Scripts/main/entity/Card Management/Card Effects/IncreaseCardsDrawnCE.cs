@@ -12,13 +12,10 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "IncreaseCardsDrawnCE", menuName = "Data/Effects/New IncreaseCardsDrawnCE")]
     public class IncreaseCardsDrawnCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
         [SerializeField] private int _additionalAmountOfCardsToDraw;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }
