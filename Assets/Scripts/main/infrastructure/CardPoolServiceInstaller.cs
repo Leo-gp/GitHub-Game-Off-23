@@ -6,7 +6,7 @@ using Zenject;
 
 namespace main.infrastructure
 {
-    public class CardPoolServiceInstaller : Installer<CardPoolServiceInstaller>
+    public class CardPoolServiceInstaller : MonoInstaller<CardPoolServiceInstaller>
     {
         public override void InstallBindings()
         {

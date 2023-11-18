@@ -4,18 +4,10 @@ using Zenject;
 
 namespace main.infrastructure
 {
-    public class GameInstaller : MonoInstaller
+    public class PlayerHandServiceInstaller : MonoInstaller<PlayerHandServiceInstaller>
     {
         public override void InstallBindings()
         {
-            ResourceLoaderInstaller.Install(Container);
-            
-            DeckDefinitionRepositoryInstaller.Install(Container);
-            
-            StarterDeckServiceInstaller.Install(Container);
-            
-            CardPoolServiceInstaller.Install(Container);
-
             Container.Bind<PlayerHand>().AsSingle();
             
             Container.Bind<DeckService>().AsSingle();
@@ -23,8 +15,6 @@ namespace main.infrastructure
             Container.Bind<DiscardPileService>().AsSingle();
             
             Container.Bind<PlayerHandService>().AsSingle().NonLazy();
-            
-            TurnServiceInstaller.Install(Container);
         }
     }
 }

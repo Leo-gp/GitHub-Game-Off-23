@@ -4,7 +4,7 @@ using Zenject;
 
 namespace main.infrastructure
 {
-    public class ResourceLoaderInstaller : Installer<ResourceLoaderInstaller>
+    public class ResourceLoaderInstaller : MonoInstaller<ResourceLoaderInstaller>
     {
         public override void InstallBindings()
         {

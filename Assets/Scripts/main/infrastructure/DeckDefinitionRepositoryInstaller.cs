@@ -5,7 +5,7 @@ using Zenject;
 
 namespace main.infrastructure
 {
-    public class DeckDefinitionRepositoryInstaller : Installer<DeckDefinitionRepositoryInstaller>
+    public class DeckDefinitionRepositoryInstaller : MonoInstaller<DeckDefinitionRepositoryInstaller>
     {
         public override void InstallBindings()
         {

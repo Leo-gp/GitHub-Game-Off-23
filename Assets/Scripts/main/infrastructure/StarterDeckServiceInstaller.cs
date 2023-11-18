@@ -6,7 +6,7 @@ using Zenject;
 
 namespace main.infrastructure
 {
-    public class StarterDeckServiceInstaller : Installer<StarterDeckServiceInstaller>
+    public class StarterDeckServiceInstaller : MonoInstaller<StarterDeckServiceInstaller>
     {
         public override void InstallBindings()
         {
