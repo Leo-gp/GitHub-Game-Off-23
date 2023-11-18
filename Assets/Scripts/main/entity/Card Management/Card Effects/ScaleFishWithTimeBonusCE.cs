@@ -9,15 +9,14 @@ namespace main.entity.Card_Management.Card_Effects
     ///     This simply defines a field "message" that will be printed upon execution.
     ///     NOTE: Can be removed once the actual card effects exist.
     /// </summary>
-    [CreateAssetMenu(fileName = "Sample Card Effect", menuName = "Data/Effects/New Sample")]
-    public class SampleEffect : CardEffect
+    [CreateAssetMenu(fileName = "ScaleFishWithTimeBonusCE", menuName = "Data/Effects/New ScaleFishWithTimeBonusCE")]
+    public class ScaleFishWithTimeBonusCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
+        [SerializeField] private int _baseAmountOfScales;
+        [SerializeField] private int _bonusAmountForEachRemainingTime;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace main.service.Turn_System
         /// </summary>
         public void ExecuteAll()
         {
-            _effectAssembly.Effects.ForEach(effect => effect.Execute());
+            _effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
             Clear();
             LogInfo("Successfully executed all end-of-turn effects");
         }
@@ -46,8 +46,8 @@ namespace main.service.Turn_System
         ///     Adds a non-null end-of-turn card effect to the <see cref="EffectAssembly" /> list.
         ///     Note that it will be deleted from the list at the end of the next turn!
         /// </summary>
-        /// <param name="effect">The non-null <see cref="CardEffect" /> that should be executed at the end</param>
-        public void AddEffect([NotNull] CardEffect effect)
+        /// <param name="effect">The non-null <see cref="CardEffectInPlay" /> that should be executed at the end</param>
+        public void AddEffect([NotNull] CardEffectInPlay effect)
         {
             LogInfo($"Adding a new card effect to the end-of-turn effects: '{effect}'");
             _effectAssembly.Effects.Add(effect);

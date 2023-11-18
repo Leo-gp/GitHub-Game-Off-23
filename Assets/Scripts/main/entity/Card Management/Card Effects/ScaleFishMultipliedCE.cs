@@ -9,15 +9,17 @@ namespace main.entity.Card_Management.Card_Effects
     ///     This simply defines a field "message" that will be printed upon execution.
     ///     NOTE: Can be removed once the actual card effects exist.
     /// </summary>
-    [CreateAssetMenu(fileName = "Sample Card Effect", menuName = "Data/Effects/New Sample")]
-    public class SampleEffect : CardEffect
+    [CreateAssetMenu(fileName = "ScaleFishMultipliedCE", menuName = "Data/Effects/New ScaleFishMultipliedCE")]
+    public class ScaleFishMultipliedCE : CardEffect
     {
-        [FormerlySerializedAs("message")] [SerializeField]
-        private string _message;
+        [SerializeField] private int _baseAmountOfScales;
+        [SerializeField] private int _incrementAmountOfScales;
+        [SerializeField] private bool _multiplyOnceForEachCardNamePlayed;
+        [SerializeField] public Card playedCardRef;
+        [SerializeField] private int _multiplicationLimit;
 
         public override void Execute(int multiplier)
         {
-            Debug.Log("My message is " + _message);
         }
     }
 }
