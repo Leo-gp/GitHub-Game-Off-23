@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using main.entity.Card_Management;
-using main.entity.Card_Management.Card_Data;
-using main.entity.Card_Management.Deck_Definition;
+using System;
+using System.Collections.Generic;
 using main.entity.Turn_System;
-using main.infrastructure;
-using main.repository;
-using main.repository.Card_Management.Deck_Definition;
 using main.service.Card_Management;
 using main.service.Fish_Management;
 using UnityEngine.Assertions;
@@ -76,7 +69,7 @@ namespace main.service.Turn_System
 
             CreateServices();
             RegisterEvents();
-            LoadDeck();
+            //LoadDeck();
             ResetGameVariables();
 
             LogInfo("Successfully started the game, now waiting for player actions");
@@ -152,8 +145,6 @@ namespace main.service.Turn_System
         /// </summary>
         private void CreateServices()
         {
-            //InitializeDependencies();
-            
             LogInfo("Now creating all service singleton instances");
 
             new EffectAssemblyService();
@@ -165,11 +156,11 @@ namespace main.service.Turn_System
             new DeckService();
             LogInfo("DeckService has been instantiated");
 
-            new CardPoolService();
-            LogInfo("CardPoolService has been instantiated");
+            //new CardPoolService();
+            //LogInfo("CardPoolService has been instantiated");
 
-            new PlayerHandService();
-            LogInfo("PlayerHandService has been instantiated");
+            //new PlayerHandService();
+            //LogInfo("PlayerHandService has been instantiated");
 
             new DiscardPileService();
             LogInfo("DiscardPileService has been instantiated");
@@ -178,21 +169,6 @@ namespace main.service.Turn_System
             LogInfo("FishService has been instantiated");
 
             LogInfo("Successfully created all services");
-        }
-
-        private static void InitializeDependencies()
-        {
-            var localizationSettingsWrapper = new LocalizationSettingsWrapper();
-            
-            var starterDeckDefinitionResourceLoader = new ResourceLoader<DeckDefinition>(localizationSettingsWrapper, ResourcePath.StarterDeck);
-
-            var starterDeckDefinitionRepository = new DeckDefinitionRepository(starterDeckDefinitionResourceLoader);
-
-            var starterDeck = new StarterDeck();
-
-            new StarterDeckService(starterDeck, starterDeckDefinitionRepository);
-            
-            // TODO: set Card Pool
         }
 
         /// <summary>

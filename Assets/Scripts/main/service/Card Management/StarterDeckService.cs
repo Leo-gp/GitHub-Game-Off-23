@@ -14,9 +14,10 @@ namespace main.service.Card_Management
         {
             this.starterDeck = starterDeck;
             this.deckDefinitionRepository = deckDefinitionRepository;
+            SetStarterDeck();
         }
 
-        public void SetStarterDeck()
+        private void SetStarterDeck()
         {
             Assert.IsTrue(starterDeck.IsEmpty(), "Expected Starter Deck to be empty.");
             
