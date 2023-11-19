@@ -37,8 +37,7 @@ namespace main.service.Turn_System
         public static GameService Instance { get; private set; }
 
         // TODO: Remove after player selections are implemented 
-        public bool GameIsRunningJustForTest =>
-            _game is { fishHasBeenScaledThisOrLastTurn: true, elapsedTurns: < Game.TURNS_IN_A_GAME };
+        public bool GameIsRunningJustForTest => _game.elapsedTurns < Game.TURNS_IN_A_GAME;
 
         /// <summary>
         ///     Starts the current game by creating all required services (resetting the old ones if they existed
@@ -115,7 +114,7 @@ namespace main.service.Turn_System
         /// </summary>
         private void ResetGameVariables()
         {
-            _game.fishHasBeenScaledThisOrLastTurn = true;
+            _game.currentAmountOfScaledFish = 0;
             _game.currentGameState = GameState.TURN_START;
             _game.lastOfferedCards = null;
         }
@@ -156,7 +155,7 @@ namespace main.service.Turn_System
         /// </summary>
         private void RegisterEvents()
         {
-            FishService.Instance.OnFishHasBeenScaled.AddListener(() => _game.fishHasBeenScaledThisOrLastTurn = true);
+            FishService.Instance.OnFishHasBeenScaled.AddListener(() => _game.currentAmountOfScaledFish++);
         }
 
         /// <summary>
@@ -304,7 +303,7 @@ namespace main.service.Turn_System
         {
             LogInfo("Now checking if the game is over");
             _game.currentGameState = GameState.GAME_OVER_CHECK;
-            return !_game.fishHasBeenScaledThisOrLastTurn || _game.elapsedTurns >= Game.TURNS_IN_A_GAME;
+            return _game.elapsedTurns >= Game.TURNS_IN_A_GAME;
         }
     }
 }
