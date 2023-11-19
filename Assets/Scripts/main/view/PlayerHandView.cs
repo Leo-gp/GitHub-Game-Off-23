@@ -23,18 +23,28 @@ namespace main.view
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
         }
 
+        public void IncreaseSpacing()
+        {
+            _playerHandLayout.spacing += CARD_SPACING_FACTOR;
+        }
+
+        public void DecreaseSpacing()
+        {
+            _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
+        }
+
         private void RenderNewCard([NotNull] Card cardEntity)
         {
             var newCardViewContainer = Instantiate(_cardViewContainerPrefab, transform);
-            newCardViewContainer.CreateChild(cardEntity);
-            _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
+            newCardViewContainer.CreateChild(cardEntity, this);
+            DecreaseSpacing();
         }
 
         private void RemoveCardAtIndex(int index)
         {
             var cardViewToRemove = _playerHandLayout.transform.GetChild(index);
             Destroy(cardViewToRemove.gameObject);
-            _playerHandLayout.spacing += CARD_SPACING_FACTOR;
+            IncreaseSpacing();
         }
 
         private void RemoveAll()

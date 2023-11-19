@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using main.entity.Card_Management.Card_Data;
 using main.view.Canvas;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace main.view
         private const float CLAMP_WIDTH = 20f, CLAMP_HEIGHT = 10f, PLAY_HEIGHT_LIMIT = -6.5f;
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private Animator _animator;
+        private PlayerHandView _callback;
 
         private CardView _child;
         private RectTransform _childRectTransform;
@@ -38,20 +40,46 @@ namespace main.view
 
             if (lastPlayState == _playState) return;
 
-            _animator.Play(_playState is CardPlayState.PLAYABLE
-                ? "CardInHandContainer_Shrink"
-                : "CardInHandContainer_Expand");
+            switch (_playState)
+            {
+                case CardPlayState.UNPLAYABLE:
+                    _callback.IncreaseSpacing();
+                    _animator.Play("CardInHandContainer_Expand");
+                    break;
+                case CardPlayState.PLAYABLE:
+                    _callback.DecreaseSpacing();
+                    _animator.Play("CardInHandContainer_Shrink");
+                    break;
+                case CardPlayState.IDLE:
+                default:
+                    throw new ArgumentException("Should only process playable and unplayable cards");
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            switch (_playState)
+            {
+                case CardPlayState.UNPLAYABLE:
+                    _childRectTransform.SetParent(transform);
+                    _childRectTransform.anchoredPosition = Vector2.zero;
+                    break;
+                case CardPlayState.PLAYABLE:
+                    //_callback.DecreaseSpacing();
+                    Destroy(gameObject);
+                    break;
+                case CardPlayState.IDLE:
+                default:
+                    throw new ArgumentException("Should only process playable and unplayable cards");
+            }
         }
 
-        public void CreateChild([NotNull] Card cardToContain)
+        public void CreateChild([NotNull] Card cardToContain, [NotNull] PlayerHandView callback)
         {
             var newCardView = Instantiate(_cardViewPrefab, transform);
             newCardView.Render(cardToContain);
 
+            _callback = callback;
             _child = newCardView;
             _childRectTransform = _child.GetComponent<RectTransform>();
             _playState = CardPlayState.IDLE;
