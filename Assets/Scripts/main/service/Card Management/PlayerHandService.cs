@@ -80,6 +80,8 @@ namespace main.service.Card_Management
             LogInfo($"Drawing {amountOfCardsToDraw} card(s)");
             var amountOfCardsInDeck = DeckService.Instance.Size();
 
+            // TODO: new shuffle
+            // TODO: if the deck is empty and discard pile are empty, just return out
             // Does the deck need to be refilled and reshuffled?
             if (amountOfCardsToDraw > amountOfCardsInDeck)
             {

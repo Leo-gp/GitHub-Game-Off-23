@@ -9,7 +9,7 @@ namespace main.view
     public class PlayerHandView : MonoBehaviour
     {
         private const float BASE_SPACING_AMOUNT = 100f;
-        private const float CARD_SPACING_FACTOR = 20f;
+        private const float CARD_SPACING_FACTOR = 15f;
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
 

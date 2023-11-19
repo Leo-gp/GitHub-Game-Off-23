@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 1521702157007418728}
   - component: {fileID: 2151763344732995324}
   - component: {fileID: 4326507948408406445}
+  - component: {fileID: 8960865704425693677}
   m_Layer: 5
   m_Name: CardView
   m_TagString: Untagged
@@ -365,6 +366,27 @@ MonoBehaviour:
   _cardNameText: {fileID: 7149161842129984917}
   _cardRarityText: {fileID: 5750907387766069840}
   _cardTimeCostText: {fileID: 6454933238749481859}
+  _layoutElement: {fileID: 8960865704425693677}
+--- !u!114 &8960865704425693677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2810235170236976100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &6670926443479404735
 GameObject:
   m_ObjectHideFlags: 0
