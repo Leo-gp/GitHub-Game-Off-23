@@ -23,7 +23,7 @@ namespace main.service.Card_Management
         /// </summary>
         public CardPoolService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the CardPoolService's singleton instance");
         }
 

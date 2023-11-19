@@ -21,7 +21,7 @@ namespace main.service.Card_Management
         /// </summary>
         public DiscardPileService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the DiscardPileService's singleton instance");
         }
 

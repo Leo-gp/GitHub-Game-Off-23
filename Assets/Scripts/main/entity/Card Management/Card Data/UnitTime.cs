@@ -15,7 +15,7 @@ namespace main.entity.Card_Management.Card_Data
         ///     The time from a scale of zero to 10 (feel free to change this range)
         /// </summary>
         [FormerlySerializedAs("time")] [Range(0, 10)]
-        public int _time;
+        private int _time;
 
         /// <summary>
         ///     Yields the time of the unit as an integer

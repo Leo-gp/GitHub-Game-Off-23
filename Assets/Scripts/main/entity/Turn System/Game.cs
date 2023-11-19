@@ -10,9 +10,10 @@ namespace main.entity.Turn_System
     public class Game
     {
         /// <summary>
-        ///     Defines how many turns there are in a game
+        ///     Defines how many turns there are in a game.
+        ///     Not that the last turn is EXCLUSIVE and will not be played.
         /// </summary>
-        public const int TURNS_IN_A_GAME = 20;
+        public const int TURNS_IN_A_GAME = 21;
 
         /// <summary>
         ///     Defines the turn in which the card swap system will start.
