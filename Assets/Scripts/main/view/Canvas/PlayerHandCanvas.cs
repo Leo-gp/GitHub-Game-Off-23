@@ -10,10 +10,18 @@ namespace main.view.Canvas
 
         public static PlayerHandCanvas Instance { get; private set; }
 
-        private void Start()
+        public Camera PooledMainCamera { get; private set; }
+
+        private void Awake()
         {
             Assert.IsNull(Instance);
             Instance = this;
+        }
+
+        private void Start()
+        {
+            PooledMainCamera = Camera.main;
+            Assert.IsNotNull(PooledMainCamera);
         }
 
         public void SetAsDirectChild([NotNull] Transform child)
