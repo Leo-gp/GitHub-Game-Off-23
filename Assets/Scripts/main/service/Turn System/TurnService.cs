@@ -8,19 +8,38 @@ namespace main.service.Turn_System
     {
         private readonly Turn turn;
         private readonly PlayerHandService playerHandService;
+        private readonly DeckService deckService;
+        private readonly EffectAssemblyService effectAssemblyService;
 
-        public TurnService(Turn turn, PlayerHandService playerHandService)
+        public TurnService
+        (
+            Turn turn,
+            PlayerHandService playerHandService,
+            EffectAssemblyService effectAssemblyService,
+            DeckService deckService
+        )
         {
             this.turn = turn;
             this.playerHandService = playerHandService;
-            StartTurn();
+            this.effectAssemblyService = effectAssemblyService;
+            this.deckService = deckService;
         }
 
         public void StartTurn()
         {
             IncrementTurnNumber();
             RestoreTime();
+            
             playerHandService.OnTurnStarted();
+        }
+        
+        public void EndTurn()
+        {
+            effectAssemblyService.OnTurnEnded();
+            
+            playerHandService.OnTurnEnded();
+            
+            deckService.OnTurnEnded();
         }
 
         private void IncrementTurnNumber()

@@ -1,18 +1,17 @@
 using main.entity.Card_Management;
 using main.service.Card_Management;
+using UnityEngine;
 using Zenject;
 
 namespace main.infrastructure
 {
     public class PlayerHandServiceInstaller : MonoInstaller<PlayerHandServiceInstaller>
     {
+        [SerializeField] private int initialDrawAmount;
+        
         public override void InstallBindings()
         {
-            Container.Bind<PlayerHand>().AsSingle();
-            
-            Container.Bind<DeckService>().AsSingle();
-            
-            Container.Bind<DiscardPileService>().AsSingle();
+            Container.Bind<PlayerHand>().AsSingle().WithArguments(initialDrawAmount);
             
             Container.Bind<PlayerHandService>().AsSingle().NonLazy();
         }

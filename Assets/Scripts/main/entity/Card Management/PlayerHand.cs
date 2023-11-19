@@ -18,5 +18,10 @@ namespace main.entity.Card_Management
         public List<Card> HandCards { get; } = new();
         
         public int DrawAmount { get; set; }
+
+        public PlayerHand(int drawAmount)
+        {
+            DrawAmount = drawAmount;
+        }
     }
 }

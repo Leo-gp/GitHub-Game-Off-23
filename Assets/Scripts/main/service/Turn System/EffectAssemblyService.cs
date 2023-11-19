@@ -15,21 +15,12 @@ namespace main.service.Turn_System
         ///     The non-null <see cref="EffectAssembly" /> entity.
         ///     The instance is created automatically once the service is created.
         /// </summary>
-        [NotNull] private readonly EffectAssembly _effectAssembly = new();
+        [NotNull] private readonly EffectAssembly effectAssembly;
 
-        /// <summary>
-        ///     Creates the singleton of this service if it does not exist
-        /// </summary>
-        public EffectAssemblyService()
+        public EffectAssemblyService([NotNull] EffectAssembly effectAssembly)
         {
-            Instance = this;
-            LogInfo("Successfully set the EffectAssemblyService's singleton instance");
+            this.effectAssembly = effectAssembly;
         }
-
-        /// <summary>
-        ///     The non-thread-safe singleton of the service
-        /// </summary>
-        public static EffectAssemblyService Instance { get; private set; }
 
         /// <summary>
         ///     Executes each end-of-turn effect assembled in the <see cref="EffectAssembly" /> and then clears the
@@ -37,7 +28,7 @@ namespace main.service.Turn_System
         /// </summary>
         public void ExecuteAll()
         {
-            _effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
+            effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
             Clear();
             LogInfo("Successfully executed all end-of-turn effects");
         }
@@ -50,7 +41,7 @@ namespace main.service.Turn_System
         public void AddEffect([NotNull] CardEffectInPlay effect)
         {
             LogInfo($"Adding a new card effect to the end-of-turn effects: '{effect}'");
-            _effectAssembly.Effects.Add(effect);
+            effectAssembly.Effects.Add(effect);
         }
 
         /// <summary>
@@ -58,7 +49,12 @@ namespace main.service.Turn_System
         /// </summary>
         private void Clear()
         {
-            _effectAssembly.Effects.Clear();
+            effectAssembly.Effects.Clear();
+        }
+
+        public void OnTurnEnded()
+        {
+            ExecuteAll();
         }
     }
 }
