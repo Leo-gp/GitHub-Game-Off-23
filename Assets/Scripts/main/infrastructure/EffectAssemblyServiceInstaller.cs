@@ -9,7 +9,7 @@ namespace main.infrastructure
         public override void InstallBindings()
         {
             Container.Bind<EffectAssembly>().AsSingle();
-            Container.Bind<EffectAssemblyService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EffectAssemblyService>().AsSingle().NonLazy();
         }
     }
 }

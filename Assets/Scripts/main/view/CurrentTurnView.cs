@@ -1,6 +1,7 @@
 ﻿using main.service.Turn_System;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace main.view
 {
@@ -8,9 +9,17 @@ namespace main.view
     {
         [SerializeField] private TMP_Text _currentTurnText;
 
+        private TurnService turnService;
+        
+        [Inject]
+        public void Construct(TurnService turnService)
+        {
+            this.turnService = turnService;
+        }
+
         private void Start()
         {
-            GameService.Instance.OnTurnNumberIncreased.AddListener(Render);
+            turnService.OnTurnNumberIncreased.AddListener(Render);
             _currentTurnText.text = "1";
         }
 

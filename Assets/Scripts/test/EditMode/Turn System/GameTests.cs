@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Card_Management.Deck_Definition;
@@ -43,20 +44,19 @@ namespace test.EditMode.Turn_System
             var playerHandService = new PlayerHandService(playerHand, deckService, discardPileService, turn);
             var effectAssembly = new EffectAssembly();
             var effectAssemblyService = new EffectAssemblyService(effectAssembly);
-            var turnService = new TurnService(turn, playerHandService, effectAssemblyService, deckService);
             // Create a new game
-            var gameService = new GameService(game, turnService, fishService, deckService, discardPileService, cardPoolService, playerHandService);
-
+            var gameService = new GameService(game, turn, fishService, deckService, discardPileService, cardPoolService, playerHandService);
+            var turnPhaseActorsList = new List<ITurnPhaseActor> { gameService, playerHandService, deckService, effectAssemblyService };
+            var turnPhaseActors = new TurnPhaseActors(turnPhaseActorsList);
+            var turnService = new TurnService(turn, turnPhaseActors);
+            
             while (gameService.GameIsRunningJustForTest)
             {
-                gameService.StartTurn();
+                turnService.StartTurn();
                 // As a test, only the first card is always played
                 playerHandService.PlayCardAt(0);
-                gameService.EndTurn();
+                turnService.EndTurn();
             }
-
-            gameService.StartTurn();
-            gameService.EndTurn();
 
             yield return null;
         }

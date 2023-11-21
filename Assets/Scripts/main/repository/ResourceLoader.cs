@@ -9,7 +9,7 @@ namespace main.repository
 
         public ResourceLoader(LocalizationSettingsWrapper localizationSettingsWrapper, ResourcePath resourcePath)
         {
-            ResourcePath = $"{localizationSettingsWrapper.SelectedLocaleIdentifier}/{resourcePath.GetValue()}";
+            ResourcePath = $"{LocalizationSettingsWrapper.SelectedLocaleIdentifier}/{resourcePath.GetValue()}";
         }
 
         public T[] GetAll()

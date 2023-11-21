@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.service.Turn_System;
 using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
@@ -11,7 +12,7 @@ namespace main.service.Card_Management
     ///     This services provides the business logic for the deck entity, represented as a card pile.
     ///     The deck is created and shuffled automatically by using the starter deck definition entity.
     /// </summary>
-    public class DeckService : Service
+    public class DeckService : Service, ITurnEndPhaseActor
     {
         /// <summary>
         ///     Contains the deck of the player at all points in the game.

@@ -9,7 +9,7 @@ namespace main.service.Turn_System
     ///     card classes to add effects that should all be executed at the end of the turn. Then, once all card effects
     ///     have been executed, the list is cleared for the next turn.
     /// </summary>
-    public class EffectAssemblyService : Service
+    public class EffectAssemblyService : Service, ITurnEndPhaseActor
     {
         /// <summary>
         ///     The non-null <see cref="EffectAssembly" /> entity.

@@ -1,65 +1,51 @@
-using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
-using main.service.Card_Management;
+using UnityEngine.Events;
 
 namespace main.service.Turn_System
 {
-    public class TurnService
+    public class TurnService : Service
     {
         private readonly Turn turn;
-        private readonly PlayerHandService playerHandService;
-        private readonly DeckService deckService;
-        private readonly EffectAssemblyService effectAssemblyService;
+        private readonly TurnPhaseActors turnPhaseActors;
 
-        public TurnService
-        (
-            Turn turn,
-            PlayerHandService playerHandService,
-            EffectAssemblyService effectAssemblyService,
-            DeckService deckService
-        )
+        public TurnService(Turn turn, TurnPhaseActors turnPhaseActors)
         {
             this.turn = turn;
-            this.playerHandService = playerHandService;
-            this.effectAssemblyService = effectAssemblyService;
-            this.deckService = deckService;
+            this.turnPhaseActors = turnPhaseActors;
         }
+        
+        /// <summary>
+        ///     Triggered once the turn number is increased when a new turn is started.
+        ///     It uses the current turn number as its argument.
+        /// </summary>
+        public readonly UnityEvent<int> OnTurnNumberIncreased = new();
 
         public void StartTurn()
         {
             IncrementTurnNumber();
             RestoreTime();
-            
-            playerHandService.OnTurnStarted();
+
+            turnPhaseActors.TurnDrawActors.ForEach(actor => actor.OnDrawStarted());
+            turnPhaseActors.TurnPlayActors.ForEach(actor => actor.OnPlayPhaseStarted());
         }
-        
+
         public void EndTurn()
         {
-            effectAssemblyService.OnTurnEnded();
-            
-            playerHandService.OnTurnEnded();
-            
-            deckService.OnTurnEnded();
+            turnPhaseActors.TurnEndActors.ForEach(actor => actor.OnTurnEnded());
         }
 
         private void IncrementTurnNumber()
         {
             turn.CurrentTurnNumber++;
+            LogInfo($"Incrementing turn number. It now is: {turn.CurrentTurnNumber}");
+
+            OnTurnNumberIncreased.Invoke(turn.CurrentTurnNumber);
+            LogInfo("Triggering the OnTurnNumberIncreased event");
         }
 
         private void RestoreTime()
         {
             turn.RemainingTime = turn.InitialTime;
-        }
-
-        public void AddTime(UnitTime unitTime)
-        {
-            turn.RemainingTime.Time += unitTime.Time;
-        }
-        
-        public void SubtractTime(UnitTime unitTime)
-        {
-            turn.RemainingTime.Time -= unitTime.Time;
         }
     }
 }

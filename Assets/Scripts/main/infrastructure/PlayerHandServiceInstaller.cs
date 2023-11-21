@@ -13,7 +13,7 @@ namespace main.infrastructure
         {
             Container.Bind<PlayerHand>().AsSingle().WithArguments(initialDrawAmount);
             
-            Container.Bind<PlayerHandService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<PlayerHandService>().AsSingle().NonLazy();
         }
     }
 }

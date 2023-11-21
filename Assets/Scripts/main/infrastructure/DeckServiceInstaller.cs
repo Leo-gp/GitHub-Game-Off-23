@@ -16,9 +16,10 @@ namespace main.infrastructure
                 .FromMethod(CreateDeckPile)
                 .AsTransient();
             
-            Container.Bind<DeckService>()
+            Container.BindInterfacesAndSelfTo<DeckService>()
                 .FromMethod(CreateDeckService)
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
         }
 
         private CardPile CreateDeckPile(InjectContext ctx)

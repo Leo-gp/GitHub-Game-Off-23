@@ -6,7 +6,7 @@ namespace main.infrastructure
 {
     public class LocalizationSettingsWrapper
     {
-        public LocaleIdentifier SelectedLocaleIdentifier
+        public static LocaleIdentifier SelectedLocaleIdentifier
         {
             get
             {

@@ -48,11 +48,10 @@ namespace main.entity.Turn_System
         public GameState currentGameState = GameState.TURN_START;
 
         /// <summary>
-        ///     The turns since the game has started.
-        ///     Note that this is initially set to one because the service increments this variable just before a new
-        ///     turn, instead of at the start of a turn.
+        ///     Tracks if at least one fish has been scaled either this turn or in the last turn.
+        ///     This is used to track the losing condition (in this case the run is considered lost).
         /// </summary>
-        public int elapsedTurns = 1;
+        public bool fishHasBeenScaledThisOrLastTurn;
 
         /// <summary>
         ///     Tracks the last three offered cards by the system during the card swap phase.

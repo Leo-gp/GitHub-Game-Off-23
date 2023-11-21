@@ -1,6 +1,7 @@
 ﻿using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
+using main.service.Turn_System;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
@@ -10,7 +11,7 @@ namespace main.service.Card_Management
     ///     This services provides the business logic for the player hand entity, which allows drawing cards,
     ///     playing them, etc.
     /// </summary>
-    public class PlayerHandService : Service
+    public class PlayerHandService : Service, ITurnDrawPhaseActor, ITurnEndPhaseActor
     {
         private readonly PlayerHand playerHand;
         private readonly DeckService deckService;
@@ -71,7 +72,7 @@ namespace main.service.Card_Management
             LogInfo("Successfully played the card");
         }
 
-        public void OnTurnStarted()
+        public void OnDrawStarted()
         {
             Draw(playerHand.DrawAmount);
         }

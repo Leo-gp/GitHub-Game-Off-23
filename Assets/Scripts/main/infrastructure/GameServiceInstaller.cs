@@ -9,7 +9,7 @@ namespace main.infrastructure
         public override void InstallBindings()
         {
             Container.Bind<Game>().AsSingle();
-            Container.Bind<GameService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameService>().AsSingle().NonLazy();
         }
     }
 }
