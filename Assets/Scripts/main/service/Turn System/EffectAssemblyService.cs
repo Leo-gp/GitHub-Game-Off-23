@@ -23,17 +23,6 @@ namespace main.service.Turn_System
         }
 
         /// <summary>
-        ///     Executes each end-of-turn effect assembled in the <see cref="EffectAssembly" /> and then clears the
-        ///     list, making it ready for the next turn.
-        /// </summary>
-        public void ExecuteAll()
-        {
-            effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
-            Clear();
-            LogInfo("Successfully executed all end-of-turn effects");
-        }
-
-        /// <summary>
         ///     Adds a non-null end-of-turn card effect to the <see cref="EffectAssembly" /> list.
         ///     Note that it will be deleted from the list at the end of the next turn!
         /// </summary>
@@ -44,17 +33,30 @@ namespace main.service.Turn_System
             effectAssembly.Effects.Add(effect);
         }
 
+        public void OnTurnEnded()
+        {
+            LogInfo("Now executing all end of turn effects");
+            
+            ExecuteAll();
+        }
+        
+        /// <summary>
+        ///     Executes each end-of-turn effect assembled in the <see cref="EffectAssembly" /> and then clears the
+        ///     list, making it ready for the next turn.
+        /// </summary>
+        private void ExecuteAll()
+        {
+            effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
+            Clear();
+            LogInfo("Successfully executed all end-of-turn effects");
+        }
+        
         /// <summary>
         ///     Removes all end-of-turn effects from the <see cref="EffectAssembly" /> once they have been executed.
         /// </summary>
         private void Clear()
         {
             effectAssembly.Effects.Clear();
-        }
-
-        public void OnTurnEnded()
-        {
-            ExecuteAll();
         }
     }
 }

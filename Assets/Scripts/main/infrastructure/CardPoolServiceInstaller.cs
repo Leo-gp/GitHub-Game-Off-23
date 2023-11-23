@@ -14,8 +14,7 @@ namespace main.infrastructure
             
             Container.Bind<CardPoolService>()
                 .FromMethod(CreateCardPoolService)
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
         }
         
         private static CardPoolService CreateCardPoolService(InjectContext ctx)

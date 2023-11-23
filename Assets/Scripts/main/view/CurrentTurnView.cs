@@ -17,9 +17,18 @@ namespace main.view
             this.turnService = turnService;
         }
 
-        private void Start()
+        private void OnEnable()
         {
             turnService.OnTurnNumberIncreased.AddListener(Render);
+        }
+
+        private void OnDisable()
+        {
+            turnService.OnTurnNumberIncreased.RemoveListener(Render);
+        }
+
+        private void Start()
+        {
             _currentTurnText.text = "1";
         }
 

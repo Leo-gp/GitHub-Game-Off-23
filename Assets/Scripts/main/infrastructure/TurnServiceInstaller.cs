@@ -18,7 +18,7 @@ namespace main.infrastructure
                 .FromMethod(CreateTurn)
                 .AsSingle();
             
-            Container.Bind<TurnService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<TurnService>().AsSingle();
         }
         
         private Turn CreateTurn()

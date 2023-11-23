@@ -52,7 +52,7 @@ namespace main.service.Turn_System
                 typeof(EffectAssemblyService),
                 typeof(GameService),
                 typeof(PlayerHandService),
-                typeof(DeckService)
+                typeof(CardSwapService)
             };
             
             var turnPhaseActorsImplementationsSequence = new Dictionary<Type, Type[]>

@@ -24,7 +24,10 @@ namespace test.EditMode.Turn_System
             // Adds the first locale as the selected locale in CI executions 
             LocalizationSettings.SelectedLocale ??= LocalizationSettings.AvailableLocales.Locales[0];
 
-            var game = new Game();
+            const int turnsInAGame = 20;
+            const int turnToStartSwappingCards = 3;
+            const int turnToStopSwappingCards = 17;
+            var game = new Game(turnsInAGame, turnToStartSwappingCards, turnToStopSwappingCards);
             var fish = new Fish(100);
             var fishService = new FishService(fish);
             var starterDeck = new StarterDeck();
@@ -32,7 +35,7 @@ namespace test.EditMode.Turn_System
             var starterDeckResourceLoader = new ResourceLoader<DeckDefinition>(localizationSettingsWrapper, ResourcePath.StarterDeck);
             var starterDeckDefinitionRepository = new DeckDefinitionRepository(starterDeckResourceLoader);
             var starterDeckService = new StarterDeckService(starterDeck, starterDeckDefinitionRepository);
-            var deckService = new DeckService(new CardPile(starterDeck.Cards, false));
+            var deckService = new DeckService(new CardPile(), starterDeck);
             var discardPileService = new DiscardPileService(new CardPile(), deckService);
             var cardPoolResourceLoader = new ResourceLoader<DeckDefinition>(localizationSettingsWrapper, ResourcePath.CardPool);
             var cardPoolDefinitionRepository = new DeckDefinitionRepository(cardPoolResourceLoader);
@@ -45,10 +48,11 @@ namespace test.EditMode.Turn_System
             var effectAssembly = new EffectAssembly();
             var effectAssemblyService = new EffectAssemblyService(effectAssembly);
             // Create a new game
-            var gameService = new GameService(game, turn, fishService, deckService, discardPileService, cardPoolService, playerHandService);
-            var turnPhaseActorsList = new List<ITurnPhaseActor> { gameService, playerHandService, deckService, effectAssemblyService };
+            var gameService = new GameService(game, turn, fishService);
+            var turnPhaseActorsList = new List<ITurnPhaseActor> { gameService, playerHandService, effectAssemblyService };
             var turnPhaseActors = new TurnPhaseActors(turnPhaseActorsList);
             var turnService = new TurnService(turn, turnPhaseActors);
+            deckService.Initialize();
             
             while (gameService.GameIsRunningJustForTest)
             {

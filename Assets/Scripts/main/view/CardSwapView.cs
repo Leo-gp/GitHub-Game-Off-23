@@ -27,18 +27,26 @@ namespace main.view
         private List<Card> _cardsThatCanBeRemovedFromDeck, _cardsThatCanBeAddedToDeck;
         private Card _selectedCardToRemove, _selectedCardToAdd;
 
-        private GameService gameService;
+        private CardSwapService cardSwapService;
         
         [Inject]
-        public void Construct(GameService gameService)
+        public void Construct(CardSwapService cardSwapService)
         {
-            this.gameService = gameService;
+            this.cardSwapService = cardSwapService;
+        }
+
+        private void OnEnable()
+        {
+            cardSwapService.OnCardSwap.AddListener(Render);
+        }
+
+        private void OnDisable()
+        {
+            cardSwapService.OnCardSwap.RemoveListener(Render);
         }
 
         private void Start()
         {
-            gameService.OnCardSwap.AddListener(Render);
-
             _container.SetActive(false);
             _deckSelectionContainer.SetActive(false);
             _cardOfferContainer.SetActive(false);
@@ -83,7 +91,7 @@ namespace main.view
             _cardOfferContainer.SetActive(false);
             _container.SetActive(false);
 
-            gameService.RegisterCardSwapSelections(_selectedCardToRemove, _selectedCardToAdd);
+            cardSwapService.RegisterCardSwapSelections(_selectedCardToRemove, _selectedCardToAdd);
         }
 
         public void SelectCardToRemove(int index)

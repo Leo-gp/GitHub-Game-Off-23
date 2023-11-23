@@ -17,7 +17,7 @@ namespace main.infrastructure
                 .AsSingle()
                 .NonLazy();
         }
-        
+
         private static StarterDeckService CreateStarterDeckService(InjectContext ctx)
         {
             var repositoryStarterDeck = ctx.Container.ResolveId<DeckDefinitionRepository>(ResourcePath.StarterDeck.GetValue());

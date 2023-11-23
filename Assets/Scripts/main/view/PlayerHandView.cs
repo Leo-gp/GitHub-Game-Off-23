@@ -23,13 +23,20 @@ namespace main.view
             this.playerHandService = playerHandService;
         }
 
-        private void Start()
+        private void OnEnable()
         {
             playerHandService.OnCardDrawn.AddListener(RenderNewCard);
             playerHandService.OnCardDiscarded.AddListener(RemoveCardAtIndex);
             playerHandService.OnHandDiscarded.AddListener(RemoveAll);
 
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
+        }
+        
+        private void OnDisable()
+        {
+            playerHandService.OnCardDrawn.RemoveListener(RenderNewCard);
+            playerHandService.OnCardDiscarded.RemoveListener(RemoveCardAtIndex);
+            playerHandService.OnHandDiscarded.RemoveListener(RemoveAll);
         }
 
         public void IncreaseSpacing()

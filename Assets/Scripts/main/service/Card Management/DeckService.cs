@@ -3,8 +3,8 @@ using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
-using main.service.Turn_System;
 using UnityEngine.Assertions;
+using Zenject;
 
 namespace main.service.Card_Management
 {
@@ -12,7 +12,7 @@ namespace main.service.Card_Management
     ///     This services provides the business logic for the deck entity, represented as a card pile.
     ///     The deck is created and shuffled automatically by using the starter deck definition entity.
     /// </summary>
-    public class DeckService : Service, ITurnEndPhaseActor
+    public class DeckService : Service, IInitializable
     {
         /// <summary>
         ///     Contains the deck of the player at all points in the game.
@@ -20,17 +20,24 @@ namespace main.service.Card_Management
         ///     defined in the editor in a random order (shuffled).
         /// </summary>
         private readonly CardPile deck;
+        private readonly StarterDeck starterDeck;
 
-        public DeckService(CardPile deck)
+        public DeckService(CardPile deck, StarterDeck starterDeck)
         {
             this.deck = deck;
+            this.starterDeck = starterDeck;
         }
 
+        public void Initialize()
+        {
+            starterDeck.Cards.ForEach(deck.Pile.Push);
+        }
+        
         /// <summary>
         ///     Yields the deck as a list of cards
         /// </summary>
         /// <returns>The deck of cards converted to a list</returns>
-        public List<Card> ToList()
+        public IEnumerable<Card> ToList()
         {
             return deck.Pile.ToList();
         }
@@ -77,13 +84,6 @@ namespace main.service.Card_Management
         public bool IsEmpty()
         {
             return Size() is 0;
-        }
-
-        public void OnTurnEnded()
-        {
-            LogInfo("Remove card from deck");
-            
-            LogInfo("Add card to deck from card pool");
         }
     }
 }

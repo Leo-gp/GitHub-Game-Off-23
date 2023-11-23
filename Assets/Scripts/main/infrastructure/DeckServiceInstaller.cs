@@ -13,13 +13,11 @@ namespace main.infrastructure
         {
             Container.Bind<CardPile>()
                 .WithId("DeckService")
-                .FromMethod(CreateDeckPile)
                 .AsTransient();
             
             Container.BindInterfacesAndSelfTo<DeckService>()
                 .FromMethod(CreateDeckService)
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
         }
 
         private CardPile CreateDeckPile(InjectContext ctx)
@@ -31,7 +29,8 @@ namespace main.infrastructure
         private static DeckService CreateDeckService(InjectContext ctx)
         {
             var cardPile = ctx.Container.ResolveId<CardPile>("DeckService");
-            return new DeckService(cardPile);
+            var starterDeck = ctx.Container.Resolve<StarterDeck>();
+            return new DeckService(cardPile, starterDeck);
         }
     }
 }

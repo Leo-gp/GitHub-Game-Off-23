@@ -10,17 +10,11 @@ namespace main.infrastructure
         {
             Container.Bind<CardPile>()
                 .WithId("DiscardPile")
-                .FromMethod(CreateDiscardPile)
                 .AsTransient();
             
             Container.Bind<DiscardPileService>()
                 .FromMethod(CreateDiscardPileService)
                 .AsSingle();
-        }
-
-        private static CardPile CreateDiscardPile(InjectContext ctx)
-        {
-            return new CardPile();
         }
         
         private static DiscardPileService CreateDiscardPileService(InjectContext ctx)

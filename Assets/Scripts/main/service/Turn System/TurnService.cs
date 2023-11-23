@@ -1,9 +1,10 @@
 using main.entity.Turn_System;
 using UnityEngine.Events;
+using Zenject;
 
 namespace main.service.Turn_System
 {
-    public class TurnService : Service
+    public class TurnService : Service, IInitializable
     {
         private readonly Turn turn;
         private readonly TurnPhaseActors turnPhaseActors;
@@ -12,6 +13,11 @@ namespace main.service.Turn_System
         {
             this.turn = turn;
             this.turnPhaseActors = turnPhaseActors;
+        }
+        
+        public void Initialize()
+        {
+            StartTurn();
         }
         
         /// <summary>
@@ -31,6 +37,8 @@ namespace main.service.Turn_System
 
         public void EndTurn()
         {
+            LogInfo("Now ending the current turn");
+            
             turnPhaseActors.TurnEndActors.ForEach(actor => actor.OnTurnEnded());
         }
 

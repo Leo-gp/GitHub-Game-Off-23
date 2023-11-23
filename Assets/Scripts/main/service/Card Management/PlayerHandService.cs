@@ -85,7 +85,7 @@ namespace main.service.Card_Management
         /// <summary>
         ///     Removes all cards from the player's hand and adds them to the discard pile
         /// </summary>
-        public void DiscardHand()
+        private void DiscardHand()
         {
             LogInfo("Discarding the entire player hand");
 
