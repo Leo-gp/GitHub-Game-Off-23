@@ -7,7 +7,7 @@ namespace main.service.Turn_System
     /// <summary>
     ///     This service provides the business logic for the game entity, including a way to end the current turn.
     /// </summary>
-    public class GameService : Service, ITurnEndPhaseActor
+    public class GameService : Service
     {
         private readonly Game game;
         private readonly Turn turn;
@@ -45,12 +45,22 @@ namespace main.service.Turn_System
         // TODO: Remove after player selections are implemented 
         public bool GameIsRunningJustForTest => game.FishHasBeenScaledThisOrLastTurn && turn.CurrentTurnNumber <= game.TurnsInAGame;
 
-        public void OnTurnEnded()
+        public void HandleGameOver()
         {
-            if (CheckIfGameIsOver())
+            if (!CheckIfGameIsOver())
             {
-                HandleGameOver();
+                return;
             }
+            
+            LogInfo("Game over. Now ending the game");
+            game.IsGameOver = true;
+            LogInfo("Now triggering the OnGameOver event");
+            OnGameOver.Invoke();
+        }
+
+        public bool IsGameOver()
+        {
+            return game.IsGameOver;
         }
 
         /// <summary>
@@ -70,14 +80,6 @@ namespace main.service.Turn_System
         private void RegisterEvents()
         {
             fishService.OnFishHasBeenScaled.AddListener(() => game.currentAmountOfScaledFish++);
-        }
-
-        private void HandleGameOver()
-        {
-            LogInfo("Game over. Now ending the game");
-            game.IsGameOver = true;
-            LogInfo("Now triggering the OnGameOver event");
-            OnGameOver.Invoke();
         }
 
         /// <summary>

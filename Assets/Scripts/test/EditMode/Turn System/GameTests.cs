@@ -49,9 +49,8 @@ namespace test.EditMode.Turn_System
             var effectAssemblyService = new EffectAssemblyService(effectAssembly);
             // Create a new game
             var gameService = new GameService(game, turn, fishService);
-            var turnPhaseActorsList = new List<ITurnPhaseActor> { gameService, playerHandService, effectAssemblyService };
-            var turnPhaseActors = new TurnPhaseActors(turnPhaseActorsList);
-            var turnService = new TurnService(turn, turnPhaseActors);
+            var cardSwapService = new CardSwapService(game, deckService, cardPoolService, discardPileService, turn);
+            var turnService = new TurnService(turn, playerHandService, gameService, cardSwapService, effectAssemblyService);
             deckService.Initialize();
             
             while (gameService.GameIsRunningJustForTest)

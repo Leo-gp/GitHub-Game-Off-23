@@ -9,7 +9,7 @@ namespace main.service.Turn_System
     ///     card classes to add effects that should all be executed at the end of the turn. Then, once all card effects
     ///     have been executed, the list is cleared for the next turn.
     /// </summary>
-    public class EffectAssemblyService : Service, ITurnEndPhaseActor
+    public class EffectAssemblyService : Service
     {
         /// <summary>
         ///     The non-null <see cref="EffectAssembly" /> entity.
@@ -32,20 +32,14 @@ namespace main.service.Turn_System
             LogInfo($"Adding a new card effect to the end-of-turn effects: '{effect}'");
             effectAssembly.Effects.Add(effect);
         }
-
-        public void OnTurnEnded()
-        {
-            LogInfo("Now executing all end of turn effects");
-            
-            ExecuteAll();
-        }
         
         /// <summary>
         ///     Executes each end-of-turn effect assembled in the <see cref="EffectAssembly" /> and then clears the
         ///     list, making it ready for the next turn.
         /// </summary>
-        private void ExecuteAll()
+        public void ExecuteAll()
         {
+            LogInfo("Now executing all end of turn effects");
             effectAssembly.Effects.ForEach(effectInPlay => effectInPlay.Execute());
             Clear();
             LogInfo("Successfully executed all end-of-turn effects");

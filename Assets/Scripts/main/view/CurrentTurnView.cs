@@ -27,11 +27,6 @@ namespace main.view
             turnService.OnTurnNumberIncreased.RemoveListener(Render);
         }
 
-        private void Start()
-        {
-            _currentTurnText.text = "1";
-        }
-
         private void Render(int currentTurnNumber)
         {
             _currentTurnText.text = currentTurnNumber.ToString();

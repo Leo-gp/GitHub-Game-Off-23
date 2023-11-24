@@ -1,7 +1,6 @@
 ﻿using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
-using main.service.Turn_System;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
@@ -11,7 +10,7 @@ namespace main.service.Card_Management
     ///     This services provides the business logic for the player hand entity, which allows drawing cards,
     ///     playing them, etc.
     /// </summary>
-    public class PlayerHandService : Service, ITurnDrawPhaseActor, ITurnEndPhaseActor
+    public class PlayerHandService : Service
     {
         private readonly PlayerHand playerHand;
         private readonly DeckService deckService;
@@ -43,6 +42,39 @@ namespace main.service.Card_Management
         ///     Triggered when the entire hand has been discarded.
         /// </summary>
         public readonly UnityEvent OnHandDiscarded = new();
+        
+        /// <summary>
+        ///     Draws the amount of cards specified in DrawAmount from PlayerHand. If the amount is larger than the
+        ///     amount of cards left in the deck, all cards from the discard pile will be shuffled back into the deck
+        ///     and the remaining cards will be drawn from the newly shuffled deck.
+        /// </summary>
+        public void Draw()
+        {
+            LogInfo($"Drawing {playerHand.DrawAmount} card(s)");
+            var amountOfCardsInDeck = deckService.Size();
+
+            // TODO: new shuffle
+            // TODO: if the deck is empty and discard pile are empty, just return out
+            // Does the deck need to be refilled and reshuffled?
+            if (playerHand.DrawAmount > amountOfCardsInDeck)
+            {
+                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = playerHand.DrawAmount - amountOfCardsInDeck;
+
+                // Draw all remaining cards from the deck
+                DrawCardsFromDeck(amountOfCardsInDeck);
+
+                // Now refill the deck and shuffle it
+                discardPileService.ShuffleBackIntoDeck();
+
+                // Now draw the remaining amount of cards
+                DrawCardsFromDeck(remainingCardsToDrawAfterDrawingLastCardsFromDeck);
+            }
+            // If the deck has enough cards, just draw them
+            else
+            {
+                DrawCardsFromDeck(playerHand.DrawAmount);
+            }
+        }
 
         /// <summary>
         ///     Plays the card at the specified index and then discards it
@@ -71,21 +103,11 @@ namespace main.service.Card_Management
 
             LogInfo("Successfully played the card");
         }
-
-        public void OnDrawStarted()
-        {
-            Draw(playerHand.DrawAmount);
-        }
-        
-        public void OnTurnEnded()
-        {
-            DiscardHand();
-        }
         
         /// <summary>
         ///     Removes all cards from the player's hand and adds them to the discard pile
         /// </summary>
-        private void DiscardHand()
+        public void DiscardHand()
         {
             LogInfo("Discarding the entire player hand");
 
@@ -95,40 +117,6 @@ namespace main.service.Card_Management
             playerHand.HandCards.Clear();
 
             OnHandDiscarded.Invoke();
-        }
-        
-        /// <summary>
-        ///     Draws the specified amount of cards. If the amount is larger than the amount of cards left in the deck,
-        ///     all cards from the discard pile will be shuffled back into the deck and the remaining cards will be
-        ///     drawn from the newly shuffled deck.
-        /// </summary>
-        /// <param name="amountOfCardsToDraw">The amount of cards to draw as an integer</param>
-        private void Draw(int amountOfCardsToDraw)
-        {
-            LogInfo($"Drawing {amountOfCardsToDraw} card(s)");
-            var amountOfCardsInDeck = deckService.Size();
-
-            // TODO: new shuffle
-            // TODO: if the deck is empty and discard pile are empty, just return out
-            // Does the deck need to be refilled and reshuffled?
-            if (amountOfCardsToDraw > amountOfCardsInDeck)
-            {
-                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = amountOfCardsToDraw - amountOfCardsInDeck;
-
-                // Draw all remaining cards from the deck
-                DrawCardsFromDeck(amountOfCardsInDeck);
-
-                // Now refill the deck and shuffle it
-                discardPileService.ShuffleBackIntoDeck();
-
-                // Now draw the remaining amount of cards
-                DrawCardsFromDeck(remainingCardsToDrawAfterDrawingLastCardsFromDeck);
-            }
-            // If the deck has enough cards, just draw them
-            else
-            {
-                DrawCardsFromDeck(amountOfCardsToDraw);
-            }
         }
         
         /// <summary>
@@ -144,6 +132,7 @@ namespace main.service.Card_Management
                 playerHand.HandCards.Add(drawnCard);
 
                 OnCardDrawn.Invoke(drawnCard);
+                
                 LogInfo("Triggered the OnCardDrawn event");
             }
         }

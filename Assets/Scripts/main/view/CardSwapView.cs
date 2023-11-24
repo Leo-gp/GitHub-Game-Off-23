@@ -37,12 +37,12 @@ namespace main.view
 
         private void OnEnable()
         {
-            cardSwapService.OnCardSwap.AddListener(Render);
+            cardSwapService.OnCardSwapOptions.AddListener(Render);
         }
 
         private void OnDisable()
         {
-            cardSwapService.OnCardSwap.RemoveListener(Render);
+            cardSwapService.OnCardSwapOptions.RemoveListener(Render);
         }
 
         private void Start()

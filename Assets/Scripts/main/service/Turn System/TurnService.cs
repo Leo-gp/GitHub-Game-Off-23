@@ -1,23 +1,45 @@
+using System;
 using main.entity.Turn_System;
+using main.service.Card_Management;
 using UnityEngine.Events;
 using Zenject;
 
 namespace main.service.Turn_System
 {
-    public class TurnService : Service, IInitializable
+    public class TurnService : Service, IInitializable, IDisposable
     {
         private readonly Turn turn;
-        private readonly TurnPhaseActors turnPhaseActors;
+        private readonly PlayerHandService playerHandService;
+        private readonly GameService gameService;
+        private readonly CardSwapService cardSwapService;
+        private readonly EffectAssemblyService effectAssemblyService;
 
-        public TurnService(Turn turn, TurnPhaseActors turnPhaseActors)
+        public TurnService
+        (
+            Turn turn, 
+            PlayerHandService playerHandService, 
+            GameService gameService, 
+            CardSwapService cardSwapService,
+            EffectAssemblyService effectAssemblyService
+        )
         {
             this.turn = turn;
-            this.turnPhaseActors = turnPhaseActors;
+            this.playerHandService = playerHandService;
+            this.gameService = gameService;
+            this.cardSwapService = cardSwapService;
+            this.effectAssemblyService = effectAssemblyService;
         }
         
         public void Initialize()
         {
+            cardSwapService.OnCardsSwapped += StartTurn;
+            
             StartTurn();
+        }
+        
+        public void Dispose()
+        {
+            cardSwapService.OnCardsSwapped -= StartTurn;
         }
         
         /// <summary>
@@ -31,15 +53,25 @@ namespace main.service.Turn_System
             IncrementTurnNumber();
             RestoreTime();
 
-            turnPhaseActors.TurnDrawActors.ForEach(actor => actor.OnDrawStarted());
-            turnPhaseActors.TurnPlayActors.ForEach(actor => actor.OnPlayPhaseStarted());
+            playerHandService.Draw();
         }
 
         public void EndTurn()
         {
             LogInfo("Now ending the current turn");
             
-            turnPhaseActors.TurnEndActors.ForEach(actor => actor.OnTurnEnded());
+            effectAssemblyService.ExecuteAll();
+            
+            gameService.HandleGameOver();
+            
+            if (gameService.IsGameOver())
+            {
+                return;
+            }
+            
+            playerHandService.DiscardHand();
+            
+            cardSwapService.HandleCardSwapOptions();
         }
 
         private void IncrementTurnNumber()

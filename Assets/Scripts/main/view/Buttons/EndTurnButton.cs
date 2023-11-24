@@ -17,7 +17,6 @@ namespace main.view.Buttons
         public void OnClick()
         {
             turnService.EndTurn();
-            turnService.StartTurn();
         }
     }
 }

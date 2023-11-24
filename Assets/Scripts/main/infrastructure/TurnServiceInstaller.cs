@@ -12,8 +12,6 @@ namespace main.infrastructure
         
         public override void InstallBindings()
         {
-            Container.Bind<TurnPhaseActors>().AsSingle();
-            
             Container.Bind<Turn>()
                 .FromMethod(CreateTurn)
                 .AsSingle();
