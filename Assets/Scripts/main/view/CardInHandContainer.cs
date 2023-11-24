@@ -65,8 +65,8 @@ namespace main.view
                     _childRectTransform.anchoredPosition = Vector2.zero;
                     break;
                 case CardPlayState.PLAYABLE:
-                    //_callback.DecreaseSpacing();
                     Destroy(gameObject);
+                    _child.Discard();
                     break;
                 case CardPlayState.IDLE:
                 default:

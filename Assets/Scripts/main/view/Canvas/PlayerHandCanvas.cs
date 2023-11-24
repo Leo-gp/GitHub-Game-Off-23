@@ -7,6 +7,9 @@ namespace main.view.Canvas
     public class PlayerHandCanvas : MonoBehaviour
     {
         [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private RectTransform _discardTargetTransform;
+
+        public Vector2 DiscardTargetPosition => _discardTargetTransform.position;
 
         public static PlayerHandCanvas Instance { get; private set; }
 
