@@ -28,6 +28,19 @@ namespace main.entity.Turn_System
         public const int TURN_TO_STOP_SWAPPING_CARDS = 17;
 
         /// <summary>
+        ///     Defines the amount of fish the player has to scale to win the game.
+        ///     This amount is increased everytime a fish is scaled.
+        ///     After the <see cref="TURNS_IN_A_GAME" />, if this value is not reached, it is game over.
+        /// </summary>
+        public const int REQUIRED_AMOUNT_OF_FISH_TO_SCALE_TO_WIN = 30;
+
+        /// <summary>
+        ///     Tracks the amount of fish that have been completely scaled by the player.
+        ///     This is incremented each time a fish is scaled in the FishService.
+        /// </summary>
+        public int currentAmountOfScaledFish;
+
+        /// <summary>
         ///     Determines the non-null state that the game is in right now.
         ///     The GameService should be responsible for setting the correct game state and classes should assert as
         ///     often as possible if the current game state is the correct state to be in.
@@ -40,12 +53,6 @@ namespace main.entity.Turn_System
         ///     turn, instead of at the start of a turn.
         /// </summary>
         public int elapsedTurns = 1;
-
-        /// <summary>
-        ///     Tracks if at least one fish has been scaled either this turn or in the last turn.
-        ///     This is used to track the losing condition (in this case the run is considered lost).
-        /// </summary>
-        public bool fishHasBeenScaledThisOrLastTurn;
 
         /// <summary>
         ///     Tracks the last three offered cards by the system during the card swap phase.
