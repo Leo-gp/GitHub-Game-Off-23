@@ -10,17 +10,19 @@ namespace main.view
     public class CardInHandContainer : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         private const float CLAMP_WIDTH = 20f, CLAMP_HEIGHT = 10f, PLAY_HEIGHT_LIMIT = -6.5f;
+        
         [SerializeField] private CardView _cardViewPrefab;
-        [SerializeField] private Animator _animator;
-        private PlayerHandView _callback;
-
-        private CardView _child;
+        [SerializeField] private Animator _animator; 
+        
+        public CardView CardView { get; private set; }
+        
+        private PlayerHandView playerHandView;
         private RectTransform _childRectTransform;
         private CardPlayState _playState;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            PlayerHandCanvas.Instance.SetAsDirectChild(_child.transform);
+            PlayerHandCanvas.Instance.SetAsDirectChild(CardView.transform);
             _playState = CardPlayState.UNPLAYABLE;
         }
 
@@ -43,11 +45,11 @@ namespace main.view
             switch (_playState)
             {
                 case CardPlayState.UNPLAYABLE:
-                    _callback.IncreaseSpacing();
+                    playerHandView.IncreaseSpacing();
                     _animator.Play("CardInHandContainer_Expand");
                     break;
                 case CardPlayState.PLAYABLE:
-                    _callback.DecreaseSpacing();
+                    playerHandView.DecreaseSpacing();
                     _animator.Play("CardInHandContainer_Shrink");
                     break;
                 case CardPlayState.IDLE:
@@ -65,8 +67,7 @@ namespace main.view
                     _childRectTransform.anchoredPosition = Vector2.zero;
                     break;
                 case CardPlayState.PLAYABLE:
-                    Destroy(gameObject);
-                    _child.Discard();
+                    playerHandView.PlayCard(CardView.Card);
                     break;
                 case CardPlayState.IDLE:
                 default:
@@ -78,12 +79,12 @@ namespace main.view
         {
             var newCardView = Instantiate(_cardViewPrefab, transform);
             PlayerHandCanvas.Instance.SetAsDirectChild(newCardView.transform);
-            newCardView.Render(cardToContain);
+            newCardView.Initialize(cardToContain);
             newCardView.HandleDraw(transform);
 
-            _callback = callback;
-            _child = newCardView;
-            _childRectTransform = _child.RectTransform;
+            playerHandView = callback;
+            CardView = newCardView;
+            _childRectTransform = CardView.RectTransform;
             _playState = CardPlayState.IDLE;
         }
 

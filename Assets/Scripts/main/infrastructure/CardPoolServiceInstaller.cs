@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using main.entity.Card_Management;
+using main.entity.Card_Management.Card_Data;
 using main.repository;
 using main.repository.Card_Management.Deck_Definition;
 using main.service.Card_Management;
@@ -10,17 +12,32 @@ namespace main.infrastructure
     {
         public override void InstallBindings()
         {
-            Container.Bind<CardPool>().AsSingle();
-            
-            Container.Bind<CardPoolService>()
-                .FromMethod(CreateCardPoolService)
+            Container.Bind<CardPool>()
+                .FromMethod(CreateCardPool)
                 .AsSingle();
+            
+            Container.Bind<CardPoolService>().AsSingle();
         }
-        
-        private static CardPoolService CreateCardPoolService(InjectContext ctx)
+
+        private static CardPool CreateCardPool(InjectContext ctx)
         {
-            var repositoryCardPool = ctx.Container.ResolveId<DeckDefinitionRepository>(ResourcePath.CardPool.GetValue());
-            return new CardPoolService(ctx.Container.Resolve<CardPool>(), repositoryCardPool, ctx.Container.Resolve<StarterDeck>());
+            var deckDefinitionRepository = ctx.Container.ResolveId<DeckDefinitionRepository>(ResourcePath.CardPool.GetValue());
+            var deckDefinition = deckDefinitionRepository.LoadDeckDefinition();
+            var starterDeck = ctx.Container.Resolve<StarterDeck>();
+            var cards = new List<Card>();
+            foreach (var cardCopies in deckDefinition.CardCopiesList)
+            {
+                var copiesInStarterDeck = starterDeck.Cards.FindAll(card => card.Name.Equals(cardCopies.Card.Name));
+                
+                var numberOfCopiesToAdd = cardCopies.NumberOfCopies - copiesInStarterDeck.Count;
+                
+                for (var i = 0; i < numberOfCopiesToAdd; i++)
+                {
+                    var card = ctx.Container.ResolveId<Card>(cardCopies.Card.Name);
+                    cards.Add(card);
+                }
+            }
+            return new CardPool(cards);
         }
     }
 }

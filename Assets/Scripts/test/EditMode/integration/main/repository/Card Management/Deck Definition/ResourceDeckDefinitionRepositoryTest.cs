@@ -10,8 +10,6 @@ namespace test.EditMode.integration.main.repository.Card_Management.Deck_Definit
     [TestFixture]
     public class ResourceDeckDefinitionRepositoryTest
     {
-        private readonly LocalizationSettingsWrapper localizationSettingsWrapper = new();
-        
         private DeckDefinitionRepository repository;
         
         [TestFixture]
@@ -27,7 +25,7 @@ namespace test.EditMode.integration.main.repository.Card_Management.Deck_Definit
                 {
                     LocalizationSettings.SelectedLocale = locale;
                     
-                    var resourceLoader = new ResourceLoader<StarterDeckDefinition>(localizationSettingsWrapper, ResourcePath.StarterDeck);
+                    var resourceLoader = new ResourceLoader<StarterDeckDefinition>(ResourcePath.StarterDeck);
                 
                     repository = new DeckDefinitionRepository(resourceLoader);
                 
@@ -49,7 +47,7 @@ namespace test.EditMode.integration.main.repository.Card_Management.Deck_Definit
                 {
                     LocalizationSettings.SelectedLocale = locale;
                     
-                    var resourceLoader = new ResourceLoader<CardPoolDeckDefinition>(localizationSettingsWrapper, ResourcePath.CardPool);
+                    var resourceLoader = new ResourceLoader<CardPoolDeckDefinition>(ResourcePath.CardPool);
                 
                     repository = new DeckDefinitionRepository(resourceLoader);
                 

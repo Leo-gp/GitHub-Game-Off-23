@@ -20,12 +20,6 @@ namespace main.infrastructure
                 .AsSingle();
         }
 
-        private CardPile CreateDeckPile(InjectContext ctx)
-        {
-            var starterDeck = ctx.Container.Resolve<StarterDeck>();
-            return new CardPile(starterDeck.Cards, shuffleOnCreation);
-        }
-
         private static DeckService CreateDeckService(InjectContext ctx)
         {
             var cardPile = ctx.Container.ResolveId<CardPile>("DeckService");

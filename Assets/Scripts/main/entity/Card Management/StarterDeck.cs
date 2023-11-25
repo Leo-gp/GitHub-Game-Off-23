@@ -5,11 +5,11 @@ namespace main.entity.Card_Management
 {
     public class StarterDeck
     {
-        public List<Card> Cards { get; } = new();
+        public List<Card> Cards { get; }
 
-        public bool IsEmpty()
+        public StarterDeck(List<Card> cards)
         {
-            return Cards.Count == 0;
+            Cards = cards;
         }
     }
 }

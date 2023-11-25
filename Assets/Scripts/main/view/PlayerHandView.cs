@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
@@ -18,11 +19,21 @@ namespace main.view
 
         private int _drawOffset;
         private PlayerHandService playerHandService;
+        private DiscardPileService discardPileService;
+
+        private List<CardInHandContainer> cardInHandContainers = new();
+        
+        [Inject]
+        public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService)
+        {
+            this.playerHandService = playerHandService;
+            this.discardPileService = discardPileService;
+        }
 
         private void OnEnable()
         {
             playerHandService.OnCardDrawn.AddListener(RenderNewCard);
-            playerHandService.OnCardDiscarded.AddListener(RemoveCardAtIndex);
+            discardPileService.OnDiscard += RemoveCard;
             playerHandService.OnHandDiscarded.AddListener(RemoveAll);
 
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
@@ -31,14 +42,8 @@ namespace main.view
         private void OnDisable()
         {
             playerHandService.OnCardDrawn.RemoveListener(RenderNewCard);
-            playerHandService.OnCardDiscarded.RemoveListener(RemoveCardAtIndex);
+            discardPileService.OnDiscard -= RemoveCard;
             playerHandService.OnHandDiscarded.RemoveListener(RemoveAll);
-        }
-
-        [Inject]
-        public void Construct(PlayerHandService playerHandService)
-        {
-            this.playerHandService = playerHandService;
         }
 
         public void IncreaseSpacing()
@@ -50,15 +55,21 @@ namespace main.view
         {
             _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
         }
+        
+        public void PlayCard(Card card)
+        {
+            playerHandService.PlayCard(card);
+        }
 
         private void RenderNewCard([NotNull] Card cardEntity)
         {
             var newCardViewContainer = Instantiate(_cardViewContainerPrefab, transform);
+            cardInHandContainers.Add(newCardViewContainer);
             _drawOffset++;
             StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity, _drawOffset));
             DecreaseSpacing();
         }
-
+        
         private IEnumerator CreateCardAfterTime(
             [NotNull] CardInHandContainer container,
             [NotNull] Card cardEntity,
@@ -73,10 +84,12 @@ namespace main.view
             container.CreateChild(cardEntity, this);
         }
 
-        private void RemoveCardAtIndex(int index)
+        private void RemoveCard(Card card)
         {
-            var cardViewToRemove = _playerHandLayout.transform.GetChild(index);
-            Destroy(cardViewToRemove.gameObject);
+            var cardInHandContainer = cardInHandContainers.Find(container => container.CardView.Card == card);
+            cardInHandContainer.CardView.Discard();
+            cardInHandContainers.Remove(cardInHandContainer);
+            Destroy(cardInHandContainer.gameObject);
             IncreaseSpacing();
         }
 

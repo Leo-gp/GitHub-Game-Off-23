@@ -11,7 +11,7 @@ namespace main.entity.Card_Management.Card_Data
         private CardEffect effectBase;
 
         public void Execute(){
-            effectBase.Execute(multiplier);
+            effectBase.Execute();
         }
     }
 }

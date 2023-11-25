@@ -1,6 +1,7 @@
 ﻿using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
+using main.service.Turn_System;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
@@ -16,21 +17,7 @@ namespace main.service.Card_Management
         private readonly DeckService deckService;
         private readonly DiscardPileService discardPileService;
         private readonly Turn turn;
-        
-        public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService, Turn turn)
-        {
-            this.playerHand = playerHand;
-            this.deckService = deckService;
-            this.discardPileService = discardPileService;
-            this.turn = turn;
-        }
-        
-        /// <summary>
-        ///     Triggered when a card from the player's hand has been discarded.
-        ///     If multiple cards are discarded, this event is triggered once per each card.
-        ///     The index of the discarded card is its parameter.
-        /// </summary>
-        public readonly UnityEvent<int> OnCardDiscarded = new();
+        private readonly EffectAssemblyService effectAssemblyService;
 
         /// <summary>
         ///     Triggered when a new card has been drawn.
@@ -42,6 +29,15 @@ namespace main.service.Card_Management
         ///     Triggered when the entire hand has been discarded.
         /// </summary>
         public readonly UnityEvent OnHandDiscarded = new();
+        
+        public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService, Turn turn, EffectAssemblyService effectAssemblyService)
+        {
+            this.playerHand = playerHand;
+            this.deckService = deckService;
+            this.discardPileService = discardPileService;
+            this.turn = turn;
+            this.effectAssemblyService = effectAssemblyService;
+        }
         
         /// <summary>
         ///     Draws the amount of cards specified in DrawAmount from PlayerHand. If the amount is larger than the
@@ -75,18 +71,12 @@ namespace main.service.Card_Management
                 DrawCardsFromDeck(playerHand.DrawAmount);
             }
         }
-
-        /// <summary>
-        ///     Plays the card at the specified index and then discards it
-        /// </summary>
-        /// <param name="index">the positive index of the cards within bounds</param>
-        public void PlayCardAt(int index)
+        
+        public void PlayCard(Card card)
         {
-            Assert.IsTrue(playerHand.HandCards.Count > index && index >= 0,
-                "The view should check if the card to play is within bounds!");
-
-            var card = playerHand.HandCards[index];
-
+            Assert.IsTrue(playerHand.HandCards.Contains(card), 
+                $"Cannot play card '{card}' because it is not in the player's hand.");
+            
             if (!CardHasEnoughTime(card))
             {
                 LogInfo($"Not enough time to playing card '{card}'");
@@ -95,11 +85,11 @@ namespace main.service.Card_Management
 
             LogInfo($"Playing card '{card}'");
 
-            // TODO card effect implementation
+            card.CardEffects.ForEach(effectAssemblyService.AddEffect);
 
-            playerHand.HandCards.RemoveAt(index);
-            discardPileService.AddToPile(card);
-            OnCardDiscarded.Invoke(index);
+            playerHand.HandCards.Remove(card);
+            
+            discardPileService.Discard(card);
 
             LogInfo("Successfully played the card");
         }
@@ -111,9 +101,8 @@ namespace main.service.Card_Management
         {
             LogInfo("Discarding the entire player hand");
 
-            foreach (var playerHandHandCard in playerHand.HandCards)
-                discardPileService.AddToPile(playerHandHandCard);
-
+            playerHand.HandCards.ForEach(discardPileService.Discard);
+            
             playerHand.HandCards.Clear();
 
             OnHandDiscarded.Invoke();

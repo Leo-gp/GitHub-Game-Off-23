@@ -1,4 +1,4 @@
-using System.Text;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -61,7 +61,7 @@ namespace main.entity.Card_Management.Card_Data
         [InfoBox("All card effects IN THE SAME ORDER as they should be executed in-game")]
         [Expandable]
         [SerializeField]
-        private CardEffect[] _cardEffects;
+        private List<CardEffect> _cardEffects;
 
         /// <summary>
         ///     Yields the rarity of the card as an integer
@@ -89,6 +89,8 @@ namespace main.entity.Card_Management.Card_Data
         /// </summary>
         public string Class => _cardClass.ToString();
 
+        public List<CardEffect> CardEffects => _cardEffects;
+
         /// <summary>
         ///     Yields the description of the card as a string
         /// </summary>
@@ -96,11 +98,11 @@ namespace main.entity.Card_Management.Card_Data
         {
             return "No effect";
             // TODO Use the card effect description instead of the "name" placeholder
-            var bobTheBuilder = new StringBuilder();
+            /*var bobTheBuilder = new StringBuilder();
             foreach (var cardEffect in _cardEffects) bobTheBuilder.Append(cardEffect.name + "\n\n");
 
             var description = bobTheBuilder.ToString();
-            return description[..^2];
+            return description[..^2];*/
         }
     }
 }

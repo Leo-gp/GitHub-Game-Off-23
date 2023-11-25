@@ -17,5 +17,7 @@ MonoBehaviour:
   _cardClass: 0
   _cardRarity:
     _rarity: 5
-  _cardEffects: []
-  _numberOfCopiesInPool: 6
+  _unitTimeCost:
+    time: 0
+  _cardEffects:
+  - {fileID: 11400000, guid: 50c11499b123bc144a40c1299fd4cbcf, type: 2}
