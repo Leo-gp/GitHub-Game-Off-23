@@ -27,7 +27,7 @@ namespace main.service.Card_Management
         /// </summary>
         public DeckService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the DeckService's singleton instance");
 
             LogInfo("Now retrieving starter deck definition");
