@@ -1,3 +1,4 @@
+using System.Text;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -87,5 +88,30 @@ namespace main.entity.Card_Management.Card_Data
         ///     Yields the cost of the card as an integer
         /// </summary>
         public int TimeCost => _unitTimeCost.Time;
+
+        /// <summary>
+        ///     Yields the icon of the card as a Unity Sprite
+        /// </summary>
+        public Sprite IconSprite => _cardSprite;
+
+        /// <summary>
+        ///     Yields the classes of the card as a string
+        ///     TODO Use localisation key
+        /// </summary>
+        public string Class => _cardClass.ToString();
+
+        /// <summary>
+        ///     Yields the description of the card as a string
+        /// </summary>
+        public string Description()
+        {
+            return "No effect";
+            // TODO Use the card effect description instead of the "name" placeholder
+            var bobTheBuilder = new StringBuilder();
+            foreach (var cardEffect in _cardEffects) bobTheBuilder.Append(cardEffect.name + "\n\n");
+
+            var description = bobTheBuilder.ToString();
+            return description[..^2];
+        }
     }
 }

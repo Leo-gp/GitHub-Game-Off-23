@@ -10,7 +10,8 @@ namespace main.view
     {
         private const float BASE_SPACING_AMOUNT = 100f;
         private const float CARD_SPACING_FACTOR = 15f;
-        [SerializeField] private CardView _cardViewPrefab;
+
+        [SerializeField] private CardInHandContainer _cardViewContainerPrefab;
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
 
         private void Start()
@@ -22,18 +23,28 @@ namespace main.view
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
         }
 
+        public void IncreaseSpacing()
+        {
+            _playerHandLayout.spacing += CARD_SPACING_FACTOR;
+        }
+
+        public void DecreaseSpacing()
+        {
+            _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
+        }
+
         private void RenderNewCard([NotNull] Card cardEntity)
         {
-            var newCardView = Instantiate(_cardViewPrefab, transform);
-            newCardView.Render(cardEntity);
-            _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
+            var newCardViewContainer = Instantiate(_cardViewContainerPrefab, transform);
+            newCardViewContainer.CreateChild(cardEntity, this);
+            DecreaseSpacing();
         }
 
         private void RemoveCardAtIndex(int index)
         {
             var cardViewToRemove = _playerHandLayout.transform.GetChild(index);
             Destroy(cardViewToRemove.gameObject);
-            _playerHandLayout.spacing += CARD_SPACING_FACTOR;
+            IncreaseSpacing();
         }
 
         private void RemoveAll()
