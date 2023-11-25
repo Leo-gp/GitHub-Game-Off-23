@@ -16,16 +16,21 @@ namespace main.service.Fish_Management
         public readonly UnityEvent OnFishHasBeenScaled = new();
 
         /// <summary>
+        ///     Triggered when a fish is scaled or a new fish is loaded
+        /// </summary>
+        public readonly UnityEvent<int> OnFishScalesHaveChanged = new();
+
+        /// <summary>
         ///     The current fish entity used for damage
         /// </summary>
         private Fish _currentFish;
 
         /// <summary>
-        ///     Creates the singleton instanec
+        ///     Creates the singleton instance
         /// </summary>
         public FishService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the FishService's singleton instance");
 
             LogInfo("Now spawning the starter fish");
@@ -49,6 +54,9 @@ namespace main.service.Fish_Management
             // Change this behaviour if there will be different fish types soon
             _currentFish = new Fish(100);
             LogInfo($"Spawned a new fish with a total amount of scales of '{_currentFish.remainingScales}");
+
+            LogInfo("Triggering the OnFishScalesHaveChanged event");
+            OnFishScalesHaveChanged.Invoke(_currentFish.remainingScales);
         }
 
         /// <summary>
@@ -65,6 +73,9 @@ namespace main.service.Fish_Management
 
             _currentFish.remainingScales -= damage;
             LogInfo($"Damaged the current fish by '{damage}'");
+
+            LogInfo("Triggering the OnFishScalesHaveChanged event");
+            OnFishScalesHaveChanged.Invoke(_currentFish.remainingScales);
 
             LogInfo("Now checking if the fish has been scaled completely");
             if (_currentFish.remainingScales <= 0)

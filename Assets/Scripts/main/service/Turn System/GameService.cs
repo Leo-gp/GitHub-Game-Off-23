@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
@@ -6,6 +7,7 @@ using main.entity.Turn_System;
 using main.service.Card_Management;
 using main.service.Fish_Management;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 namespace main.service.Turn_System
 {
@@ -21,11 +23,31 @@ namespace main.service.Turn_System
         [NotNull] private readonly Game _game = new();
 
         /// <summary>
+        ///     Triggered once the card swap has selected three cards from the players deck.
+        ///     The player must choose one of these cards and remove it from the deck.
+        ///     The first argument list is for the cards that are taken from the deck, where one must be removed.
+        ///     The second argument list is for the cards that are offered to the player, where one must be added.
+        /// </summary>
+        public readonly UnityEvent<List<Card>, List<Card>> OnCardSwap = new();
+
+        /// <summary>
+        ///     Triggered once the game is over because there have been two turns without scaling a fish,
+        ///     or the round limit has been reached
+        /// </summary>
+        public readonly UnityEvent OnGameOver = new();
+
+        /// <summary>
+        ///     Triggered once the turn number is increased when a new turn is started.
+        ///     It uses the current turn number as its argument.
+        /// </summary>
+        public readonly UnityEvent<int> OnTurnNumberIncreased = new();
+
+        /// <summary>
         ///     Creates the singleton of this service if it does not exist and then starts the game
         /// </summary>
         public GameService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the GameService's singleton instance");
 
             StartNewGame();
@@ -37,8 +59,7 @@ namespace main.service.Turn_System
         public static GameService Instance { get; private set; }
 
         // TODO: Remove after player selections are implemented 
-        public bool GameIsRunningJustForTest =>
-            _game is { fishHasBeenScaledThisOrLastTurn: true, elapsedTurns: < Game.TURNS_IN_A_GAME };
+        public bool GameIsRunningJustForTest => _game.elapsedTurns < Game.TURNS_IN_A_GAME;
 
         /// <summary>
         ///     Starts the current game by creating all required services (resetting the old ones if they existed
@@ -63,7 +84,8 @@ namespace main.service.Turn_System
         {
             LogInfo("Now ending the current turn");
             Assert.IsTrue(_game.currentGameState is GameState.PLAY_CARDS, "Should currently be in the play " +
-                                                                          "cards state!");
+                                                                          "cards state, but is in " +
+                                                                          _game.currentGameState);
 
             // First, the turn is ended
             _game.currentGameState = GameState.TURN_END;
@@ -73,24 +95,17 @@ namespace main.service.Turn_System
             LogInfo("Now executing all end of turn effects");
             EffectAssemblyService.Instance.ExecuteAll();
 
-            // If the game is now over, handle the end of the run
-            if (GameIsOver())
-            {
-                HandleGameOver();
-            }
-            // If the game is not yet over, handle the card swap system
-            else
-            {
-                HandleCardSwaps();
+            HandleCardSwaps();
 
-                // Increment tracking variables
-                _game.elapsedTurns++;
-                LogInfo($"Incrementing turn number. It now is: {_game.elapsedTurns}");
+            // Increment tracking variables
+            _game.elapsedTurns++;
+            LogInfo($"Incrementing turn number. It now is: {_game.elapsedTurns}");
 
-                // At the end, start the new turn
-                _game.currentGameState = GameState.TURN_START;
-                // TODO: Do view stuff 
-            }
+            LogInfo("Triggering the OnTurnNumberIncreased event");
+            OnTurnNumberIncreased.Invoke(_game.elapsedTurns);
+
+            // At the end, start the new turn
+            _game.currentGameState = GameState.TURN_START;
         }
 
         /// <summary>
@@ -98,15 +113,22 @@ namespace main.service.Turn_System
         /// </summary>
         public void StartTurn()
         {
-            Assert.IsTrue(_game.currentGameState is GameState.TURN_START,
-                "Should be in the turn start state, but is: " + _game.currentGameState);
+            // If the game is now over, handle the end of the run
+            if (CheckIfGameIsOver())
+            {
+                HandleGameOver();
+            }
+            else
+            {
+                _game.currentGameState = GameState.TURN_START;
 
-            // TODO Reset time variable 
+                // TODO Reset time variable 
 
-            // The player draws five cards
-            PlayerHandService.Instance.Draw(5);
+                // The player draws five cards
+                PlayerHandService.Instance.Draw(5);
 
-            _game.currentGameState = GameState.PLAY_CARDS;
+                _game.currentGameState = GameState.PLAY_CARDS;
+            }
         }
 
         /// <summary>
@@ -115,7 +137,7 @@ namespace main.service.Turn_System
         /// </summary>
         private void ResetGameVariables()
         {
-            _game.fishHasBeenScaledThisOrLastTurn = true;
+            _game.currentAmountOfScaledFish = 0;
             _game.currentGameState = GameState.TURN_START;
             _game.lastOfferedCards = null;
         }
@@ -156,7 +178,7 @@ namespace main.service.Turn_System
         /// </summary>
         private void RegisterEvents()
         {
-            FishService.Instance.OnFishHasBeenScaled.AddListener(() => _game.fishHasBeenScaledThisOrLastTurn = true);
+            FishService.Instance.OnFishHasBeenScaled.AddListener(() => _game.currentAmountOfScaledFish++);
         }
 
         /// <summary>
@@ -189,13 +211,14 @@ namespace main.service.Turn_System
             LogInfo("Game over. Now ending the game");
             _game.currentGameState = GameState.GAME_OVER;
 
-            // TODO: Do the roguelike end of game stuff from the diagram
+            LogInfo("Now triggering the OnGameOver event");
+            OnGameOver.Invoke();
         }
 
         private void HandleCardSwaps()
         {
-            Assert.IsTrue(_game.currentGameState is GameState.GAME_OVER_CHECK,
-                "Should currently be in the game over check state!");
+            Assert.IsTrue(_game.currentGameState is GameState.END_OF_TURN_EFFECT_EXECUTION,
+                "Should currently be in the end of turn execution  state, but is in " + _game.currentGameState);
             _game.currentGameState = GameState.CARDS_SWAP;
 
             // First, discarding all hand cards
@@ -269,7 +292,9 @@ namespace main.service.Turn_System
                         $"\n- {selectedCards[2]}");
 
                 LogInfo("Now waiting for the player to select one card to exchange");
-                // TODO impl the player selection
+                LogInfo("Triggering the OnCardSwap event");
+                OnCardSwap.Invoke(finalResult, selectedCards);
+
                 // TODO remove player give choice from card pool
             }
             else
@@ -278,6 +303,12 @@ namespace main.service.Turn_System
             }
 
             LogInfo("Handled the card swap");
+        }
+
+        public void RegisterCardSwapSelections([NotNull] Card cardToRemoveFromDeck, [NotNull] Card cardToAddToDeck)
+        {
+            LogInfo($"Registered the selection made by the player. Removing card '{cardToRemoveFromDeck}'" +
+                    $" and adding card '{cardToAddToDeck}'");
         }
 
         /// <summary>
@@ -300,11 +331,10 @@ namespace main.service.Turn_System
         ///     turns in a game has been reached (or exceeded).
         /// </summary>
         /// <returns>true - if the game is over; false - if the game is not yet over</returns>
-        private bool GameIsOver()
+        private bool CheckIfGameIsOver()
         {
-            LogInfo("Now checking if the game is over");
             _game.currentGameState = GameState.GAME_OVER_CHECK;
-            return !_game.fishHasBeenScaledThisOrLastTurn || _game.elapsedTurns >= Game.TURNS_IN_A_GAME;
+            return _game.elapsedTurns >= Game.TURNS_IN_A_GAME;
         }
     }
 }

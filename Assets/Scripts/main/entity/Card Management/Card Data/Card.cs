@@ -82,5 +82,10 @@ namespace main.entity.Card_Management.Card_Data
         ///     Yields the name of the card as a string
         /// </summary>
         public string Name => _cardName;
+
+        /// <summary>
+        ///     Yields the cost of the card as an integer
+        /// </summary>
+        public int TimeCost => _unitTimeCost.Time;
     }
 }

@@ -22,7 +22,7 @@ namespace main.service.Turn_System
         /// </summary>
         public EffectAssemblyService()
         {
-            Instance ??= this;
+            Instance = this;
             LogInfo("Successfully set the EffectAssemblyService's singleton instance");
         }
 
