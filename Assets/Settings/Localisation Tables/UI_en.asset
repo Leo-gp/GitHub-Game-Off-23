@@ -34,6 +34,26 @@ MonoBehaviour:
     m_Localized: No, Stay
     m_Metadata:
       m_Items: []
+  - m_Id: 32679965415464960
+    m_Localized: Game Over!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 32680177651441664
+    m_Localized: Congratulations, you have won the game!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 32680232626184192
+    m_Localized: Oh no, you have lost!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 32680637317799936
+    m_Localized: Play Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 32680812299968512
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
