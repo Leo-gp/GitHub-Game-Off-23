@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
 using main.view.Canvas;
@@ -17,6 +18,7 @@ namespace main.view
         [SerializeField] private TMP_Text _cardDescriptionText;
         [SerializeField] private Image _cardTypeSpriteImage;
         [SerializeField] private Image _cardIconSpriteImage;
+        [SerializeField] private StudioEventEmitter _cardPlayEvent;
 
         [Header("Item Types")] [SerializeField]
         private Sprite _actionCardPanelSprite;
@@ -48,6 +50,7 @@ namespace main.view
         public void Discard()
         {
             _isBeingDiscarded = true;
+            _cardPlayEvent.Play();
             _bezierTargetCount = 0f;
 
             _bezierNodes = new Vector3[3];
