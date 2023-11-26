@@ -3,6 +3,7 @@ using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace main.view
 {
@@ -13,14 +14,29 @@ namespace main.view
 
         [SerializeField] private CardInHandContainer _cardViewContainerPrefab;
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
-
-        private void Start()
+        
+        private PlayerHandService playerHandService;
+        
+        [Inject]
+        public void Construct(PlayerHandService playerHandService)
         {
-            PlayerHandService.Instance.OnCardDrawn.AddListener(RenderNewCard);
-            PlayerHandService.Instance.OnCardDiscarded.AddListener(RemoveCardAtIndex);
-            PlayerHandService.Instance.OnHandDiscarded.AddListener(RemoveAll);
+            this.playerHandService = playerHandService;
+        }
+
+        private void OnEnable()
+        {
+            playerHandService.OnCardDrawn.AddListener(RenderNewCard);
+            playerHandService.OnCardDiscarded.AddListener(RemoveCardAtIndex);
+            playerHandService.OnHandDiscarded.AddListener(RemoveAll);
 
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
+        }
+        
+        private void OnDisable()
+        {
+            playerHandService.OnCardDrawn.RemoveListener(RenderNewCard);
+            playerHandService.OnCardDiscarded.RemoveListener(RemoveCardAtIndex);
+            playerHandService.OnHandDiscarded.RemoveListener(RemoveAll);
         }
 
         public void IncreaseSpacing()

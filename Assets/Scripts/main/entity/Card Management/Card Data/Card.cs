@@ -64,17 +64,6 @@ namespace main.entity.Card_Management.Card_Data
         private CardEffect[] _cardEffects;
 
         /// <summary>
-        ///     The amount of times this card should be added to the pool
-        /// </summary>
-        [Space(20)] [InfoBox("The amount of times this card should be added to the pool")] [SerializeField]
-        private int _numberOfCopiesInPool;
-
-        /// <summary>
-        ///     Yields the number of copies this card should have in the card pool
-        /// </summary>
-        public int NumberOfCopiesInPool => _numberOfCopiesInPool;
-
-        /// <summary>
         ///     Yields the rarity of the card as an integer
         /// </summary>
         public int Rarity => _cardRarity.Rarity;
