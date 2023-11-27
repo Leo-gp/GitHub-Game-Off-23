@@ -27,10 +27,9 @@ namespace Core
 
         private void Awake()
         {
-            Assert.IsNotNull(_spinnerImage, "There is no spinner image");
             Assert.IsFalse(_banks.Count is 0, "There are no FMOD banks set up!");
 
-            if (_spinnerSprite is not null) _spinnerImage.sprite = _spinnerSprite;
+            if (_spinnerImage is not null) _spinnerImage.sprite = _spinnerSprite;
         }
 
         private void Start()
