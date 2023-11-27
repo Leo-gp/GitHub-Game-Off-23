@@ -34,13 +34,13 @@ namespace main.view
         [SerializeField] private Sprite _itemCardPanelSprite;
 
         private Animator _animator;
-        public Card Card { get; private set; }
-        
+
         private Vector3[] _bezierNodes;
         private float _bezierTargetCount;
         private bool _isBeingDiscarded, _isBeingDrawn;
 
         private Transform _transform, _parent;
+        public Card Card { get; private set; }
         public RectTransform RectTransform => _transform as RectTransform;
 
         private void Awake()
@@ -49,16 +49,16 @@ namespace main.view
             _animator = GetComponent<Animator>();
         }
 
-        public void Initialize(Card card)
-        {
-            Card = card;
-            Render();
-        }
-
         private void Update()
         {
             HandlePotentialDraw();
             HandlePotentialDiscard();
+        }
+
+        public void Initialize(Card card)
+        {
+            Card = card;
+            Render();
         }
 
         private void HandlePotentialDraw()
@@ -133,11 +133,11 @@ namespace main.view
 
         private void Render()
         {
-            _cardNameText.text = cardEntity.Name;
-            _cardClassText.text = cardEntity.Class;
-            _cardCostText.text = cardEntity.TimeCost.ToString();
-            _cardValueText.text = cardEntity.Rarity.ToString();
-            _cardDescriptionText.text = cardEntity.Description();
+            _cardNameText.text = Card.Name;
+            _cardClassText.text = Card.Class;
+            _cardCostText.text = Card.TimeCost.ToString();
+            _cardValueText.text = Card.Rarity.ToString();
+            _cardDescriptionText.text = Card.Description();
 
             _cardIconSpriteImage.sprite = Card.IconSprite;
             _cardTypeSpriteImage.sprite = Card switch
