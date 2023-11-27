@@ -7,6 +7,7 @@ using main.view.Canvas;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace main.view
 {
@@ -25,17 +26,19 @@ namespace main.view
         private Sprite _actionCardPanelSprite;
 
         [SerializeField] private Sprite _itemCardPanelSprite;
+
+        private Animator _animator;
         private Vector3[] _bezierNodes;
         private float _bezierTargetCount;
         private bool _isBeingDiscarded, _isBeingDrawn;
 
         private Transform _transform, _parent;
-
         public RectTransform RectTransform => _transform as RectTransform;
 
         private void Awake()
         {
             _transform = transform;
+            _animator = GetComponent<Animator>();
         }
 
         private void Update()
@@ -100,6 +103,9 @@ namespace main.view
 
             // We will draw from the same position used for discarding cards
             var drawOriginPosition = PlayerHandCanvas.Instance.DiscardTargetPosition;
+
+            var randomTime = Random.Range(0f, _animator.GetCurrentAnimatorStateInfo(0).length);
+            _animator.Play("CardSelection", 0, randomTime);
 
             _transform.position = drawOriginPosition;
             _isBeingDrawn = true;
