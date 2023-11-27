@@ -9,6 +9,13 @@ namespace main.view
 {
     public class CardInHandContainer : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
+        public enum CardPlayState
+        {
+            PLAYABLE,
+            UNPLAYABLE,
+            IDLE
+        }
+
         private const float CLAMP_WIDTH = 20f, CLAMP_HEIGHT = 10f, PLAY_HEIGHT_LIMIT = -6.5f;
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private Animator _animator;
@@ -45,10 +52,12 @@ namespace main.view
                 case CardPlayState.UNPLAYABLE:
                     _callback.IncreaseSpacing();
                     _animator.Play("CardInHandContainer_Expand");
+                    _child.ChangeSelection(CardPlayState.IDLE);
                     break;
                 case CardPlayState.PLAYABLE:
                     _callback.DecreaseSpacing();
                     _animator.Play("CardInHandContainer_Shrink");
+                    _child.ChangeSelection(CardPlayState.PLAYABLE);
                     break;
                 case CardPlayState.IDLE:
                 default:
@@ -85,13 +94,6 @@ namespace main.view
             _child = newCardView;
             _childRectTransform = _child.RectTransform;
             _playState = CardPlayState.IDLE;
-        }
-
-        private enum CardPlayState
-        {
-            PLAYABLE,
-            UNPLAYABLE,
-            IDLE
         }
     }
 }

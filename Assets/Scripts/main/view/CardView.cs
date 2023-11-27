@@ -20,6 +20,10 @@ namespace main.view
         [SerializeField] private TMP_Text _cardDescriptionText;
         [SerializeField] private Image _cardTypeSpriteImage;
         [SerializeField] private Image _cardIconSpriteImage;
+        [SerializeField] private Image[] _selectionOutlineImages;
+        [SerializeField] private Color _idleColour;
+        [SerializeField] private Color _playableColour;
+        [SerializeField] private Color _unplayableColour;
         [SerializeField] private StudioEventEmitter _cardPlayEvent;
 
         [Header("Item Types")] [SerializeField]
@@ -131,6 +135,18 @@ namespace main.view
                 _ => throw new NotImplementedException($"The item type '{cardEntity.GetType()}' is not" +
                                                        " implemented")
             };
+        }
+
+        public void ChangeSelection(CardInHandContainer.CardPlayState state)
+        {
+            foreach (var outlineImage in _selectionOutlineImages)
+                outlineImage.color = state switch
+                {
+                    CardInHandContainer.CardPlayState.IDLE => _idleColour,
+                    CardInHandContainer.CardPlayState.PLAYABLE => _playableColour,
+                    CardInHandContainer.CardPlayState.UNPLAYABLE => _unplayableColour,
+                    _ => throw new NotImplementedException("Colour does not exist")
+                };
         }
     }
 }

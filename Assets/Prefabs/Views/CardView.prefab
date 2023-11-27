@@ -283,6 +283,14 @@ MonoBehaviour:
   _cardDescriptionText: {fileID: 9024027482075894813}
   _cardTypeSpriteImage: {fileID: 6784903596800981705}
   _cardIconSpriteImage: {fileID: 6564624181017337020}
+  _selectionOutlineImages:
+  - {fileID: 5852428511801298104}
+  - {fileID: 3354280541623776827}
+  - {fileID: 3171430312007879815}
+  - {fileID: 574484151948261320}
+  _idleColour: {r: 1, g: 1, b: 1, a: 1}
+  _playableColour: {r: 0.8666667, g: 0.9490196, b: 0.16862746, a: 1}
+  _unplayableColour: {r: 1, g: 0.20392157, b: 0.3254902, a: 1}
   _cardPlayEvent: {fileID: 2119321683219683838}
   _actionCardPanelSprite: {fileID: 21300000, guid: 7153b8dcd20316b4091c7ddbbcfefc9c, type: 3}
   _itemCardPanelSprite: {fileID: 21300000, guid: 63ca25c50a6cff6479f1cd37f8492ab9, type: 3}
