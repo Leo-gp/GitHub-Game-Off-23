@@ -18,6 +18,8 @@ namespace main.view
         [SerializeField] private TMP_Text _cardNameText;
         [SerializeField] private TMP_Text _cardClassText;
         [SerializeField] private TMP_Text _cardDescriptionText;
+        [SerializeField] private TMP_Text _cardCostText;
+        [SerializeField] private TMP_Text _cardValueText;
         [SerializeField] private Image _cardTypeSpriteImage;
         [SerializeField] private Image _cardIconSpriteImage;
         [SerializeField] private Image[] _selectionOutlineImages;
@@ -125,6 +127,8 @@ namespace main.view
         {
             _cardNameText.text = cardEntity.Name;
             _cardClassText.text = cardEntity.Class;
+            _cardCostText.text = cardEntity.TimeCost.ToString();
+            _cardValueText.text = cardEntity.Rarity.ToString();
             _cardDescriptionText.text = cardEntity.Description();
 
             _cardIconSpriteImage.sprite = cardEntity.IconSprite;

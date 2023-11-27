@@ -51,6 +51,10 @@ MonoBehaviour:
     m_Key: game-over-exit
     m_Metadata:
       m_Items: []
+  - m_Id: 33074189000531968
+    m_Key: end-turn-button
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
