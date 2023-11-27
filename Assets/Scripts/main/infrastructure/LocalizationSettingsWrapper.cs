@@ -4,7 +4,7 @@ using UnityEngine.Localization.Settings;
 
 namespace main.infrastructure
 {
-    public class LocalizationSettingsWrapper
+    public static class LocalizationSettingsWrapper
     {
         public static LocaleIdentifier SelectedLocaleIdentifier
         {

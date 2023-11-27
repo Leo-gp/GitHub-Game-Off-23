@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
-using main.repository.Card_Management.Deck_Definition;
 using UnityEngine.Assertions;
 
 namespace main.service.Card_Management
@@ -19,15 +17,10 @@ namespace main.service.Card_Management
         ///     The card pool entity containing discovered / available cards
         /// </summary>
         private readonly CardPool cardPool;
-        private readonly DeckDefinitionRepository deckDefinitionRepository;
-        private readonly StarterDeck starterDeck;
         
-        public CardPoolService(CardPool cardPool, DeckDefinitionRepository deckDefinitionRepository, StarterDeck starterDeck)
+        public CardPoolService(CardPool cardPool)
         {
             this.cardPool = cardPool;
-            this.deckDefinitionRepository = deckDefinitionRepository;
-            this.starterDeck = starterDeck;
-            SetCardPool();
         }
         
         /// <summary>
@@ -67,20 +60,6 @@ namespace main.service.Card_Management
         public int Size()
         {
             return cardPool.Cards.Count;
-        }
-
-        private void SetCardPool()
-        {
-            var deckDefinition = deckDefinitionRepository.LoadDeckDefinition();
-            
-            foreach (var cardCopies in deckDefinition.CardCopiesList)
-            {
-                var copiesInStarterDeck = starterDeck.Cards.FindAll(card => card.Equals(cardCopies.Card));
-
-                var copiesToAddToPool = cardCopies.NumberOfCopies - copiesInStarterDeck.Count;
-                
-                cardPool.Cards.AddRange(Enumerable.Repeat(cardCopies.Card, copiesToAddToPool));
-            }
         }
     }
 }

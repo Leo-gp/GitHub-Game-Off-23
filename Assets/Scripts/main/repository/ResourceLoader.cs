@@ -7,7 +7,7 @@ namespace main.repository
     {
         public string ResourcePath { get; }
 
-        public ResourceLoader(LocalizationSettingsWrapper localizationSettingsWrapper, ResourcePath resourcePath)
+        public ResourceLoader(ResourcePath resourcePath)
         {
             ResourcePath = $"{LocalizationSettingsWrapper.SelectedLocaleIdentifier}/{resourcePath.GetValue()}";
         }

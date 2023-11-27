@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
-using UnityEngine;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 namespace main.service.Card_Management
 {
@@ -19,14 +20,19 @@ namespace main.service.Card_Management
             this.deckService = deckService;
         }
 
+        public event Action<Card> OnDiscard;
+
         /// <summary>
         ///     Adds the card to the top of the discard pile
         /// </summary>
         /// <param name="card">The card instance that should be pushed to the discard pile stack</param>
-        public void AddToPile([NotNull] Card card)
+        public void Discard([NotNull] Card card)
         {
             LogInfo($"Discarding card '{card}'");
+            
             discardPile.Pile.Push(card);
+            
+            OnDiscard?.Invoke(card);
         }
 
         /// <summary>

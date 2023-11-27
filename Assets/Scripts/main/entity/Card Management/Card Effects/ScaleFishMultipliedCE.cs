@@ -18,7 +18,7 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] public Card playedCardRef;
         [SerializeField] private int _multiplicationLimit;
 
-        public override void Execute(int multiplier)
+        public override void Execute()
         {
         }
     }

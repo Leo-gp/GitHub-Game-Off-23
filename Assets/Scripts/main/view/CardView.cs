@@ -25,6 +25,9 @@ namespace main.view
         private Sprite _actionCardPanelSprite;
 
         [SerializeField] private Sprite _itemCardPanelSprite;
+
+        public Card Card { get; private set; }
+        
         private Vector3[] _bezierNodes;
         private float _bezierTargetCount;
         private bool _isBeingDiscarded, _isBeingDrawn;
@@ -36,6 +39,12 @@ namespace main.view
         private void Awake()
         {
             _transform = transform;
+        }
+
+        public void Initialize(Card card)
+        {
+            Card = card;
+            Render();
         }
 
         private void Update()
@@ -111,18 +120,18 @@ namespace main.view
                               Vector3.up * DRAW_CURVE_HEIGHT;
         }
 
-        public void Render([NotNull] Card cardEntity)
+        private void Render()
         {
-            _cardNameText.text = cardEntity.Name;
-            _cardClassText.text = cardEntity.Class;
-            _cardDescriptionText.text = cardEntity.Description();
+            _cardNameText.text = Card.Name;
+            _cardClassText.text = Card.Class;
+            _cardDescriptionText.text = Card.Description();
 
-            _cardIconSpriteImage.sprite = cardEntity.IconSprite;
-            _cardTypeSpriteImage.sprite = cardEntity switch
+            _cardIconSpriteImage.sprite = Card.IconSprite;
+            _cardTypeSpriteImage.sprite = Card switch
             {
                 ActionCard => _actionCardPanelSprite,
                 ItemCard => _itemCardPanelSprite,
-                _ => throw new NotImplementedException($"The item type '{cardEntity.GetType()}' is not" +
+                _ => throw new NotImplementedException($"The item type '{Card.GetType()}' is not" +
                                                        " implemented")
             };
         }
