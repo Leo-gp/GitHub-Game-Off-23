@@ -8,23 +8,17 @@ namespace main.infrastructure
     {
         public override void InstallBindings()
         {
-            Container.Bind<LocalizationSettingsWrapper>().AsSingle();
-            
             Container.Bind<IResourceLoader<DeckDefinition>>()
                 .WithId(ResourcePath.StarterDeck.GetValue())
-                .FromMethod(ctx => CreateResourceLoader(ctx, ResourcePath.StarterDeck))
-                .AsTransient();
+                .To<ResourceLoader<DeckDefinition>>()
+                .AsTransient()
+                .WithArguments(ResourcePath.StarterDeck);
 
             Container.Bind<IResourceLoader<DeckDefinition>>()
                 .WithId(ResourcePath.CardPool.GetValue())
-                .FromMethod(ctx => CreateResourceLoader(ctx, ResourcePath.CardPool))
-                .AsTransient();
-        }
-        
-        private static ResourceLoader<DeckDefinition> CreateResourceLoader(InjectContext ctx, ResourcePath resourcePath)
-        {
-            var localizationSettings = ctx.Container.Resolve<LocalizationSettingsWrapper>();
-            return new ResourceLoader<DeckDefinition>(localizationSettings, resourcePath);
+                .To<ResourceLoader<DeckDefinition>>()
+                .AsTransient()
+                .WithArguments(ResourcePath.CardPool);
         }
     }
 }

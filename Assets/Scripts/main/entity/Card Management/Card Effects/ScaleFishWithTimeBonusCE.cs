@@ -15,7 +15,7 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] private int _baseAmountOfScales;
         [SerializeField] private int _bonusAmountForEachRemainingTime;
 
-        public override void Execute(int multiplier)
+        public override void Execute()
         {
         }
     }

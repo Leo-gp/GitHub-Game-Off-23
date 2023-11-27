@@ -1,5 +1,6 @@
 using main.entity.Card_Management;
 using main.service.Card_Management;
+using main.view;
 using UnityEngine;
 using Zenject;
 
