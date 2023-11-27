@@ -67,6 +67,7 @@ namespace main.view
                     _childRectTransform.anchoredPosition = Vector2.zero;
                     break;
                 case CardPlayState.PLAYABLE:
+                    playerHandView.IncreaseSpacing();
                     playerHandView.PlayCard(CardView.Card);
                     break;
                 case CardPlayState.IDLE:

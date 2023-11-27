@@ -11,7 +11,7 @@ namespace main.view
 {
     public class PlayerHandView : MonoBehaviour
     {
-        private const float BASE_SPACING_AMOUNT = 100f;
+        private const float BASE_SPACING_AMOUNT = 25f;
         private const float CARD_SPACING_FACTOR = 15f;
 
         [SerializeField] private CardInHandContainer _cardViewContainerPrefab;
@@ -34,7 +34,6 @@ namespace main.view
         {
             playerHandService.OnCardDrawn.AddListener(RenderNewCard);
             discardPileService.OnDiscard += RemoveCard;
-            playerHandService.OnHandDiscarded.AddListener(RemoveAll);
 
             _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
         }
@@ -43,7 +42,6 @@ namespace main.view
         {
             playerHandService.OnCardDrawn.RemoveListener(RenderNewCard);
             discardPileService.OnDiscard -= RemoveCard;
-            playerHandService.OnHandDiscarded.RemoveListener(RemoveAll);
         }
 
         public void IncreaseSpacing()
@@ -67,7 +65,6 @@ namespace main.view
             cardInHandContainers.Add(newCardViewContainer);
             _drawOffset++;
             StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity, _drawOffset));
-            DecreaseSpacing();
         }
         
         private IEnumerator CreateCardAfterTime(
@@ -90,16 +87,6 @@ namespace main.view
             cardInHandContainer.CardView.Discard();
             cardInHandContainers.Remove(cardInHandContainer);
             Destroy(cardInHandContainer.gameObject);
-            IncreaseSpacing();
-        }
-
-        private void RemoveAll()
-        {
-            _drawOffset = 0;
-
-            foreach (Transform child in _playerHandLayout.transform) Destroy(child.gameObject);
-
-            _playerHandLayout.spacing = BASE_SPACING_AMOUNT;
         }
     }
 }

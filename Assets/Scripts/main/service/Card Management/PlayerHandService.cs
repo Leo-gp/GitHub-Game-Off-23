@@ -24,11 +24,6 @@ namespace main.service.Card_Management
         ///     If multiple cards are drawn, this event is triggered once per each card.
         /// </summary>
         public readonly UnityEvent<Card> OnCardDrawn = new();
-
-        /// <summary>
-        ///     Triggered when the entire hand has been discarded.
-        /// </summary>
-        public readonly UnityEvent OnHandDiscarded = new();
         
         public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService, Turn turn, EffectAssemblyService effectAssemblyService)
         {
@@ -104,8 +99,6 @@ namespace main.service.Card_Management
             playerHand.HandCards.ForEach(discardPileService.Discard);
             
             playerHand.HandCards.Clear();
-
-            OnHandDiscarded.Invoke();
         }
         
         /// <summary>
