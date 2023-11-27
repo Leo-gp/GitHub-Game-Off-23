@@ -10,14 +10,8 @@ namespace main.view
         [SerializeField] private GameObject _container;
         [SerializeField] private GameObject _gameOverWinText;
         [SerializeField] private GameObject _gameOverLossText;
-        
+
         private GameService gameService;
-        
-        [Inject]
-        public void Construct(GameService gameService)
-        {
-            this.gameService = gameService;
-        }
 
         private void Awake()
         {
@@ -28,6 +22,12 @@ namespace main.view
         {
             gameService.OnGameOver.AddListener(() => Render(false));
             // TODO: OnGameWon -> Render(true)
+        }
+
+        [Inject]
+        public void Construct(GameService gameService)
+        {
+            this.gameService = gameService;
         }
 
         public void RestartGame()
