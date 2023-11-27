@@ -5,7 +5,6 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Core
 {
@@ -18,18 +17,12 @@ namespace Core
         [Header("FMOD Audio")] [BankRef] [SerializeField]
         private List<string> _banks;
 
-        [Header("Spinner")] [SerializeField] private Image _spinnerImage;
-
-        [SerializeField] private Sprite _spinnerSprite;
-
         [Header("Scene Management")] [SerializeField] [Scene]
         private string _sceneToLoadOnFinish;
 
         private void Awake()
         {
             Assert.IsFalse(_banks.Count is 0, "There are no FMOD banks set up!");
-
-            if (_spinnerImage is not null) _spinnerImage.sprite = _spinnerSprite;
         }
 
         private void Start()

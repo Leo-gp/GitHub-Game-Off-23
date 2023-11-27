@@ -7,6 +7,7 @@ using main.view.Canvas;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace main.view
 {
@@ -17,8 +18,14 @@ namespace main.view
         [SerializeField] private TMP_Text _cardNameText;
         [SerializeField] private TMP_Text _cardClassText;
         [SerializeField] private TMP_Text _cardDescriptionText;
+        [SerializeField] private TMP_Text _cardCostText;
+        [SerializeField] private TMP_Text _cardValueText;
         [SerializeField] private Image _cardTypeSpriteImage;
         [SerializeField] private Image _cardIconSpriteImage;
+        [SerializeField] private Image[] _selectionOutlineImages;
+        [SerializeField] private Color _idleColour;
+        [SerializeField] private Color _playableColour;
+        [SerializeField] private Color _unplayableColour;
         [SerializeField] private StudioEventEmitter _cardPlayEvent;
 
         [Header("Item Types")] [SerializeField]
@@ -26,31 +33,32 @@ namespace main.view
 
         [SerializeField] private Sprite _itemCardPanelSprite;
 
-        public Card Card { get; private set; }
-        
+        private Animator _animator;
+
         private Vector3[] _bezierNodes;
         private float _bezierTargetCount;
         private bool _isBeingDiscarded, _isBeingDrawn;
 
         private Transform _transform, _parent;
-
+        public Card Card { get; private set; }
         public RectTransform RectTransform => _transform as RectTransform;
 
         private void Awake()
         {
             _transform = transform;
-        }
-
-        public void Initialize(Card card)
-        {
-            Card = card;
-            Render();
+            _animator = GetComponent<Animator>();
         }
 
         private void Update()
         {
             HandlePotentialDraw();
             HandlePotentialDiscard();
+        }
+
+        public void Initialize(Card card)
+        {
+            Card = card;
+            Render();
         }
 
         private void HandlePotentialDraw()
@@ -110,6 +118,9 @@ namespace main.view
             // We will draw from the same position used for discarding cards
             var drawOriginPosition = PlayerHandCanvas.Instance.DiscardTargetPosition;
 
+            var randomTime = Random.Range(0f, _animator.GetCurrentAnimatorStateInfo(0).length);
+            _animator.Play("CardSelection", 0, randomTime);
+
             _transform.position = drawOriginPosition;
             _isBeingDrawn = true;
 
@@ -124,6 +135,8 @@ namespace main.view
         {
             _cardNameText.text = Card.Name;
             _cardClassText.text = Card.Class;
+            _cardCostText.text = Card.TimeCost.ToString();
+            _cardValueText.text = Card.Rarity.ToString();
             _cardDescriptionText.text = Card.Description();
 
             _cardIconSpriteImage.sprite = Card.IconSprite;
@@ -134,6 +147,18 @@ namespace main.view
                 _ => throw new NotImplementedException($"The item type '{Card.GetType()}' is not" +
                                                        " implemented")
             };
+        }
+
+        public void ChangeSelection(CardInHandContainer.CardPlayState state)
+        {
+            foreach (var outlineImage in _selectionOutlineImages)
+                outlineImage.color = state switch
+                {
+                    CardInHandContainer.CardPlayState.IDLE => _idleColour,
+                    CardInHandContainer.CardPlayState.PLAYABLE => _playableColour,
+                    CardInHandContainer.CardPlayState.UNPLAYABLE => _unplayableColour,
+                    _ => throw new NotImplementedException("Colour does not exist")
+                };
         }
     }
 }

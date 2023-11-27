@@ -54,6 +54,10 @@ MonoBehaviour:
     m_Localized: Exit
     m_Metadata:
       m_Items: []
+  - m_Id: 33074189000531968
+    m_Localized: End Turn
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

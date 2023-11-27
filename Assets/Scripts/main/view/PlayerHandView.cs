@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using FMODUnity;
 using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace main.view
 
         [SerializeField] private CardInHandContainer _cardViewContainerPrefab;
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
+        [SerializeField] private StudioEventEmitter _cardDrawEvent;
 
         private int _drawOffset;
         private PlayerHandService playerHandService;
@@ -78,6 +80,7 @@ namespace main.view
             // Now create a slight draw offset
             yield return new WaitForSeconds(0.1f * offset);
 
+            _cardDrawEvent.Play();
             container.CreateChild(cardEntity, this);
         }
 
