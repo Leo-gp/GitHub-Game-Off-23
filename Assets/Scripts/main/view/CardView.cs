@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FMODUnity;
 using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
@@ -50,8 +51,7 @@ namespace main.view
             if (_bezierTargetCount >= 1f)
             {
                 _isBeingDrawn = false;
-                _transform.SetParent(_parent);
-                _transform.position = Vector3.zero;
+                StartCoroutine(ReparentSelf());
             }
 
             _bezierTargetCount += DRAW_SPEED * Time.deltaTime;
@@ -59,6 +59,13 @@ namespace main.view
             var m1 = Vector3.Lerp(_bezierNodes[0], _bezierNodes[1], _bezierTargetCount);
             var m2 = Vector3.Lerp(_bezierNodes[1], _bezierNodes[2], _bezierTargetCount);
             _transform.position = Vector3.Lerp(m1, m2, _bezierTargetCount);
+        }
+
+        private IEnumerator ReparentSelf()
+        {
+            _transform.SetParent(_parent);
+            yield return new WaitForEndOfFrame();
+            RectTransform.anchoredPosition = Vector3.zero;
         }
 
         private void HandlePotentialDiscard()

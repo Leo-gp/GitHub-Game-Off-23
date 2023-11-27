@@ -65,7 +65,7 @@ namespace main.view
             int offset)
         {
             // Guarantee to wait one frame
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
             // Now create a slight draw offset
             yield return new WaitForSeconds(0.1f * offset);
