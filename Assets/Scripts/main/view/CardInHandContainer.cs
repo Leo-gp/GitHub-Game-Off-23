@@ -5,6 +5,7 @@ using main.service.Card_Management;
 using main.view.Canvas;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using FMODUnity;
 
 namespace main.view
 {
@@ -21,6 +22,8 @@ namespace main.view
 
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private Animator _animator;
+        [SerializeField] private StudioEventEmitter _cardRedockEvent;
+        [SerializeField] private StudioEventEmitter _cardSelectionEvent;
         private RectTransform _childRectTransform;
         private bool _hasEnoughTimeToPlay;
         private CardPlayState _playState;
@@ -45,6 +48,7 @@ namespace main.view
         {
             if (playerHandService.CardHasEnoughTime(CardView.Card))
             {
+                _cardSelectionEvent.Play();
                 _hasEnoughTimeToPlay = true;
                 PlayerHandCanvas.Instance.SetAsDirectChild(CardView.transform);
                 _playState = CardPlayState.UNPLAYABLE;
@@ -99,6 +103,7 @@ namespace main.view
             switch (_playState)
             {
                 case CardPlayState.UNPLAYABLE:
+                    _cardRedockEvent.Play();
                     _childRectTransform.SetParent(transform);
                     _childRectTransform.anchoredPosition = Vector2.zero;
                     break;
