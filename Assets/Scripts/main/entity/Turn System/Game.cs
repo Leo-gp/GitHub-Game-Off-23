@@ -63,5 +63,9 @@ namespace main.entity.Turn_System
             TurnToStartSwappingCards = turnToStartSwappingCards;
             TurnToStopSwappingCards = turnToStopSwappingCards;
         }
+
+        public int ScaledFishToWin(){
+            return RequiredAmountOfFishToScaleToWin;
+        }
     }
 }

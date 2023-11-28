@@ -92,5 +92,13 @@ namespace main.service.Turn_System
         {
             return turn.CurrentTurnNumber >= game.TurnsInAGame;
         }
+
+        public int CurrentAmountOfScaledFish(){
+            return game.currentAmountOfScaledFish;
+        }
+
+        public int RequiredAmountOfFishToScaleToWin(){
+            return game.ScaledFishToWin();
+        }
     }
 }
