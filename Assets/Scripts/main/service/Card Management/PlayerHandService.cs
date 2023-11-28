@@ -13,10 +13,8 @@ namespace main.service.Card_Management
     /// </summary>
     public class PlayerHandService : Service
     {
-        private readonly PlayerHand playerHand;
         private readonly DeckService deckService;
         private readonly DiscardPileService discardPileService;
-        private readonly Turn turn;
         private readonly EffectAssemblyService effectAssemblyService;
 
         /// <summary>
@@ -24,8 +22,14 @@ namespace main.service.Card_Management
         ///     If multiple cards are drawn, this event is triggered once per each card.
         /// </summary>
         public readonly UnityEvent<Card> OnCardDrawn = new();
-        
-        public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService, Turn turn, EffectAssemblyService effectAssemblyService)
+
+        public readonly UnityEvent<int> OnTimeUnitChange = new();
+
+        private readonly PlayerHand playerHand;
+        private readonly Turn turn;
+
+        public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService,
+            Turn turn, EffectAssemblyService effectAssemblyService)
         {
             this.playerHand = playerHand;
             this.deckService = deckService;
@@ -33,7 +37,7 @@ namespace main.service.Card_Management
             this.turn = turn;
             this.effectAssemblyService = effectAssemblyService;
         }
-        
+
         /// <summary>
         ///     Draws the amount of cards specified in DrawAmount from PlayerHand. If the amount is larger than the
         ///     amount of cards left in the deck, all cards from the discard pile will be shuffled back into the deck
@@ -66,29 +70,37 @@ namespace main.service.Card_Management
                 DrawCardsFromDeck(playerHand.DrawAmount);
             }
         }
-        
+
         public void PlayCard(Card card)
         {
-            Assert.IsTrue(playerHand.HandCards.Contains(card), 
+            Assert.IsTrue(playerHand.HandCards.Contains(card),
                 $"Cannot play card '{card}' because it is not in the player's hand.");
-            
+
             if (!CardHasEnoughTime(card))
             {
                 LogInfo($"Not enough time to playing card '{card}'");
                 return;
             }
 
+            LogInfo("Initial time before was " + turn.InitialTime.Time);
+            turn.RemainingTime.Time -= card.TimeCost;
+            
+            LogInfo($"Removing {card.TimeCost} time, time is now {turn.RemainingTime.Time}");
+            OnTimeUnitChange.Invoke(turn.RemainingTime.Time);
+
+            LogInfo("Initial time after is " + turn.InitialTime.Time);
+
             LogInfo($"Playing card '{card}'");
 
             card.CardEffects.ForEach(effectAssemblyService.AddEffect);
 
             playerHand.HandCards.Remove(card);
-            
+
             discardPileService.Discard(card);
 
             LogInfo("Successfully played the card");
         }
-        
+
         /// <summary>
         ///     Removes all cards from the player's hand and adds them to the discard pile
         /// </summary>
@@ -97,10 +109,10 @@ namespace main.service.Card_Management
             LogInfo("Discarding the entire player hand");
 
             playerHand.HandCards.ForEach(discardPileService.Discard);
-            
+
             playerHand.HandCards.Clear();
         }
-        
+
         /// <summary>
         ///     Helper method that will "actually" draw the cards from the deck and then add them to the hand.
         ///     All assertions, state checks and so on should be done by the caller!
@@ -114,12 +126,12 @@ namespace main.service.Card_Management
                 playerHand.HandCards.Add(drawnCard);
 
                 OnCardDrawn.Invoke(drawnCard);
-                
+
                 LogInfo("Triggered the OnCardDrawn event");
             }
         }
-        
-        private bool CardHasEnoughTime(Card card)
+
+        public bool CardHasEnoughTime(Card card)
         {
             return card.TimeCost <= turn.RemainingTime.Time;
         }

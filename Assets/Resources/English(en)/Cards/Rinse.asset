@@ -17,5 +17,6 @@ MonoBehaviour:
   _cardClass: 3
   _cardRarity:
     _rarity: 7
+  _unitTimeCost:
+    time: 2
   _cardEffects: []
-  _numberOfCopiesInPool: 5

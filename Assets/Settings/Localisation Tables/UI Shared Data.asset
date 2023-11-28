@@ -55,6 +55,10 @@ MonoBehaviour:
     m_Key: end-turn-button
     m_Metadata:
       m_Items: []
+  - m_Id: 33338286682169344
+    m_Key: warning-time
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
