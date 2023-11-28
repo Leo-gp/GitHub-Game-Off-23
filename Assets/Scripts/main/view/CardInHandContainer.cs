@@ -52,7 +52,7 @@ namespace main.view
             else
             {
                 _hasEnoughTimeToPlay = false;
-                Debug.Log("CANNOT PLAY TOO LITTLE TIME");
+                WarningCanvas.Instance.DisplayTimeWarning();
             }
         }
 
