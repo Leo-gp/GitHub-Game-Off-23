@@ -3580,11 +3580,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -420674393
-      Data2: 1251492708
-      Data3: 518574501
-      Data4: 2087934572
-    Path: event:/SFX/UI/UI_Click
+      Data1: 667056334
+      Data2: 1183534345
+      Data3: -485628999
+      Data4: -540097525
+    Path: event:/SFX/UI/UI_CardDiscardSelect
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -7593,11 +7593,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -420674393
-      Data2: 1251492708
-      Data3: 518574501
-      Data4: 2087934572
-    Path: event:/SFX/UI/UI_Click
+      Data1: 667056334
+      Data2: 1183534345
+      Data3: -485628999
+      Data4: -540097525
+    Path: event:/SFX/UI/UI_CardDiscardSelect
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -8719,11 +8719,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -420674393
-      Data2: 1251492708
-      Data3: 518574501
-      Data4: 2087934572
-    Path: event:/SFX/UI/UI_Click
+      Data1: 707446836
+      Data2: 1269199049
+      Data3: -1048161387
+      Data4: -927435472
+    Path: event:/SFX/Cards/Card_Discard
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -22412,11 +22412,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 114854998
-      Data2: 1244522085
-      Data3: 1503122066
-      Data4: -91207337
-    Path: event:/SFX/UI/UI_StartGame
+      Data1: -523575138
+      Data2: 1146289498
+      Data3: -1058635634
+      Data4: 1179516591
+    Path: event:/SFX/UI/UI_ExitGame
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -22683,11 +22683,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -420674393
-      Data2: 1251492708
-      Data3: 518574501
-      Data4: 2087934572
-    Path: event:/SFX/UI/UI_Click
+      Data1: 667056334
+      Data2: 1183534345
+      Data3: -485628999
+      Data4: -540097525
+    Path: event:/SFX/UI/UI_CardDiscardSelect
   Event: 
   PlayEvent: 0
   StopEvent: 0
