@@ -71,6 +71,22 @@ MonoBehaviour:
     m_Key: confirmation-text
     m_Metadata:
       m_Items: []
+  - m_Id: 33417566388772864
+    m_Key: menu-play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33417619652239360
+    m_Key: menu-settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33417659259052032
+    m_Key: menu-credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33417689458040832
+    m_Key: menu-exit
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

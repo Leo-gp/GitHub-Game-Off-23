@@ -19,9 +19,9 @@ namespace main.view
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
         [SerializeField] private StudioEventEmitter _cardDrawEvent;
 
-        private int _drawOffset;
-
         private readonly List<CardInHandContainer> cardInHandContainers = new();
+
+        private int _drawOffset;
         private DiscardPileService discardPileService;
         private PlayerHandService playerHandService;
 
@@ -65,20 +65,22 @@ namespace main.view
         {
             var newCardViewContainer = Instantiate(_cardViewContainerPrefab, transform);
             cardInHandContainers.Add(newCardViewContainer);
-            _drawOffset++;
-            StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity, _drawOffset));
+            StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity));
         }
 
         private IEnumerator CreateCardAfterTime(
             [NotNull] CardInHandContainer container,
-            [NotNull] Card cardEntity,
-            int offset)
+            [NotNull] Card cardEntity)
         {
             // Guarantee to wait one frame
             yield return new WaitForEndOfFrame();
 
+            _drawOffset++;
+
             // Now create a slight draw offset
-            yield return new WaitForSeconds(0.1f * offset);
+            yield return new WaitForSeconds(0.1f * _drawOffset);
+
+            _drawOffset--;
 
             _cardDrawEvent.Play();
             container.CreateChild(cardEntity, this, playerHandService);
