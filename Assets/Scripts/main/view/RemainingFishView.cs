@@ -12,31 +12,32 @@ namespace main.view
 
         private FishService fishService;
         private GameService gameService;
-        
-        [Inject]
-        public void Construct(FishService fishService)
-        {
-            this.fishService = fishService;
-        }
 
-        [Inject]
-        public void Construct(GameService gameService)
-        {
-            this.gameService = gameService;
-        }
-
-        private void Start()
+        private void OnEnable()
         {
             fishService.OnFishHasBeenScaled.AddListener(RenderRemainingFish);
             Render(0);
         }
 
-        private void Render(int remainingFish)
+        private void OnDisable()
         {
-            _remainingFishText.text = remainingFish.ToString() + "/" + gameService.RequiredAmountOfFishToScaleToWin().ToString();
+            fishService.OnFishHasBeenScaled.RemoveListener(RenderRemainingFish);
         }
 
-        private void RenderRemainingFish(){
+        [Inject]
+        public void Construct(GameService gameService, FishService fishService)
+        {
+            this.gameService = gameService;
+            this.fishService = fishService;
+        }
+
+        private void Render(int remainingFish)
+        {
+            _remainingFishText.text = remainingFish + "/" + gameService.RequiredAmountOfFishToScaleToWin();
+        }
+
+        private void RenderRemainingFish()
+        {
             Render(gameService.CurrentAmountOfScaledFish());
         }
     }
