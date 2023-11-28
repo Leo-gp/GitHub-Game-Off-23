@@ -62,6 +62,18 @@ MonoBehaviour:
     m_Localized: You don't have enough time to play this card!
     m_Metadata:
       m_Items: []
+  - m_Id: 33397784025260032
+    m_Localized: Choose a card to remove from your deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33397819857199104
+    m_Localized: Choose a card to add to your deck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33398068415848448
+    m_Localized: OK
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

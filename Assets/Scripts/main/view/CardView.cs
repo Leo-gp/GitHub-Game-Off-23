@@ -118,9 +118,6 @@ namespace main.view
             // We will draw from the same position used for discarding cards
             var drawOriginPosition = PlayerHandCanvas.Instance.DiscardTargetPosition;
 
-            var randomTime = Random.Range(0f, _animator.GetCurrentAnimatorStateInfo(0).length);
-            _animator.Play("CardSelection", 0, randomTime);
-
             _transform.position = drawOriginPosition;
             _isBeingDrawn = true;
 
@@ -147,6 +144,9 @@ namespace main.view
                 _ => throw new NotImplementedException($"The item type '{Card.GetType()}' is not" +
                                                        " implemented")
             };
+
+            var randomTime = Random.Range(0f, _animator.GetCurrentAnimatorStateInfo(0).length);
+            _animator.Play("CardSelection", 0, randomTime);
         }
 
         public void ChangeSelection(CardInHandContainer.CardPlayState state)
