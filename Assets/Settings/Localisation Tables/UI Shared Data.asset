@@ -59,6 +59,18 @@ MonoBehaviour:
     m_Key: warning-time
     m_Metadata:
       m_Items: []
+  - m_Id: 33397784025260032
+    m_Key: card-swap-remove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33397819857199104
+    m_Key: card-swap-add
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33398068415848448
+    m_Key: confirmation-text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

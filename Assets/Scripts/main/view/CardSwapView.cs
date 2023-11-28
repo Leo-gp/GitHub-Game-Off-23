@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
 using main.service.Turn_System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
@@ -16,8 +15,8 @@ namespace main.view
         [SerializeField] private GameObject _container;
         [SerializeField] private GameObject _deckSelectionContainer;
         [SerializeField] private GameObject _cardOfferContainer;
-        [SerializeField] private TMP_Text[] _deckSelectionButtonTexts;
-        [SerializeField] private TMP_Text[] _deckOfferButtonTexts;
+        [SerializeField] private CardView[] _removalCardViews;
+        [SerializeField] private CardView[] _additionCardViews;
 
         [FormerlySerializedAs("_confirmationButton")] [SerializeField]
         private Button _removalConfirmationButton;
@@ -28,11 +27,12 @@ namespace main.view
         private Card _selectedCardToRemove, _selectedCardToAdd;
 
         private CardSwapService cardSwapService;
-        
-        [Inject]
-        public void Construct(CardSwapService cardSwapService)
+
+        private void Start()
         {
-            this.cardSwapService = cardSwapService;
+            _container.SetActive(false);
+            _deckSelectionContainer.SetActive(false);
+            _cardOfferContainer.SetActive(false);
         }
 
         private void OnEnable()
@@ -45,14 +45,14 @@ namespace main.view
             cardSwapService.OnCardSwapOptions.RemoveListener(Render);
         }
 
-        private void Start()
+        [Inject]
+        public void Construct(CardSwapService cardSwapService)
         {
-            _container.SetActive(false);
-            _deckSelectionContainer.SetActive(false);
-            _cardOfferContainer.SetActive(false);
+            this.cardSwapService = cardSwapService;
         }
 
-        private void Render([NotNull] List<Card> cardsThatCanBeRemovedFromDeck,
+        private void Render(
+            [NotNull] List<Card> cardsThatCanBeRemovedFromDeck,
             [NotNull] List<Card> cardsThatCanBeAddedToDeck)
         {
             Assert.AreEqual(3, cardsThatCanBeRemovedFromDeck.Count,
@@ -71,7 +71,10 @@ namespace main.view
             _cardsThatCanBeAddedToDeck = cardsThatCanBeAddedToDeck;
 
             for (var i = 0; i < cardsThatCanBeRemovedFromDeck.Count; i++)
-                _deckSelectionButtonTexts[i].text = cardsThatCanBeRemovedFromDeck[i].Name;
+            {
+                _removalCardViews[i].Initialize(cardsThatCanBeRemovedFromDeck[i]);
+                _removalCardViews[i].ChangeSelection(CardInHandContainer.CardPlayState.IDLE);
+            }
         }
 
         public void ConfirmRemoval()
@@ -80,7 +83,10 @@ namespace main.view
             _cardOfferContainer.SetActive(true);
 
             for (var i = 0; i < _cardsThatCanBeAddedToDeck.Count; i++)
-                _deckOfferButtonTexts[i].text = _cardsThatCanBeAddedToDeck[i].Name;
+            {
+                _additionCardViews[i].Initialize(_cardsThatCanBeAddedToDeck[i]);
+                _additionCardViews[i].ChangeSelection(CardInHandContainer.CardPlayState.IDLE);
+            }
 
             _additionConfirmationButton.interactable = false;
         }
@@ -102,6 +108,11 @@ namespace main.view
 
             _selectedCardToRemove = _cardsThatCanBeRemovedFromDeck[index];
             _removalConfirmationButton.interactable = true;
+
+            foreach (var removalCardView in _removalCardViews)
+                removalCardView.ChangeSelection(CardInHandContainer.CardPlayState.IDLE);
+
+            _removalCardViews[index].ChangeSelection(CardInHandContainer.CardPlayState.UNPLAYABLE);
         }
 
         public void SelectCardToAdd(int index)
@@ -112,6 +123,11 @@ namespace main.view
 
             _selectedCardToAdd = _cardsThatCanBeAddedToDeck[index];
             _additionConfirmationButton.interactable = true;
+
+            foreach (var additionCardView in _additionCardViews)
+                additionCardView.ChangeSelection(CardInHandContainer.CardPlayState.IDLE);
+
+            _additionCardViews[index].ChangeSelection(CardInHandContainer.CardPlayState.PLAYABLE);
         }
     }
 }
