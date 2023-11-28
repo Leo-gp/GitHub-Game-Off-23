@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using main.entity.Card_Management.Card_Data;
+using main.service.Card_Management;
 using main.view.Canvas;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,20 +22,44 @@ namespace main.view
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private Animator _animator;
         private RectTransform _childRectTransform;
+        private bool _hasEnoughTimeToPlay;
         private CardPlayState _playState;
+        private PlayerHandService playerHandService;
 
         private PlayerHandView playerHandView;
 
         public CardView CardView { get; private set; }
 
+        private void OnEnable()
+        {
+            // Should only subscribe when the card object is set to active, NOT on start
+            playerHandService?.OnTimeUnitChange.AddListener(SetUsabilityColourOfCardView);
+        }
+
+        private void OnDisable()
+        {
+            playerHandService?.OnTimeUnitChange.RemoveListener(SetUsabilityColourOfCardView);
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
-            PlayerHandCanvas.Instance.SetAsDirectChild(CardView.transform);
-            _playState = CardPlayState.UNPLAYABLE;
+            if (playerHandService.CardHasEnoughTime(CardView.Card))
+            {
+                _hasEnoughTimeToPlay = true;
+                PlayerHandCanvas.Instance.SetAsDirectChild(CardView.transform);
+                _playState = CardPlayState.UNPLAYABLE;
+            }
+            else
+            {
+                _hasEnoughTimeToPlay = false;
+                WarningCanvas.Instance.DisplayTimeWarning();
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!_hasEnoughTimeToPlay) return;
+
             var pos = PlayerHandCanvas
                 .Instance
                 .PooledMainCamera
@@ -69,6 +94,8 @@ namespace main.view
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (!_hasEnoughTimeToPlay) return;
+
             switch (_playState)
             {
                 case CardPlayState.UNPLAYABLE:
@@ -85,16 +112,33 @@ namespace main.view
             }
         }
 
-        public void CreateChild([NotNull] Card cardToContain, [NotNull] PlayerHandView callback)
+        private void SetUsabilityColourOfCardView(int _)
         {
-            var newCardView = Instantiate(_cardViewPrefab, transform);
-            PlayerHandCanvas.Instance.SetAsDirectChild(newCardView.transform);
-            newCardView.Initialize(cardToContain);
-            newCardView.HandleDraw(transform);
+            CardView.ChangeSelection(playerHandService.CardHasEnoughTime(CardView.Card)
+                ? CardPlayState.IDLE
+                : CardPlayState.UNPLAYABLE);
+        }
 
+        public void CreateChild(
+            [NotNull] Card cardToContain,
+            [NotNull] PlayerHandView callback,
+            [NotNull] PlayerHandService playerHandService)
+        {
+            this.playerHandService = playerHandService;
             playerHandView = callback;
+
+            playerHandService.OnTimeUnitChange.AddListener(SetUsabilityColourOfCardView);
+
+            var newCardView = Instantiate(_cardViewPrefab, transform);
             CardView = newCardView;
             _childRectTransform = CardView.RectTransform;
+
+            PlayerHandCanvas.Instance.SetAsDirectChild(newCardView.transform);
+
+            newCardView.Initialize(cardToContain);
+            newCardView.HandleDraw(transform);
+            SetUsabilityColourOfCardView(-1);
+
             _playState = CardPlayState.IDLE;
         }
     }

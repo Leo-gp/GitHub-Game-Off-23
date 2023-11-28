@@ -9,19 +9,20 @@ namespace main.infrastructure
     public class TurnServiceInstaller : MonoInstaller<TurnServiceInstaller>
     {
         [SerializeField] private UnitTime turnInitialTime;
-        
+
         public override void InstallBindings()
         {
             Container.Bind<Turn>()
                 .FromMethod(CreateTurn)
                 .AsSingle();
-            
+
             Container.BindInterfacesAndSelfTo<TurnService>().AsSingle();
         }
-        
+
         private Turn CreateTurn()
         {
-            return new Turn(turnInitialTime, 0, turnInitialTime);
+            var remainingTime = new UnitTime { Time = turnInitialTime.Time };
+            return new Turn(turnInitialTime, 0, remainingTime);
         }
     }
 }

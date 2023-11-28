@@ -58,6 +58,10 @@ MonoBehaviour:
     m_Localized: End Turn
     m_Metadata:
       m_Items: []
+  - m_Id: 33338286682169344
+    m_Localized: You don't have enough time to play this card!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FMODUnity;
 using main.entity.Card_Management.Card_Data;
@@ -20,17 +20,10 @@ namespace main.view
         [SerializeField] private StudioEventEmitter _cardDrawEvent;
 
         private int _drawOffset;
-        private PlayerHandService playerHandService;
-        private DiscardPileService discardPileService;
 
-        private List<CardInHandContainer> cardInHandContainers = new();
-        
-        [Inject]
-        public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService)
-        {
-            this.playerHandService = playerHandService;
-            this.discardPileService = discardPileService;
-        }
+        private readonly List<CardInHandContainer> cardInHandContainers = new();
+        private DiscardPileService discardPileService;
+        private PlayerHandService playerHandService;
 
         private void OnEnable()
         {
@@ -46,6 +39,13 @@ namespace main.view
             discardPileService.OnDiscard -= RemoveCard;
         }
 
+        [Inject]
+        public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService)
+        {
+            this.playerHandService = playerHandService;
+            this.discardPileService = discardPileService;
+        }
+
         public void IncreaseSpacing()
         {
             _playerHandLayout.spacing += CARD_SPACING_FACTOR;
@@ -55,7 +55,7 @@ namespace main.view
         {
             _playerHandLayout.spacing -= CARD_SPACING_FACTOR;
         }
-        
+
         public void PlayCard(Card card)
         {
             playerHandService.PlayCard(card);
@@ -68,7 +68,7 @@ namespace main.view
             _drawOffset++;
             StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity, _drawOffset));
         }
-        
+
         private IEnumerator CreateCardAfterTime(
             [NotNull] CardInHandContainer container,
             [NotNull] Card cardEntity,
@@ -81,7 +81,7 @@ namespace main.view
             yield return new WaitForSeconds(0.1f * offset);
 
             _cardDrawEvent.Play();
-            container.CreateChild(cardEntity, this);
+            container.CreateChild(cardEntity, this, playerHandService);
         }
 
         private void RemoveCard(Card card)

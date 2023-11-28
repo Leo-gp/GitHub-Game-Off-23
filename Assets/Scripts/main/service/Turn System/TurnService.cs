@@ -87,7 +87,9 @@ namespace main.service.Turn_System
 
         private void RestoreTime()
         {
-            turn.RemainingTime = turn.InitialTime;
+            LogInfo("Restoring time to " + turn.InitialTime.Time);
+            turn.RemainingTime.Time = turn.InitialTime.Time;
+            playerHandService.OnTimeUnitChange.Invoke(turn.RemainingTime.Time);
         }
     }
 }
