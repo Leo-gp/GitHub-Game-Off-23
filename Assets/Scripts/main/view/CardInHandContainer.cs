@@ -38,7 +38,7 @@ namespace main.view
 
         private void OnDisable()
         {
-            playerHandService.OnTimeUnitChange.RemoveListener(SetUsabilityColourOfCardView);
+            playerHandService?.OnTimeUnitChange.RemoveListener(SetUsabilityColourOfCardView);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
