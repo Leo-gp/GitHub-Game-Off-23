@@ -1,15 +1,13 @@
 using main.entity.Card_Management.Card_Data;
+using main.service.Card_Management;
+using main.service.Fish_Management;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace main.entity.Card_Management.Card_Effects
 {
-    /// <summary>
-    ///     A simple example of how classes can define card effects.
-    ///     This simply defines a field "message" that will be printed upon execution.
-    ///     NOTE: Can be removed once the actual card effects exist.
-    /// </summary>
-    [CreateAssetMenu(fileName = "ScaleFishMultipliedCE", menuName = "Data/Effects/New ScaleFishMultipliedCE")]
+    [CreateAssetMenu(fileName = "Scale Fish Multiplied", menuName = "Data/Effects/Scale Fish Multiplied")]
     public class ScaleFishMultipliedCE : CardEffect
     {
         [SerializeField] private int _baseAmountOfScales;
@@ -17,9 +15,24 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] private bool _multiplyOnceForEachCardNamePlayed;
         [SerializeField] public Card playedCardRef;
         [SerializeField] private int _multiplicationLimit;
+        private FishService fishService;
+        private PlayerHandService playerHandService;
+        
+        [Inject]
+        public void Construct(FishService fishService)
+        {
+            this.fishService = fishService;
+        }
+
+        [Inject]
+        public void Construct(PlayerHandService playerHandService)
+        {
+            this.playerHandService = playerHandService;
+        }
 
         public override void Execute()
         {
+            
         }
     }
 }

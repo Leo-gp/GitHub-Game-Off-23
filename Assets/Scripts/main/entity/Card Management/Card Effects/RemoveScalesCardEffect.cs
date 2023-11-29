@@ -20,7 +20,11 @@ namespace main.entity.Card_Management.Card_Effects
         
         public override void Execute()
         {
-            fishService.ScaleFish(amountOfScalesToRemove);
+            fishService.ScaleFish(AmountOfScalesToRemove());
+        }
+
+        public int AmountOfScalesToRemove(){
+            return amountOfScalesToRemove;
         }
     }
 }

@@ -68,5 +68,13 @@ namespace main.service.Card_Management
         {
             return discardPile.Pile.ToList();
         }
+
+        public int GetAmountInDiscardPile(Card refCard){
+            int valueToReturn = 0;
+            foreach(Card pileCard in discardPile.Pile){
+                if(pileCard == refCard) valueToReturn++;
+            }
+            return valueToReturn;
+        }
     }
 }

@@ -1,5 +1,8 @@
-﻿using main.entity.Card_Management;
+﻿using System;
+using System.Diagnostics;
+using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.entity.Card_Management.Card_Effects;
 using main.entity.Turn_System;
 using main.service.Turn_System;
 using UnityEngine.Assertions;
@@ -24,6 +27,7 @@ namespace main.service.Card_Management
         public readonly UnityEvent<Card> OnCardDrawn = new();
 
         public readonly UnityEvent<int> OnTimeUnitChange = new();
+        public readonly UnityEvent<int> ScaleCounterShouldIncrease = new();
 
         private readonly PlayerHand playerHand;
         private readonly Turn turn;
@@ -92,7 +96,17 @@ namespace main.service.Card_Management
 
             LogInfo($"Playing card '{card}'");
 
-            card.CardEffects.ForEach(effectAssemblyService.AddEffect);
+            foreach(CardEffect cardEffect in card.CardEffects){
+                if(cardEffect.GetType() == typeof(RemoveScalesCardEffect)){
+                    RemoveScalesCardEffect estimatedEffect = cardEffect as RemoveScalesCardEffect;
+                    int estimatedScalesRemoved = estimatedEffect.AmountOfScalesToRemove() * card.Multiplier;
+                    ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
+                }
+                if(cardEffect.GetType() == typeof(ScaleFishMultipliedCE)){
+                    LogInfo("Scale Fish Multiplied played");
+                }
+                effectAssemblyService.AddEffect(card.Multiplier, cardEffect);
+            }
 
             playerHand.HandCards.Remove(card);
 
