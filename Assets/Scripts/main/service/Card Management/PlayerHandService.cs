@@ -46,6 +46,13 @@ namespace main.service.Card_Management
             playedCardCounter = new();
         }
 
+        public void StartTurnDraw()
+        {
+            for(int i = 0; i < playerHand.DrawAmount; i++){
+                Draw();
+            }
+        }
+
         /// <summary>
         ///     Draws the amount of cards specified in DrawAmount from PlayerHand. If the amount is larger than the
         ///     amount of cards left in the deck, all cards from the discard pile will be shuffled back into the deck
