@@ -9,14 +9,10 @@ namespace main.entity.Card_Management.Card_Effects
     ///     This simply defines a field "message" that will be printed upon execution.
     ///     NOTE: Can be removed once the actual card effects exist.
     /// </summary>
-    [CreateAssetMenu(fileName = "DoubleEffectCE", menuName = "Data/Effects/New DoubleEffectCE")]
-    public class DoubleEffectCE : CardEffect
+    [CreateAssetMenu(fileName = "DrawCardCE", menuName = "Data/Effects/New DrawCardCE")]
+    public class DrawCardCE : CardEffect
     {
-        private Card _handCardTarget; //not serialized because it is only set at runtime
-        [SerializeField] private bool _affectsAllCardsThisTurn;
-        [SerializeField] private CardClass _classToAffect;
-        [SerializeField] private bool _affectsActionCards;
-        [SerializeField] private bool _affectsItemCards;
+        [SerializeField] private int _amountOfCardsToDraw;
 
         public override void Execute(int multiplier)
         {

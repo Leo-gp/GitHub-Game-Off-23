@@ -78,6 +78,8 @@ namespace main.entity.Card_Management.Card_Data
         /// </summary>
         public int TimeCost => _unitTimeCost.Time;
 
+        public int Multiplier = 1;
+
         /// <summary>
         ///     Yields the icon of the card as a Unity Sprite
         /// </summary>

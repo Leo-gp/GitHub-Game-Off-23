@@ -1,5 +1,9 @@
-﻿using main.entity.Card_Management;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.entity.Card_Management.Card_Effects;
 using main.entity.Turn_System;
 using main.service.Turn_System;
 using UnityEngine.Assertions;
@@ -24,9 +28,11 @@ namespace main.service.Card_Management
         public readonly UnityEvent<Card> OnCardDrawn = new();
 
         public readonly UnityEvent<int> OnTimeUnitChange = new();
+        public readonly UnityEvent<int> ScaleCounterShouldIncrease = new();
 
         private readonly PlayerHand playerHand;
         private readonly Turn turn;
+        public List<PlayedCardCounter> playedCardCounter;
 
         public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService,
             Turn turn, EffectAssemblyService effectAssemblyService)
@@ -36,11 +42,15 @@ namespace main.service.Card_Management
             this.discardPileService = discardPileService;
             this.turn = turn;
             this.effectAssemblyService = effectAssemblyService;
+
+            playedCardCounter = new();
         }
 
         public void StartTurnDraw()
         {
-            Draw(playerHand.DrawAmount);
+            for(int i = 0; i < playerHand.DrawAmount; i++){
+                Draw();
+            }
         }
 
         /// <summary>
@@ -48,15 +58,17 @@ namespace main.service.Card_Management
         ///     amount of cards left in the deck, all cards from the discard pile will be shuffled back into the deck
         ///     and the remaining cards will be drawn from the newly shuffled deck.
         /// </summary>
-        public void Draw(int amount)
+        public void Draw()
         {
-            LogInfo($"Drawing {amount} card(s)");
+            LogInfo($"Drawing {playerHand.DrawAmount} card(s)");
             var amountOfCardsInDeck = deckService.Size();
 
+            // TODO: new shuffle
+            // TODO: if the deck is empty and discard pile are empty, just return out
             // Does the deck need to be refilled and reshuffled?
-            if (amount > amountOfCardsInDeck)
+            if (playerHand.DrawAmount > amountOfCardsInDeck)
             {
-                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = amount - amountOfCardsInDeck;
+                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = playerHand.DrawAmount - amountOfCardsInDeck;
 
                 // Draw all remaining cards from the deck
                 DrawCardsFromDeck(amountOfCardsInDeck);
@@ -70,8 +82,7 @@ namespace main.service.Card_Management
             // If the deck has enough cards, just draw them
             else
             {
-                deckService.ShuffleDeck();
-                DrawCardsFromDeck(amount);
+                DrawCardsFromDeck(playerHand.DrawAmount);
             }
         }
 
@@ -96,7 +107,38 @@ namespace main.service.Card_Management
 
             LogInfo($"Playing card '{card}'");
 
-            card.CardEffects.ForEach(effectAssemblyService.AddEffect);
+            if(playedCardCounter.Count < 1){
+                LogInfo("Empty counter, creating list item");
+                playedCardCounter.Add(new PlayedCardCounter(card.Name));
+            }
+            else{
+                bool containsCard = false;
+                foreach(PlayedCardCounter playedCard in playedCardCounter){
+                    if (playedCard.CardName() == card.Name){
+                        containsCard = true;
+                        playedCard.IncrementAmount();
+                        LogInfo("Card found in list, incrementing");
+                    }
+                }
+                if(!containsCard){
+                    LogInfo("Card not yet in list, creating list item");
+                    playedCardCounter.Add(new PlayedCardCounter(card.Name));
+                }
+            }
+
+            foreach(CardEffect cardEffect in card.CardEffects){
+                if(cardEffect.GetType() == typeof(RemoveScalesCardEffect)){
+                    RemoveScalesCardEffect estimatedEffect = cardEffect as RemoveScalesCardEffect;
+                    int estimatedScalesRemoved = estimatedEffect.AmountOfScalesToRemove() * card.Multiplier;
+                    ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
+                }
+                else if(cardEffect.GetType() == typeof(ScaleFishMultipliedCE)){
+                    ScaleFishMultipliedCE estimatedEffect = cardEffect as ScaleFishMultipliedCE;
+                    int estimatedScalesRemoved = estimatedEffect.EstimateAmountOfScalesToRemove() * card.Multiplier;
+                    ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
+                }
+                effectAssemblyService.AddEffect(card.Multiplier, cardEffect);
+            }
 
             playerHand.HandCards.Remove(card);
 
@@ -116,11 +158,6 @@ namespace main.service.Card_Management
 
             playerHand.HandCards.Clear();
         }
-        
-        public bool CardHasEnoughTime(Card card)
-        {
-            return card.TimeCost <= turn.RemainingTime.Time;
-        }
 
         /// <summary>
         ///     Helper method that will "actually" draw the cards from the deck and then add them to the hand.
@@ -138,6 +175,23 @@ namespace main.service.Card_Management
 
                 LogInfo("Triggered the OnCardDrawn event");
             }
+        }
+
+        public bool CardHasEnoughTime(Card card)
+        {
+            return card.TimeCost <= turn.RemainingTime.Time;
+        }
+
+        public void ResetPlayedCardCounter(){
+            playedCardCounter = new();
+        }
+
+        public int RemainingTime(){
+            return turn.RemainingTime.Time;
+        }
+
+        public int RemainingCards(){
+            return playerHand.HandCards.Count;
         }
     }
 }
