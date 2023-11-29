@@ -57,7 +57,7 @@ namespace main.service.Turn_System
 
             OnNewTurnStart.Invoke();
 
-            playerHandService.Draw();
+            playerHandService.StartTurnDraw();
         }
 
         public void EndTurn()

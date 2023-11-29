@@ -38,20 +38,25 @@ namespace main.service.Card_Management
             this.effectAssemblyService = effectAssemblyService;
         }
 
+        public void StartTurnDraw()
+        {
+            Draw(playerHand.DrawAmount);
+        }
+
         /// <summary>
         ///     Draws the amount of cards specified in DrawAmount from PlayerHand. If the amount is larger than the
         ///     amount of cards left in the deck, all cards from the discard pile will be shuffled back into the deck
         ///     and the remaining cards will be drawn from the newly shuffled deck.
         /// </summary>
-        public void Draw()
+        public void Draw(int amount)
         {
-            LogInfo($"Drawing {playerHand.DrawAmount} card(s)");
+            LogInfo($"Drawing {amount} card(s)");
             var amountOfCardsInDeck = deckService.Size();
 
             // Does the deck need to be refilled and reshuffled?
-            if (playerHand.DrawAmount > amountOfCardsInDeck)
+            if (amount > amountOfCardsInDeck)
             {
-                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = playerHand.DrawAmount - amountOfCardsInDeck;
+                var remainingCardsToDrawAfterDrawingLastCardsFromDeck = amount - amountOfCardsInDeck;
 
                 // Draw all remaining cards from the deck
                 DrawCardsFromDeck(amountOfCardsInDeck);
@@ -66,7 +71,7 @@ namespace main.service.Card_Management
             else
             {
                 deckService.ShuffleDeck();
-                DrawCardsFromDeck(playerHand.DrawAmount);
+                DrawCardsFromDeck(amount);
             }
         }
 
@@ -111,6 +116,11 @@ namespace main.service.Card_Management
 
             playerHand.HandCards.Clear();
         }
+        
+        public bool CardHasEnoughTime(Card card)
+        {
+            return card.TimeCost <= turn.RemainingTime.Time;
+        }
 
         /// <summary>
         ///     Helper method that will "actually" draw the cards from the deck and then add them to the hand.
@@ -128,11 +138,6 @@ namespace main.service.Card_Management
 
                 LogInfo("Triggered the OnCardDrawn event");
             }
-        }
-
-        public bool CardHasEnoughTime(Card card)
-        {
-            return card.TimeCost <= turn.RemainingTime.Time;
         }
     }
 }
