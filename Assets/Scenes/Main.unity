@@ -4188,7 +4188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -682.0554}
+  m_AnchoredPosition: {x: 973.5149, y: -627.207}
   m_SizeDelta: {x: 883.14, y: 185.8308}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &639551343
@@ -4801,6 +4801,8 @@ GameObject:
   - component: {fileID: 802451502}
   - component: {fileID: 802451501}
   - component: {fileID: 802451505}
+  - component: {fileID: 802451507}
+  - component: {fileID: 802451506}
   m_Layer: 5
   m_Name: GameOverCanvas
   m_TagString: Untagged
@@ -4907,6 +4909,71 @@ MonoBehaviour:
   _container: {fileID: 503514484}
   _gameOverWinText: {fileID: 2130609737}
   _gameOverLossText: {fileID: 1307611312}
+  _gameMusic: {fileID: 1886832651}
+  _gameWinMusic: {fileID: 802451507}
+  _gameLossMusic: {fileID: 802451506}
+--- !u!114 &802451506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802451500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 587045391
+      Data2: 1280127931
+      Data3: 327467651
+      Data4: 1526121637
+    Path: event:/Music/Music_Defeat
+  Event: 
+  PlayEvent: 0
+  StopEvent: 12
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &802451507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802451500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 500788705
+      Data2: 1178852583
+      Data3: -1499309414
+      Data4: 457488156
+    Path: event:/Music/Music_Victory
+  Event: 
+  PlayEvent: 0
+  StopEvent: 12
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &838317619
 GameObject:
   m_ObjectHideFlags: 0
@@ -6375,6 +6442,7 @@ GameObject:
   - component: {fileID: 1122735808}
   - component: {fileID: 1122735807}
   - component: {fileID: 1122735809}
+  - component: {fileID: 1122735810}
   m_Layer: 5
   m_Name: WarningTimeText
   m_TagString: Untagged
@@ -6536,9 +6604,52 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+      - m_Target: {fileID: 1122735810}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   references:
     version: 2
     RefIds: []
+--- !u!114 &1122735810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122735805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1544244729
+      Data2: 1280844093
+      Data3: 1208743070
+      Data4: -1959191583
+    Path: event:/SFX/UI/UI_Warning
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1123232071
 GameObject:
   m_ObjectHideFlags: 0
@@ -7627,7 +7738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1307611313
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9992,7 +10103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -352.381}
+  m_AnchoredPosition: {x: 973.5149, y: -392.23618}
   m_SizeDelta: {x: 788.2991, y: 94.7036}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1633728470
@@ -11398,7 +11509,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1886832649}
-  - component: {fileID: 1886832648}
+  - component: {fileID: 1886832651}
   - component: {fileID: 1886832650}
   m_Layer: 0
   m_Name: Music
@@ -11407,37 +11518,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1886832648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1886832647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -276881837
-      Data2: 1093008940
-      Data3: -1390548325
-      Data4: -841528069
-    Path: event:/Music/Music_Play
-  Event: 
-  PlayEvent: 1
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 1
-  Preload: 0
-  AllowNonRigidbodyDoppler: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
 --- !u!4 &1886832649
 Transform:
   m_ObjectHideFlags: 0
@@ -11484,6 +11564,39 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
+--- !u!114 &1886832651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886832647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -276881837
+      Data2: 1093008940
+      Data3: -1390548325
+      Data4: -841528069
+    Path: event:/Music/Music_Play
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 1
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params:
+  - Name: Game Over
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1889787306
 GameObject:
   m_ObjectHideFlags: 0
@@ -13055,7 +13168,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -447.0846}
+  m_AnchoredPosition: {x: 973.5149, y: -486.93976}
   m_SizeDelta: {x: 1083.3428, y: 94.7036}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2130609739
