@@ -138,11 +138,11 @@ namespace main.view
             _cardDescriptionText.text = Card.Description();
 
             if(Card.Multiplier < 2){
-                _cardMultiplierText.gameObject.SetActive(false);
+                if(_cardMultiplierText)_cardMultiplierText.gameObject.SetActive(false);
             }
             else{
-                _cardMultiplierText.text = "x" + Card.Multiplier.ToString();
-                _cardMultiplierText.gameObject.SetActive(true);
+                if(_cardMultiplierText)_cardMultiplierText.text = "x" + Card.Multiplier.ToString();
+                if(_cardMultiplierText)_cardMultiplierText.gameObject.SetActive(true);
             }
 
             _cardIconSpriteImage.sprite = Card.IconSprite;

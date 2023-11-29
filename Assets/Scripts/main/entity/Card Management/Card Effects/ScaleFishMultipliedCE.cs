@@ -30,9 +30,52 @@ namespace main.entity.Card_Management.Card_Effects
             this.playerHandService = playerHandService;
         }
 
-        public override void Execute()
+        public override void Execute(int multiplier)
         {
-            
+            int scalesToRemove = AmountOfScalesToRemove() * multiplier;
+            if(scalesToRemove > 0)fishService.ScaleFish(scalesToRemove);
+        }
+
+        public int AmountOfScalesToRemove(){
+            if(!_multiplyOnceForEachCardNamePlayed) return _baseAmountOfScales;
+            int countedSoFar = 0;
+            foreach(PlayedCardCounter playedCard in playerHandService.playedCardCounter){
+                if (playedCard.CardName() == playedCardRef.Name){
+                    countedSoFar = playedCard.CountedSoFar();
+                    Debug.Log("Playing with " + countedSoFar + " counted");
+                }
+            }
+            return AmountToRemovePerCount(countedSoFar);
+        }
+
+        public int EstimateAmountOfScalesToRemove(){
+            if(!_multiplyOnceForEachCardNamePlayed) return _baseAmountOfScales;
+            int countedSoFar = 0;
+            foreach(PlayedCardCounter playedCard in playerHandService.playedCardCounter){
+                if (playedCard.CardName() == playedCardRef.Name){
+                    countedSoFar = playedCard.CurrentAmount();
+                }
+            }
+            return AmountToRemovePerCount(countedSoFar);
+        }
+
+         public int AmountToRemovePerCount(int count){
+            if(count < 1){
+                return 0; //should not happen
+            }
+            else if (count == 1){
+                return _baseAmountOfScales; //if only one of the card was played, there is no bonus
+            }
+            else{
+                //total minus the amount from previous cards
+                int previouslyPlayed = 1;
+                int previouslyRemoved = 0;
+                while (previouslyPlayed < count){
+                    previouslyRemoved += AmountToRemovePerCount(previouslyPlayed);
+                    previouslyPlayed++;
+                }
+                return (_baseAmountOfScales * count * _incrementAmountOfScales * Mathf.Clamp(count, 0, _multiplicationLimit)) - previouslyRemoved;
+            }
         }
     }
 }

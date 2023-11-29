@@ -16,9 +16,7 @@ namespace main.entity.Card_Management.Card_Data
         }
 
         public void Execute(){
-            for(int i = 0; i < multiplier; i++){
-                effectBase.Execute();
-            }
+            effectBase.Execute(multiplier);
         }
     }
 }

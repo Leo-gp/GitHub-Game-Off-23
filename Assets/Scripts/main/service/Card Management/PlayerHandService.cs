@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
@@ -31,6 +32,7 @@ namespace main.service.Card_Management
 
         private readonly PlayerHand playerHand;
         private readonly Turn turn;
+        public List<PlayedCardCounter> playedCardCounter;
 
         public PlayerHandService(PlayerHand playerHand, DeckService deckService, DiscardPileService discardPileService,
             Turn turn, EffectAssemblyService effectAssemblyService)
@@ -40,6 +42,8 @@ namespace main.service.Card_Management
             this.discardPileService = discardPileService;
             this.turn = turn;
             this.effectAssemblyService = effectAssemblyService;
+
+            playedCardCounter = new();
         }
 
         /// <summary>
@@ -96,14 +100,35 @@ namespace main.service.Card_Management
 
             LogInfo($"Playing card '{card}'");
 
+            if(playedCardCounter.Count < 1){
+                LogInfo("Empty counter, creating list item");
+                playedCardCounter.Add(new PlayedCardCounter(card.Name));
+            }
+            else{
+                bool containsCard = false;
+                foreach(PlayedCardCounter playedCard in playedCardCounter){
+                    if (playedCard.CardName() == card.Name){
+                        containsCard = true;
+                        playedCard.IncrementAmount();
+                        LogInfo("Card found in list, incrementing");
+                    }
+                }
+                if(!containsCard){
+                    LogInfo("Card not yet in list, creating list item");
+                    playedCardCounter.Add(new PlayedCardCounter(card.Name));
+                }
+            }
+
             foreach(CardEffect cardEffect in card.CardEffects){
                 if(cardEffect.GetType() == typeof(RemoveScalesCardEffect)){
                     RemoveScalesCardEffect estimatedEffect = cardEffect as RemoveScalesCardEffect;
                     int estimatedScalesRemoved = estimatedEffect.AmountOfScalesToRemove() * card.Multiplier;
                     ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
                 }
-                if(cardEffect.GetType() == typeof(ScaleFishMultipliedCE)){
-                    LogInfo("Scale Fish Multiplied played");
+                else if(cardEffect.GetType() == typeof(ScaleFishMultipliedCE)){
+                    ScaleFishMultipliedCE estimatedEffect = cardEffect as ScaleFishMultipliedCE;
+                    int estimatedScalesRemoved = estimatedEffect.EstimateAmountOfScalesToRemove() * card.Multiplier;
+                    ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
                 }
                 effectAssemblyService.AddEffect(card.Multiplier, cardEffect);
             }
@@ -148,6 +173,18 @@ namespace main.service.Card_Management
         public bool CardHasEnoughTime(Card card)
         {
             return card.TimeCost <= turn.RemainingTime.Time;
+        }
+
+        public void ResetPlayedCardCounter(){
+            playedCardCounter = new();
+        }
+
+        public int RemainingTime(){
+            return turn.RemainingTime.Time;
+        }
+
+        public int RemainingCards(){
+            return playerHand.HandCards.Count;
         }
     }
 }
