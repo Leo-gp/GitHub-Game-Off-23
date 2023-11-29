@@ -4,8 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
+using main.infrastructure;
 using UnityEngine.Assertions;
-using Random = UnityEngine.Random;
 
 namespace main.service.Card_Management
 {
@@ -45,19 +45,15 @@ namespace main.service.Card_Management
 
             LogInfo("Shuffling the discard pile back into the deck");
 
-            // Gather all cards from the stack and save them in a list
-            var asList = new List<Card>();
-            while (discardPile.Pile.Count > 0) asList.Add(discardPile.Pile.Pop());
-
+            var cards = new List<Card>(discardPile.Pile);
+            
+            discardPile.Pile.Clear();
+            
             LogInfo("Removed all cards from the discard pile");
-
-            // Randomly add them back into the deck
-            while (asList.Count > 0)
-            {
-                var nextIndexToRemove = Random.Range(0, asList.Count);
-                deckService.AddCard(asList[nextIndexToRemove]);
-                asList.RemoveAt(nextIndexToRemove);
-            }
+            
+            cards.Shuffle();
+            
+            cards.ForEach(deckService.AddCard);
         }
 
         /// <summary>
