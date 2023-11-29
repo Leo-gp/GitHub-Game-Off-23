@@ -8,9 +8,11 @@ namespace main.service.Turn_System
 {
     public class TurnService : Service, IInitializable, IDisposable
     {
+        private readonly Turn turn;
+        private readonly PlayerHandService playerHandService;
+        private readonly GameService gameService;
         private readonly CardSwapService cardSwapService;
         private readonly EffectAssemblyService effectAssemblyService;
-        private readonly GameService gameService;
 
         public readonly UnityEvent OnNewTurnStart = new();
 
@@ -19,9 +21,6 @@ namespace main.service.Turn_System
         ///     It uses the current turn number as its argument.
         /// </summary>
         public readonly UnityEvent<int> OnTurnNumberIncreased = new();
-
-        private readonly PlayerHandService playerHandService;
-        private readonly Turn turn;
 
         public TurnService
         (
@@ -59,7 +58,7 @@ namespace main.service.Turn_System
 
             OnNewTurnStart.Invoke();
 
-            playerHandService.Draw();
+            playerHandService.StartTurnDraw();
         }
 
         public void EndTurn()
