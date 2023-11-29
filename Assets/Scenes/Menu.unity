@@ -3349,11 +3349,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -420674393
-      Data2: 1251492708
-      Data3: 518574501
-      Data4: 2087934572
-    Path: event:/SFX/UI/UI_Click
+      Data1: 114854998
+      Data2: 1244522085
+      Data3: 1503122066
+      Data4: -91207337
+    Path: event:/SFX/UI/UI_StartGame
   Event: 
   PlayEvent: 0
   StopEvent: 0
