@@ -4899,6 +4899,8 @@ MonoBehaviour:
   _slashPrefab: {fileID: 4861744274909546075, guid: 7cc586a97548c204cb5fd7a7b7409607, type: 3}
   _rawFishImage: {fileID: 511201381}
   _remainingScalesView: {fileID: 1685347122}
+  _remainingFishView: {fileID: 1044751245733905008}
+  _newFishAnimator: {fileID: 1226921314}
 --- !u!1 &802451500
 GameObject:
   m_ObjectHideFlags: 0
@@ -7584,6 +7586,7 @@ GameObject:
   - component: {fileID: 1226921311}
   - component: {fileID: 1226921313}
   - component: {fileID: 1226921312}
+  - component: {fileID: 1226921314}
   m_Layer: 5
   m_Name: FishImage
   m_TagString: Untagged
@@ -7650,6 +7653,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226921310}
   m_CullTransparentMesh: 1
+--- !u!95 &1226921314
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226921310}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 83c54eb75d307b847a339da18396ac7a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1250961193
 GameObject:
   m_ObjectHideFlags: 0
@@ -19083,6 +19107,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7794677376645083952, guid: 6fdc938d18c27764b99ea03b8e85b0b3, type: 3}
   m_PrefabInstance: {fileID: 3583328735244061803}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1044751245733905008 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5511380288007566058, guid: 6fdc938d18c27764b99ea03b8e85b0b3, type: 3}
+  m_PrefabInstance: {fileID: 3583328735244061803}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2756b5a17e3a674f9372d6cbfe35c61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1108462208464390646
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,12 +15,15 @@ namespace main.view.Canvas
         [SerializeField] private SlashPanel _slashPrefab;
         [SerializeField] private Image _rawFishImage;
         [SerializeField] private RemainingScalesView _remainingScalesView;
+        [SerializeField] private RemainingFishView _remainingFishView;
+        [SerializeField] private Animator _newFishAnimator;
         private readonly Queue<EndOfTurnSegment> _endOfTurnQueue = new();
         private float _currentAlphaDamage;
         private EffectAssemblyService _effectAssemblyService;
         private FishService _fishService;
 
         private TurnService _turnService;
+        private int damage;
 
         private void OnEnable()
         {
@@ -72,21 +75,31 @@ namespace main.view.Canvas
                 switch (nextSegment)
                 {
                     case ScaleDamageSegment scaleDamageSegment:
-                        var damage = scaleDamageSegment.DamageAmount;
+                        damage = scaleDamageSegment.DamageAmount;
                         _rawFishImage.color = new Color(1f, 1f, 1f,
                             TranslateDamageToRawFishAlphaColour(damage));
                         UpdateScalesView();
                         StartCoroutine(CreateSlash(TranslateDamageToSlashAmount(damage)));
                         break;
                     case FishKillSegment:
-                        _currentAlphaDamage = 0f;
-                        _rawFishImage.color = new Color(255f, 255f, 255, 0);
-                        HandleNextSegment();
+                        StartCoroutine(HandleFishKill());
                         break;
                     default:
                         throw new NotImplementedException("Segment is not implemented");
                 }
             }
+        }
+
+        private IEnumerator HandleFishKill()
+        {
+            _currentAlphaDamage = 0f;
+            _rawFishImage.color = new Color(255f, 255f, 255, 0);
+            _newFishAnimator.Play("New_Fish");
+            UpdateScalesView();
+            _remainingFishView.IncrementAndRender();
+
+            yield return new WaitForSeconds(2.3f);
+            HandleNextSegment();
         }
 
         private void UpdateScalesView()
@@ -116,9 +129,9 @@ namespace main.view.Canvas
         {
             while (amountOfSlashes > 0)
             {
-                yield return new WaitForSeconds(0.2f);
                 Instantiate(_slashPrefab, transform).Render();
                 amountOfSlashes--;
+                yield return new WaitForSeconds(0.2f);
             }
 
             HandleNextSegment();
