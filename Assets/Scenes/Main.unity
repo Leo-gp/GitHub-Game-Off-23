@@ -21031,11 +21031,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1601965772
-      Data2: 1313246335
-      Data3: -2015550814
-      Data4: -251444315
-    Path: event:/SFX/UI/UI_StayInGame
+      Data1: 23432883
+      Data2: 1314971424
+      Data3: 1975095983
+      Data4: -803591879
+    Path: event:/SFX/UI/UI_AcceptCard
   Event: 
   PlayEvent: 0
   StopEvent: 0
