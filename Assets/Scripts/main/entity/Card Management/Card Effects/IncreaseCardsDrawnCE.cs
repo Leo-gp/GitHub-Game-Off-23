@@ -17,5 +17,15 @@ namespace main.entity.Card_Management.Card_Effects
         public override void Execute()
         {
         }
+
+        public override void MultiplyEffect(int multiplier)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void ResetEffect()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

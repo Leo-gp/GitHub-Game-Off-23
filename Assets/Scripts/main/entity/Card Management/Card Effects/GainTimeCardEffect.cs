@@ -8,19 +8,37 @@ namespace main.entity.Card_Management.Card_Effects
     [CreateAssetMenu(fileName = "Gain Time", menuName = "Data/Card Effect/Gain Time")]
     public class GainTimeCardEffect : CardEffect
     {
-        [SerializeField] private int amount;
+        [SerializeField] private int amountOfTimeToGain;
 
-        private TurnService turnService;
+        private int currentAmountOfTimeToGain;
+        
+        private LazyInject<TurnService> turnService;
 
         [Inject]
-        public void Construct(TurnService turnService)
+        public void Construct(LazyInject<TurnService> turnService)
         {
             this.turnService = turnService;
         }
-        
+
+        private void OnEnable()
+        {
+            ResetEffect();
+        }
+
         public override void Execute()
         {
-            turnService.IncreaseTime(amount);
+            turnService.Value.IncreaseTime(currentAmountOfTimeToGain);
+            ResetEffect();
+        }
+
+        public override void MultiplyEffect(int multiplier)
+        {
+            currentAmountOfTimeToGain *= multiplier;
+        }
+
+        protected override void ResetEffect()
+        {
+            currentAmountOfTimeToGain = amountOfTimeToGain;
         }
     }
 }

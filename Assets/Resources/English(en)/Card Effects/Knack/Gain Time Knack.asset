@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Gain Time Knack
   m_EditorClassIdentifier: 
   isEndTurnEffect: 0
-  amount: 3
+  amountOfTimeToGain: 3

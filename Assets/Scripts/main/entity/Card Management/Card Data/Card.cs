@@ -89,9 +89,13 @@ namespace main.entity.Card_Management.Card_Data
         ///     Yields the classes of the card as a string
         ///     TODO Use localisation key
         /// </summary>
-        public string Class => _cardClass.ToString();
+        public string CardClass => _cardClass.ToString();
 
-        public List<CardEffect> CardEffects => _cardEffects;
+        public List<CardEffect> CardEffects
+        {
+            get => _cardEffects;
+            set => _cardEffects = value;
+        }
 
         /// <summary>
         ///     Yields the description of the card as a string
@@ -120,6 +124,11 @@ namespace main.entity.Card_Management.Card_Data
             Assert.IsTrue(matches.Count <= 1, 
                 $"Each Card should have a single instance, but {this} has multiple matches: {matches}");
             return matches.Count == 1;
+        }
+
+        public void MultiplyEffects(int multiplier)
+        {
+            _cardEffects.ForEach(effect => effect.MultiplyEffect(multiplier));
         }
     }
 }

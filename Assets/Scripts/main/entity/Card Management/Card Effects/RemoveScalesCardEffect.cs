@@ -10,12 +10,9 @@ namespace main.entity.Card_Management.Card_Effects
     {
         [SerializeField] private int amountOfScalesToRemove;
 
-        private FishService fishService;
+        private int currentAmountOfScalesToRemove;
 
-        public int PreviewAmount()
-        {
-            return amountOfScalesToRemove;
-        }
+        private FishService fishService;
 
         [Inject]
         public void Construct(FishService fishService)
@@ -23,9 +20,30 @@ namespace main.entity.Card_Management.Card_Effects
             this.fishService = fishService;
         }
 
+        private void OnEnable()
+        {
+            ResetEffect();
+        }
+
         public override void Execute()
         {
-            fishService.ScaleFish(amountOfScalesToRemove);
+            fishService.ScaleFish(currentAmountOfScalesToRemove);
+            ResetEffect();
+        }
+
+        public override void MultiplyEffect(int multiplier)
+        {
+            currentAmountOfScalesToRemove *= multiplier;
+        }
+
+        protected override void ResetEffect()
+        {
+            currentAmountOfScalesToRemove = amountOfScalesToRemove;
+        }
+        
+        public int PreviewAmount()
+        {
+            return currentAmountOfScalesToRemove;
         }
     }
 }
