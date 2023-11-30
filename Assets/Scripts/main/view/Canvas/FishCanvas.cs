@@ -93,7 +93,6 @@ namespace main.view.Canvas
         private IEnumerator HandleFishKill()
         {
             _currentAlphaDamage = 0f;
-            _rawFishImage.color = new Color(255f, 255f, 255, 0);
             _newFishAnimator.Play("New_Fish");
             UpdateScalesView();
             _remainingFishView.IncrementAndRender();
