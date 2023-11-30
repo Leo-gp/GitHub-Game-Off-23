@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
+using main.entity.Card_Management.Card_Effects;
 using main.entity.Turn_System;
 using UnityEngine.Events;
 
@@ -19,6 +20,8 @@ namespace main.service.Turn_System
         [NotNull] private readonly EffectAssembly effectAssembly;
 
         public UnityEvent OnEffectsWereExecuted = new();
+
+        public UnityEvent<int> OnScalePreviewHasChanged = new();
 
         public EffectAssemblyService([NotNull] EffectAssembly effectAssembly)
         {
@@ -42,6 +45,9 @@ namespace main.service.Turn_System
                 LogInfo($"Adding a new card effect to the end-of-turn effects: '{cardEffect}'");
                 effectAssembly.Effects.Add(cardEffect);
             }
+
+            if (cardEffect is IPreviewable previewableCardEffect)
+                OnScalePreviewHasChanged.Invoke(previewableCardEffect.PreviewAmount());
         }
 
         /// <summary>

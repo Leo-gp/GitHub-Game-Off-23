@@ -134,6 +134,7 @@ namespace main.view.Canvas
                 yield return new WaitForSeconds(0.2f);
             }
 
+            UpdateScalesView();
             HandleNextSegment();
         }
 

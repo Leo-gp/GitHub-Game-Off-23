@@ -1,4 +1,5 @@
-﻿using main.entity.Fish_Management;
+﻿using System;
+using main.entity.Fish_Management;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
@@ -84,7 +85,7 @@ namespace main.service.Fish_Management
                 LogInfo("Triggering the successful scale event");
                 OnFishHasBeenScaled.Invoke();
 
-                var carryOverDamage = +fish.RemainingScales;
+                var carryOverDamage = Math.Abs(fish.RemainingScales);
                 LogInfo($"There is a carry over damage of '{carryOverDamage}'");
 
                 // For nicer consistency in the program
@@ -92,10 +93,10 @@ namespace main.service.Fish_Management
 
                 SpawnNewFish();
 
-                if (carryOverDamage <= 0) return;
+                if (carryOverDamage is 0) return;
 
                 LogInfo("Because there is carry over damage, the method will call itself recursively " +
-                        "to scale the next fish");
+                        $"to scale the next fish. Carry over is {carryOverDamage}");
                 ScaleFish(carryOverDamage);
             }
             else
