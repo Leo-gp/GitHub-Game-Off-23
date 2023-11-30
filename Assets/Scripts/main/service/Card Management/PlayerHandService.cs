@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Card_Management.Card_Effects;
@@ -26,9 +28,9 @@ namespace main.service.Card_Management
         public readonly UnityEvent<Card> OnCardDrawn = new();
 
         public readonly UnityEvent<int> OnTimeUnitChange = new();
+        public readonly UnityEvent<int> ScaleCounterShouldIncrease = new();
 
         private readonly PlayerHand playerHand;
-        public readonly UnityEvent<int> ScaleCounterShouldIncrease = new();
         private readonly Turn turn;
         public List<PlayedCardCounter> playedCardCounter;
 
@@ -41,12 +43,14 @@ namespace main.service.Card_Management
             this.turn = turn;
             this.effectAssemblyService = effectAssemblyService;
 
-            playedCardCounter = new List<PlayedCardCounter>();
+            playedCardCounter = new();
         }
 
         public void StartTurnDraw()
         {
-            Draw();
+            for(int i = 0; i < playerHand.DrawAmount; i++){
+                Draw();
+            }
         }
 
         /// <summary>
@@ -95,7 +99,7 @@ namespace main.service.Card_Management
 
             LogInfo("Initial time before was " + turn.InitialTime.Time);
             turn.RemainingTime.Time -= card.TimeCost;
-
+            
             LogInfo($"Removing {card.TimeCost} time, time is now {turn.RemainingTime.Time}");
             OnTimeUnitChange.Invoke(turn.RemainingTime.Time);
 
@@ -103,44 +107,36 @@ namespace main.service.Card_Management
 
             LogInfo($"Playing card '{card}'");
 
-            if (playedCardCounter.Count < 1)
-            {
+            if(playedCardCounter.Count < 1){
                 LogInfo("Empty counter, creating list item");
                 playedCardCounter.Add(new PlayedCardCounter(card.Name));
             }
-            else
-            {
-                var containsCard = false;
-                foreach (var playedCard in playedCardCounter)
-                    if (playedCard.CardName() == card.Name)
-                    {
+            else{
+                bool containsCard = false;
+                foreach(PlayedCardCounter playedCard in playedCardCounter){
+                    if (playedCard.CardName() == card.Name){
                         containsCard = true;
                         playedCard.IncrementAmount();
                         LogInfo("Card found in list, incrementing");
                     }
-
-                if (!containsCard)
-                {
+                }
+                if(!containsCard){
                     LogInfo("Card not yet in list, creating list item");
                     playedCardCounter.Add(new PlayedCardCounter(card.Name));
                 }
             }
 
-            foreach (var cardEffect in card.CardEffects)
-            {
-                if (cardEffect.GetType() == typeof(RemoveScalesCardEffect))
-                {
-                    var estimatedEffect = cardEffect as RemoveScalesCardEffect;
-                    var estimatedScalesRemoved = estimatedEffect.AmountOfScalesToRemove() * card.Multiplier;
+            foreach(CardEffect cardEffect in card.CardEffects){
+                if(cardEffect.GetType() == typeof(RemoveScalesCardEffect)){
+                    RemoveScalesCardEffect estimatedEffect = cardEffect as RemoveScalesCardEffect;
+                    int estimatedScalesRemoved = estimatedEffect.AmountOfScalesToRemove() * card.Multiplier;
                     ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
                 }
-                else if (cardEffect.GetType() == typeof(ScaleFishMultipliedCE))
-                {
-                    var estimatedEffect = cardEffect as ScaleFishMultipliedCE;
-                    var estimatedScalesRemoved = estimatedEffect.EstimateAmountOfScalesToRemove() * card.Multiplier;
+                else if(cardEffect.GetType() == typeof(ScaleFishMultipliedCE)){
+                    ScaleFishMultipliedCE estimatedEffect = cardEffect as ScaleFishMultipliedCE;
+                    int estimatedScalesRemoved = estimatedEffect.EstimateAmountOfScalesToRemove() * card.Multiplier;
                     ScaleCounterShouldIncrease.Invoke(estimatedScalesRemoved);
                 }
-
                 effectAssemblyService.AddEffect(card.Multiplier, cardEffect);
             }
 
@@ -186,18 +182,15 @@ namespace main.service.Card_Management
             return card.TimeCost <= turn.RemainingTime.Time;
         }
 
-        public void ResetPlayedCardCounter()
-        {
-            playedCardCounter = new List<PlayedCardCounter>();
+        public void ResetPlayedCardCounter(){
+            playedCardCounter = new();
         }
 
-        public int RemainingTime()
-        {
+        public int RemainingTime(){
             return turn.RemainingTime.Time;
         }
 
-        public int RemainingCards()
-        {
+        public int RemainingCards(){
             return playerHand.HandCards.Count;
         }
     }
