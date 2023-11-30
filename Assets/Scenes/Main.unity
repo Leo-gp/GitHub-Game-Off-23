@@ -4898,6 +4898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slashPrefab: {fileID: 4861744274909546075, guid: 7cc586a97548c204cb5fd7a7b7409607, type: 3}
   _rawFishImage: {fileID: 511201381}
+  _cameraController: {fileID: 83382762}
 --- !u!1 &802451500
 GameObject:
   m_ObjectHideFlags: 0

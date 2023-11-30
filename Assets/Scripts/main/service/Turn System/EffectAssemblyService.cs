@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
+using UnityEngine.Events;
 
 namespace main.service.Turn_System
 {
@@ -16,6 +17,8 @@ namespace main.service.Turn_System
         ///     The instance is created automatically once the service is created.
         /// </summary>
         [NotNull] private readonly EffectAssembly effectAssembly;
+
+        public UnityEvent OnEffectsWereExecuted = new();
 
         public EffectAssemblyService([NotNull] EffectAssembly effectAssembly)
         {
@@ -40,7 +43,7 @@ namespace main.service.Turn_System
                 effectAssembly.Effects.Add(cardEffect);
             }
         }
-        
+
         /// <summary>
         ///     Executes each end-of-turn effect assembled in the <see cref="EffectAssembly" /> and then clears the
         ///     list, making it ready for the next turn.
@@ -50,9 +53,10 @@ namespace main.service.Turn_System
             LogInfo("Now executing all end of turn effects");
             effectAssembly.Effects.ForEach(effect => effect.Execute());
             Clear();
+            OnEffectsWereExecuted.Invoke();
             LogInfo("Successfully executed all end-of-turn effects");
         }
-        
+
         /// <summary>
         ///     Removes all end-of-turn effects from the <see cref="EffectAssembly" /> once they have been executed.
         /// </summary>

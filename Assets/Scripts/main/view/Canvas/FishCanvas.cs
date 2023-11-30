@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using main.service.Fish_Management;
+using main.service.Turn_System;
 using main.view.Panels;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Zenject;
 
@@ -17,31 +17,36 @@ namespace main.view.Canvas
 
         private readonly Queue<EndOfTurnSegment> _endOfTurnQueue = new();
         private float _currentAlphaDamage;
+        private EffectAssemblyService _effectAssemblyService;
         private FishService _fishService;
-        private bool _isHandlingQueue;
+        private TurnService _turnService;
 
         private void OnEnable()
         {
             _fishService.OnFishHasReceivedDamage.AddListener(EnqueueFishScale);
             _fishService.OnFishHasBeenScaled.AddListener(EnqueueFishKill);
+            _effectAssemblyService.OnEffectsWereExecuted.AddListener(HandleNextSegment);
         }
 
         private void OnDisable()
         {
             _fishService.OnFishHasReceivedDamage.RemoveListener(EnqueueFishScale);
             _fishService.OnFishHasBeenScaled.RemoveListener(EnqueueFishKill);
+            _effectAssemblyService.OnEffectsWereExecuted.RemoveListener(HandleNextSegment);
         }
 
         [Inject]
-        public void Construct(FishService fishService)
+        public void Construct(FishService fishService, EffectAssemblyService effectAssemblyService,
+            TurnService turnService)
         {
             _fishService = fishService;
+            _effectAssemblyService = effectAssemblyService;
+            _turnService = turnService;
         }
 
         private void EnqueueFishKill()
         {
             _endOfTurnQueue.Enqueue(new FishKillSegment());
-            HandleQueueIfNotAlready();
         }
 
         private void EnqueueFishScale(int amountThatHasBeenScaled)
@@ -50,24 +55,13 @@ namespace main.view.Canvas
             {
                 DamageAmount = amountThatHasBeenScaled
             });
-
-            HandleQueueIfNotAlready();
-        }
-
-        private void HandleQueueIfNotAlready()
-        {
-            Assert.AreNotEqual(_endOfTurnQueue.Count, 0);
-            if (_isHandlingQueue) return;
-
-            _isHandlingQueue = true;
-            HandleNextSegment();
         }
 
         private void HandleNextSegment()
         {
             if (_endOfTurnQueue.Count is 0)
             {
-                Debug.Log("Should now proceed with end of turn");
+                _turnService.ProceedWithEndOfTurn();
             }
             else
             {
@@ -83,6 +77,7 @@ namespace main.view.Canvas
                     case FishKillSegment:
                         _currentAlphaDamage = 0f;
                         _rawFishImage.color = new Color(255f, 255f, 255, 0);
+                        HandleNextSegment();
                         break;
                     default:
                         throw new NotImplementedException("Segment is not implemented");
