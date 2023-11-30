@@ -1,4 +1,3 @@
-using main.service.Fish_Management;
 using main.service.Turn_System;
 using TMPro;
 using UnityEngine;
@@ -9,36 +8,30 @@ namespace main.view
     public class RemainingFishView : MonoBehaviour
     {
         [SerializeField] private TMP_Text _remainingFishText;
+        private int _current;
 
-        private FishService fishService;
         private GameService gameService;
 
-        private void OnEnable()
+        private void Start()
         {
-            fishService.OnFishHasBeenScaled.AddListener(RenderRemainingFish);
-            Render(0);
-        }
-
-        private void OnDisable()
-        {
-            fishService.OnFishHasBeenScaled.RemoveListener(RenderRemainingFish);
+            Render();
         }
 
         [Inject]
-        public void Construct(GameService gameService, FishService fishService)
+        public void Construct(GameService gameService)
         {
             this.gameService = gameService;
-            this.fishService = fishService;
         }
 
-        private void Render(int remainingFish)
+        public void IncrementAndRender()
         {
-            _remainingFishText.text = remainingFish + "/" + gameService.RequiredAmountOfFishToScaleToWin();
+            _current++;
+            Render();
         }
 
-        private void RenderRemainingFish()
+        private void Render()
         {
-            Render(gameService.CurrentAmountOfScaledFish());
+            _remainingFishText.text = _current + "/" + gameService.RequiredAmountOfFishToScaleToWin();
         }
     }
 }

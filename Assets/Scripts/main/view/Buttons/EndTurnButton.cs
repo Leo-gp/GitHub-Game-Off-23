@@ -14,9 +14,14 @@ namespace main.view.Buttons
             _animator = GetComponent<Animator>();
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            turnService.OnNewTurnStart.AddListener(Lock);
+            turnService.OnNewTurnStart.AddListener(Unlock);
+        }
+
+        private void OnDisable()
+        {
+            turnService.OnNewTurnStart.RemoveListener(Unlock);
         }
 
         [Inject]
@@ -27,6 +32,7 @@ namespace main.view.Buttons
 
         public void OnClick()
         {
+            Lock();
             turnService.EndTurn();
         }
 
@@ -34,6 +40,11 @@ namespace main.view.Buttons
         {
             if (_animator.GetCurrentAnimatorStateInfo(0).IsName("EndOfTurnLock")) _animator.Play("Idle");
             _animator.Play("EndOfTurnLock");
+        }
+
+        private void Unlock()
+        {
+            _animator.Play("EndOfTurnUnlock");
         }
     }
 }

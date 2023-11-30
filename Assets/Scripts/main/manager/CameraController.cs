@@ -8,7 +8,7 @@ namespace main.manager
     {
         private const float LEFT = -2.12f, RIGHT = 2.12f, TOP = 1.16f, BOTTOM = -1.13f, SPEED = 5f;
         private Camera _camera;
-    
+
         private void Start()
         {
             _camera = GetComponent<Camera>();

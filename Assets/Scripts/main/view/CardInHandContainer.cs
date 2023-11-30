@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using FMODUnity;
 using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
+using main.service.Turn_System;
 using main.view.Canvas;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using FMODUnity;
 
 namespace main.view
 {
@@ -25,11 +26,12 @@ namespace main.view
         [SerializeField] private StudioEventEmitter _cardRedockEvent;
         [SerializeField] private StudioEventEmitter _cardSelectionEvent;
         private RectTransform _childRectTransform;
-        private bool _hasEnoughTimeToPlay;
+        private bool _hasEnoughTimeToPlay, _isInEndOfTurn;
         private CardPlayState _playState;
         private PlayerHandService playerHandService;
 
         private PlayerHandView playerHandView;
+        private TurnService turnService;
 
         public CardView CardView { get; private set; }
 
@@ -42,10 +44,14 @@ namespace main.view
         private void OnDisable()
         {
             playerHandService?.OnTimeUnitChange.RemoveListener(SetUsabilityColourOfCardView);
+            turnService.OnBeforeEndOfTurn.RemoveListener(DisableOnEndOfTurn);
+            turnService.OnNewTurnStart.RemoveListener(EnableOnNewTurn);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (_isInEndOfTurn) return;
+
             if (playerHandService.CardHasEnoughTime(CardView.Card))
             {
                 _cardSelectionEvent.Play();
@@ -62,7 +68,7 @@ namespace main.view
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (!_hasEnoughTimeToPlay) return;
+            if (!_hasEnoughTimeToPlay || _isInEndOfTurn) return;
 
             var pos = PlayerHandCanvas
                 .Instance
@@ -98,7 +104,7 @@ namespace main.view
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (!_hasEnoughTimeToPlay) return;
+            if (!_hasEnoughTimeToPlay || _isInEndOfTurn) return;
 
             switch (_playState)
             {
@@ -117,6 +123,16 @@ namespace main.view
             }
         }
 
+        private void DisableOnEndOfTurn()
+        {
+            _isInEndOfTurn = true;
+        }
+
+        private void EnableOnNewTurn()
+        {
+            _isInEndOfTurn = false;
+        }
+
         private void SetUsabilityColourOfCardView(int _)
         {
             CardView.ChangeSelection(playerHandService.CardHasEnoughTime(CardView.Card)
@@ -127,12 +143,16 @@ namespace main.view
         public void CreateChild(
             [NotNull] Card cardToContain,
             [NotNull] PlayerHandView callback,
-            [NotNull] PlayerHandService playerHandService)
+            [NotNull] PlayerHandService playerHandService,
+            [NotNull] TurnService turnService)
         {
             this.playerHandService = playerHandService;
+            this.turnService = turnService;
             playerHandView = callback;
 
             playerHandService.OnTimeUnitChange.AddListener(SetUsabilityColourOfCardView);
+            turnService.OnBeforeEndOfTurn.AddListener(DisableOnEndOfTurn);
+            turnService.OnNewTurnStart.AddListener(EnableOnNewTurn);
 
             var newCardView = Instantiate(_cardViewPrefab, transform);
             CardView = newCardView;

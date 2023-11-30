@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using FMODUnity;
 using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
+using main.service.Turn_System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -19,18 +20,12 @@ namespace main.view
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
         [SerializeField] private StudioEventEmitter _cardDrawEvent;
 
-        private PlayerHandService playerHandService;
-        private DiscardPileService discardPileService;
-
         private readonly List<CardInHandContainer> cardInHandContainers = new();
         private int _drawOffset;
+        private DiscardPileService discardPileService;
 
-        [Inject]
-        public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService)
-        {
-            this.playerHandService = playerHandService;
-            this.discardPileService = discardPileService;
-        }
+        private PlayerHandService playerHandService;
+        private TurnService turnService;
 
         private void OnEnable()
         {
@@ -44,6 +39,15 @@ namespace main.view
         {
             playerHandService.OnCardDrawn.RemoveListener(RenderNewCard);
             discardPileService.OnDiscard -= RemoveCard;
+        }
+
+        [Inject]
+        public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService,
+            TurnService turnService)
+        {
+            this.playerHandService = playerHandService;
+            this.discardPileService = discardPileService;
+            this.turnService = turnService;
         }
 
         public void IncreaseSpacing()
@@ -67,7 +71,7 @@ namespace main.view
             cardInHandContainers.Add(newCardViewContainer);
             StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity));
         }
-        
+
         private IEnumerator CreateCardAfterTime([NotNull] CardInHandContainer container, [NotNull] Card cardEntity)
         {
             // Guarantee to wait one frame
@@ -75,11 +79,11 @@ namespace main.view
 
             // Now create a slight draw offset
             _drawOffset++;
-            yield return new WaitForSeconds(0.1f  * _drawOffset);
+            yield return new WaitForSeconds(0.1f * _drawOffset);
             _drawOffset--;
-            
+
             _cardDrawEvent.Play();
-            container.CreateChild(cardEntity, this, playerHandService);
+            container.CreateChild(cardEntity, this, playerHandService, turnService);
         }
 
         private void RemoveCard(Card card)

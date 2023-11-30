@@ -1,4 +1,5 @@
-﻿using main.entity.Fish_Management;
+﻿using System;
+using main.entity.Fish_Management;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
@@ -15,21 +16,26 @@ namespace main.service.Fish_Management
         /// </summary>
         private readonly Fish fish;
 
-        public FishService(Fish fish)
-        {
-            this.fish = fish;
-        }
-        
         /// <summary>
         ///     Triggered once a fish has been completely scaled.
         /// </summary>
         public readonly UnityEvent OnFishHasBeenScaled = new();
-        
+
         /// <summary>
-        ///     Triggered when a fish is scaled or a new fish is loaded
+        ///     Triggered when a fish is scaled
+        /// </summary>
+        public readonly UnityEvent<int> OnFishHasReceivedDamage = new();
+
+        /// <summary>
+        ///     Triggered when the fish scale amount is changed
         /// </summary>
         public readonly UnityEvent<int> OnFishScalesHaveChanged = new();
-        
+
+        public FishService(Fish fish)
+        {
+            this.fish = fish;
+        }
+
         /// <summary>
         ///     Sets the current fish to a new fish instance.
         ///     Note that this should only be done if the current fish is null or its remaining scales are zero
@@ -47,6 +53,11 @@ namespace main.service.Fish_Management
             OnFishScalesHaveChanged.Invoke(fish.RemainingScales);
         }
 
+        public int GetBaseScalesOfCurrentFish()
+        {
+            return fish.TotalScales;
+        }
+
         /// <summary>
         ///     Damages the current fish by the specified amount.
         ///     If the fish "dies" / is scaled, a new fish is spawned and the carry-over damage will be applied to
@@ -60,6 +71,7 @@ namespace main.service.Fish_Management
                 "Should not try to scale the fish if it does not exist yet or is already scaled");
 
             fish.RemainingScales -= damage;
+            OnFishHasReceivedDamage.Invoke(damage);
             LogInfo($"Damaged the current fish by '{damage}'");
 
             LogInfo("Triggering the OnFishScalesHaveChanged event");
@@ -73,7 +85,7 @@ namespace main.service.Fish_Management
                 LogInfo("Triggering the successful scale event");
                 OnFishHasBeenScaled.Invoke();
 
-                var carryOverDamage = +fish.RemainingScales;
+                var carryOverDamage = Math.Abs(fish.RemainingScales);
                 LogInfo($"There is a carry over damage of '{carryOverDamage}'");
 
                 // For nicer consistency in the program
@@ -81,10 +93,10 @@ namespace main.service.Fish_Management
 
                 SpawnNewFish();
 
-                if (carryOverDamage <= 0) return;
+                if (carryOverDamage is 0) return;
 
                 LogInfo("Because there is carry over damage, the method will call itself recursively " +
-                        "to scale the next fish");
+                        $"to scale the next fish. Carry over is {carryOverDamage}");
                 ScaleFish(carryOverDamage);
             }
             else
@@ -93,7 +105,7 @@ namespace main.service.Fish_Management
                         $"'{fish.RemainingScales}' remaining scales");
             }
         }
-        
+
         private void RestoreFishScales()
         {
             fish.RemainingScales = fish.TotalScales;
