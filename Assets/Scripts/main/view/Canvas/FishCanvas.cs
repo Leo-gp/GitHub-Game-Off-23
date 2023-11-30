@@ -14,11 +14,12 @@ namespace main.view.Canvas
     {
         [SerializeField] private SlashPanel _slashPrefab;
         [SerializeField] private Image _rawFishImage;
-
+        [SerializeField] private RemainingScalesView _remainingScalesView;
         private readonly Queue<EndOfTurnSegment> _endOfTurnQueue = new();
         private float _currentAlphaDamage;
         private EffectAssemblyService _effectAssemblyService;
         private FishService _fishService;
+
         private TurnService _turnService;
 
         private void OnEnable()
@@ -26,6 +27,8 @@ namespace main.view.Canvas
             _fishService.OnFishHasReceivedDamage.AddListener(EnqueueFishScale);
             _fishService.OnFishHasBeenScaled.AddListener(EnqueueFishKill);
             _effectAssemblyService.OnEffectsWereExecuted.AddListener(HandleNextSegment);
+
+            UpdateScalesView();
         }
 
         private void OnDisable()
@@ -72,6 +75,7 @@ namespace main.view.Canvas
                         var damage = scaleDamageSegment.DamageAmount;
                         _rawFishImage.color = new Color(1f, 1f, 1f,
                             TranslateDamageToRawFishAlphaColour(damage));
+                        UpdateScalesView();
                         StartCoroutine(CreateSlash(TranslateDamageToSlashAmount(damage)));
                         break;
                     case FishKillSegment:
@@ -83,6 +87,11 @@ namespace main.view.Canvas
                         throw new NotImplementedException("Segment is not implemented");
                 }
             }
+        }
+
+        private void UpdateScalesView()
+        {
+            _remainingScalesView.Render(_fishService.GetBaseScalesOfCurrentFish() - (int)_currentAlphaDamage);
         }
 
         private float TranslateDamageToRawFishAlphaColour(int damage)

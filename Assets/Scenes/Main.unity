@@ -4898,7 +4898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slashPrefab: {fileID: 4861744274909546075, guid: 7cc586a97548c204cb5fd7a7b7409607, type: 3}
   _rawFishImage: {fileID: 511201381}
-  _cameraController: {fileID: 83382762}
+  _remainingScalesView: {fileID: 1685347122}
 --- !u!1 &802451500
 GameObject:
   m_ObjectHideFlags: 0
@@ -10683,6 +10683,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662524744}
   m_CullTransparentMesh: 1
+--- !u!114 &1685347122 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1127372749360917892, guid: e45014f0b7d3645458d79030a6b54c8a, type: 3}
+  m_PrefabInstance: {fileID: 3251333045853920232}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac12db8885bd4dcf907a9daeb40d3c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1701258374
 GameObject:
   m_ObjectHideFlags: 0
