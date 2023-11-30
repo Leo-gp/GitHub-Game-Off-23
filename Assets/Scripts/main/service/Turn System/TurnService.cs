@@ -11,6 +11,7 @@ namespace main.service.Turn_System
         private readonly CardSwapService cardSwapService;
         private readonly EffectAssemblyService effectAssemblyService;
         private readonly GameService gameService;
+        public readonly UnityEvent OnBeforeEndOfTurn = new();
 
         public readonly UnityEvent OnNewTurnStart = new();
 
@@ -65,6 +66,7 @@ namespace main.service.Turn_System
         {
             LogInfo("Now ending the current turn");
 
+            OnBeforeEndOfTurn.Invoke();
             effectAssemblyService.ExecuteAll();
         }
 
