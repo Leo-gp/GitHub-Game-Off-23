@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using main.entity.Card_Management.Card_Data;
 using UnityEngine;
@@ -11,6 +12,18 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] private CardClass targetClass;
 
         private int multiplier;
+
+        private int Multiplier
+        {
+            get => multiplier;
+            set
+            {
+                multiplier = value;
+                OnEffectUpdated?.Invoke();
+            }
+        }
+
+        public override event Action OnEffectUpdated;
 
         private PlayerHand playerHand;
 
@@ -30,19 +43,24 @@ namespace main.entity.Card_Management.Card_Effects
             playerHand.HandCards
                 .Where(card => card.CardClass.Equals(targetClass.ToString()))
                 .ToList()
-                .ForEach(card => card.MultiplyEffects(multiplier));
+                .ForEach(card => card.MultiplyEffects(Multiplier));
             
             ResetEffect();
         }
 
         public override void MultiplyEffect(int multiplier)
         {
-            this.multiplier *= multiplier;
+            Multiplier *= multiplier;
         }
 
         protected override void ResetEffect()
         {
-            multiplier = 2;
+            Multiplier = 2;
+        }
+
+        public override string GetDescription()
+        {
+            return $"x{Multiplier} the effects of all {targetClass.ToString()} cards in your hand";
         }
     }
 }

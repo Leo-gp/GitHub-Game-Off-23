@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -94,21 +96,33 @@ namespace main.entity.Card_Management.Card_Data
         public List<CardEffect> CardEffects
         {
             get => _cardEffects;
-            set => _cardEffects = value;
+            set
+            { 
+                _cardEffects = value;
+                _cardEffects.ForEach(effect =>
+                {
+                    effect.OnEffectUpdated += NotifyDescriptionUpdated;
+                });
+            }
         }
 
-        /// <summary>
-        ///     Yields the description of the card as a string
-        /// </summary>
-        public string Description()
+        public event Action OnDescriptionUpdated;
+
+        private void OnDisable()
         {
-            return "No effect";
-            // TODO Use the card effect description instead of the "name" placeholder
-            /*var bobTheBuilder = new StringBuilder();
-            foreach (var cardEffect in _cardEffects) bobTheBuilder.Append(cardEffect.name + "\n\n");
+            _cardEffects.ForEach(effect =>
+            {
+                effect.OnEffectUpdated -= NotifyDescriptionUpdated;
+            });
+        }
+
+        public string GetDescription()
+        {
+            var bobTheBuilder = new StringBuilder();
+            foreach (var cardEffect in _cardEffects) bobTheBuilder.Append(cardEffect.GetDescription() + "\n\n");
 
             var description = bobTheBuilder.ToString();
-            return description[..^2];*/
+            return description.Length > 0 ? description[..^2] : "No effect";
         }
 
         public void RemoveFrom(ICollection<Card> cards)
@@ -129,6 +143,11 @@ namespace main.entity.Card_Management.Card_Data
         public void MultiplyEffects(int multiplier)
         {
             _cardEffects.ForEach(effect => effect.MultiplyEffect(multiplier));
+        }
+
+        private void NotifyDescriptionUpdated()
+        {
+            OnDescriptionUpdated?.Invoke();
         }
     }
 }

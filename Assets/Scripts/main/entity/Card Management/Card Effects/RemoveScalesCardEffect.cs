@@ -1,3 +1,4 @@
+using System;
 using main.entity.Card_Management.Card_Data;
 using main.service.Fish_Management;
 using UnityEngine;
@@ -12,6 +13,18 @@ namespace main.entity.Card_Management.Card_Effects
 
         private int currentAmountOfScalesToRemove;
 
+        private int CurrentAmountOfScalesToRemove
+        {
+            get => currentAmountOfScalesToRemove;
+            set
+            {
+                currentAmountOfScalesToRemove = value;
+                OnEffectUpdated?.Invoke();
+            }
+        }
+        
+        public override event Action OnEffectUpdated;
+
         private FishService fishService;
 
         [Inject]
@@ -24,26 +37,31 @@ namespace main.entity.Card_Management.Card_Effects
         {
             ResetEffect();
         }
-
+        
         public override void Execute()
         {
-            fishService.ScaleFish(currentAmountOfScalesToRemove);
+            fishService.ScaleFish(CurrentAmountOfScalesToRemove);
             ResetEffect();
         }
 
         public override void MultiplyEffect(int multiplier)
         {
-            currentAmountOfScalesToRemove *= multiplier;
+            CurrentAmountOfScalesToRemove *= multiplier;
         }
 
         protected override void ResetEffect()
         {
-            currentAmountOfScalesToRemove = amountOfScalesToRemove;
+            CurrentAmountOfScalesToRemove = amountOfScalesToRemove;
         }
-        
+
+        public override string GetDescription()
+        {
+            return $"Remove {CurrentAmountOfScalesToRemove} scales";
+        }
+
         public int PreviewAmount()
         {
-            return currentAmountOfScalesToRemove;
+            return CurrentAmountOfScalesToRemove;
         }
     }
 }
