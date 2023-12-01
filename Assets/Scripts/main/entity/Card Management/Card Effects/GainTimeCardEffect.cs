@@ -1,3 +1,4 @@
+using System;
 using main.entity.Card_Management.Card_Data;
 using main.service.Turn_System;
 using UnityEngine;
@@ -11,7 +12,19 @@ namespace main.entity.Card_Management.Card_Effects
         [SerializeField] private int amountOfTimeToGain;
 
         private int currentAmountOfTimeToGain;
+
+        private int CurrentAmountOfTimeToGain
+        {
+            get => currentAmountOfTimeToGain;
+            set
+            {
+                currentAmountOfTimeToGain = value;
+                OnEffectUpdated?.Invoke();
+            }
+        }
         
+        public override event Action OnEffectUpdated;
+
         private LazyInject<TurnService> turnService;
 
         [Inject]
@@ -24,21 +37,26 @@ namespace main.entity.Card_Management.Card_Effects
         {
             ResetEffect();
         }
-
+        
         public override void Execute()
         {
-            turnService.Value.IncreaseTime(currentAmountOfTimeToGain);
+            turnService.Value.IncreaseTime(CurrentAmountOfTimeToGain);
             ResetEffect();
         }
 
         public override void MultiplyEffect(int multiplier)
         {
-            currentAmountOfTimeToGain *= multiplier;
+            CurrentAmountOfTimeToGain *= multiplier;
         }
 
         protected override void ResetEffect()
         {
-            currentAmountOfTimeToGain = amountOfTimeToGain;
+            CurrentAmountOfTimeToGain = amountOfTimeToGain;
+        }
+
+        public override string GetDescription()
+        {
+            return $"Gain +{CurrentAmountOfTimeToGain} time";
         }
     }
 }

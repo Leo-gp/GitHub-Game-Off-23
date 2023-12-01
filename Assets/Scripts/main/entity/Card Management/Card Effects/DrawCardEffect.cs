@@ -1,3 +1,4 @@
+using System;
 using main.entity.Card_Management.Card_Data;
 using main.service.Card_Management;
 using UnityEngine;
@@ -12,8 +13,20 @@ namespace main.entity.Card_Management.Card_Effects
 
         private int currentAmountOfCardsToDraw;
 
-        private LazyInject<PlayerHandService> playerHandService;
+        private int CurrentAmountOfCardsToDraw
+        {
+            get => currentAmountOfCardsToDraw;
+            set
+            {
+                currentAmountOfCardsToDraw = value;
+                OnEffectUpdated?.Invoke();
+            }
+        }
         
+        public override event Action OnEffectUpdated;
+        
+        private LazyInject<PlayerHandService> playerHandService;
+
         [Inject]
         public void Construct(LazyInject<PlayerHandService> playerHandService)
         {
@@ -24,21 +37,27 @@ namespace main.entity.Card_Management.Card_Effects
         {
             ResetEffect();
         }
-
+        
         public override void Execute()
         {
-            playerHandService.Value.Draw(currentAmountOfCardsToDraw);
+            playerHandService.Value.Draw(CurrentAmountOfCardsToDraw);
             ResetEffect();
         }
 
         public override void MultiplyEffect(int multiplier)
         {
-            currentAmountOfCardsToDraw *= multiplier;
+            CurrentAmountOfCardsToDraw *= multiplier;
         }
 
         protected override void ResetEffect()
         {
-            currentAmountOfCardsToDraw = amountOfCardsToDraw;
+            CurrentAmountOfCardsToDraw = amountOfCardsToDraw;
+        }
+
+        public override string GetDescription()
+        {
+            var cardOrCards = CurrentAmountOfCardsToDraw == 1 ? "card" : "cards";
+            return $"Draw {CurrentAmountOfCardsToDraw} {cardOrCards}";
         }
     }
 }

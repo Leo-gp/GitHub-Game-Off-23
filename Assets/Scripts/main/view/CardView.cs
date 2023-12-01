@@ -62,6 +62,12 @@ namespace main.view
         {
             Card = card;
             Render();
+            card.OnDescriptionUpdated += UpdateCardDescriptionText;
+        }
+
+        private void OnDisable()
+        {
+            Card.OnDescriptionUpdated -= UpdateCardDescriptionText;
         }
 
         private void HandlePotentialDraw()
@@ -145,7 +151,7 @@ namespace main.view
             _cardClassText.text = Card.CardClass;
             _cardCostText.text = Card.TimeCost.ToString();
             _cardValueText.text = Card.Rarity.ToString();
-            _cardDescriptionText.text = Card.Description();
+            _cardDescriptionText.text = Card.GetDescription();
 
             _cardIconSpriteImage.sprite = Card.IconSprite;
             _cardTypeSpriteImage.sprite = Card switch
@@ -170,6 +176,11 @@ namespace main.view
                     CardInHandContainer.CardPlayState.UNPLAYABLE => _unplayableColour,
                     _ => throw new NotImplementedException("Colour does not exist")
                 };
+        }
+        
+        private void UpdateCardDescriptionText()
+        {
+            _cardDescriptionText.text = Card.GetDescription();
         }
     }
 }
