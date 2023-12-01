@@ -20,4 +20,4 @@ MonoBehaviour:
   _unitTimeCost:
     time: 4
   _cardEffects:
-  - {fileID: 11400000, guid: 9f21e99ac315b4743886ca9502701949, type: 2}
+  - {fileID: 11400000, guid: 9d80a4e7457bc1348a0ded3d526e4d40, type: 2}
