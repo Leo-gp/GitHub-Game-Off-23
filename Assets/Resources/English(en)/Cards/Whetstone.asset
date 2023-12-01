@@ -20,5 +20,5 @@ MonoBehaviour:
   _unitTimeCost:
     time: 2
   _cardEffects:
-  - {fileID: 11400000, guid: beeeed230a1b54546bce55e82463ac12, type: 2}
+  - {fileID: 11400000, guid: 6350cdd42045b284ba79307681f4aacc, type: 2}
   _amountOfTurnsToLast: 3
