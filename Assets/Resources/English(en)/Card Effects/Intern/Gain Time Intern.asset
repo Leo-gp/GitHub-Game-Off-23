@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Gain Time Intern
   m_EditorClassIdentifier: 
   isEndTurnEffect: 0
-  amount: 20
+  amountOfTimeToGain: 20

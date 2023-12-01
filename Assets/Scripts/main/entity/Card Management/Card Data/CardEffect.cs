@@ -22,5 +22,9 @@ namespace main.entity.Card_Management.Card_Data
         ///     Debug.Log, etc.
         /// </summary>
         public abstract void Execute();
+
+        public abstract void MultiplyEffect(int multiplier);
+
+        protected abstract void ResetEffect();
     }
 }

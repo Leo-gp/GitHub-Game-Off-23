@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using main.entity.Card_Management;
 using main.entity.Card_Management.Card_Data;
 using main.entity.Turn_System;
@@ -95,9 +96,9 @@ namespace main.service.Card_Management
             
             LogInfo($"Playing card '{card}'");
 
-            card.CardEffects.ForEach(effectAssemblyService.AddEffect);
-
             playerHand.HandCards.Remove(card);
+            
+            card.CardEffects.ForEach(effectAssemblyService.AddEffect);
 
             discardPileService.Discard(card);
 
@@ -128,7 +129,8 @@ namespace main.service.Card_Management
         /// <param name="amount">The amount of cards to draw</param>
         private void DrawCardsFromDeck(int amount)
         {
-            for (var i = 0; i < amount; i++)
+            var actualAmount = Math.Min(amount, deckService.ToList().Count());
+            for (var i = 0; i < actualAmount; i++)
             {
                 var drawnCard = deckService.DrawFromTop();
                 playerHand.HandCards.Add(drawnCard);

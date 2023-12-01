@@ -10,17 +10,35 @@ namespace main.entity.Card_Management.Card_Effects
     {
         [SerializeField] private int amountOfCardsToDraw;
 
-        private PlayerHandService playerHandService;
+        private int currentAmountOfCardsToDraw;
+
+        private LazyInject<PlayerHandService> playerHandService;
         
         [Inject]
-        public void Construct(PlayerHandService playerHandService)
+        public void Construct(LazyInject<PlayerHandService> playerHandService)
         {
             this.playerHandService = playerHandService;
         }
-        
+
+        private void OnEnable()
+        {
+            ResetEffect();
+        }
+
         public override void Execute()
         {
-            playerHandService.Draw(amountOfCardsToDraw);
+            playerHandService.Value.Draw(currentAmountOfCardsToDraw);
+            ResetEffect();
+        }
+
+        public override void MultiplyEffect(int multiplier)
+        {
+            currentAmountOfCardsToDraw *= multiplier;
+        }
+
+        protected override void ResetEffect()
+        {
+            currentAmountOfCardsToDraw = amountOfCardsToDraw;
         }
     }
 }

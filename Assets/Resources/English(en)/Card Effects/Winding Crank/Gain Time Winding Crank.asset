@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Gain Time Winding Crank
   m_EditorClassIdentifier: 
   isEndTurnEffect: 0
-  amount: 2
+  amountOfTimeToGain: 2
