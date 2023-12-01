@@ -4,15 +4,17 @@ namespace Core
 {
     public static class GameSettingsManager
     {
-        public static bool muteAudio;
-        public static int volumeStep;
+        public static bool muteMusic;
+        public static bool muteSounds;
+        public static bool enableCameraFollow;
 
         public static void Load()
         {
             if (HasBeenSetOnce())
             {
-                muteAudio = PlayerPrefs.GetInt("muteAudio") == 1;
-                volumeStep = PlayerPrefs.GetInt("volumeStep");
+                muteMusic = PlayerPrefs.GetInt("muteMusic") == 1;
+                muteSounds = PlayerPrefs.GetInt("muteSounds") == 1;
+                enableCameraFollow = PlayerPrefs.GetInt("enableCameraFollow") == 1;
             }
             else
             {
@@ -22,20 +24,22 @@ namespace Core
 
         public static void Save()
         {
-            PlayerPrefs.SetInt("muteAudio", muteAudio ? 1 : 0);
-            PlayerPrefs.SetInt("volumeStep", volumeStep);
+            PlayerPrefs.SetInt("muteMusic", muteMusic ? 1 : 0);
+            PlayerPrefs.SetInt("muteSounds", muteSounds ? 1 : 0);
+            PlayerPrefs.SetInt("enableCameraFollow", enableCameraFollow ? 1 : 0);
             AudioManager.UpdateBus();
         }
 
-        private static void LoadDefaultValues()
+        public static void LoadDefaultValues()
         {
-            muteAudio = false;
-            volumeStep = 10;
+            muteMusic = false;
+            muteSounds = false;
+            enableCameraFollow = true;
         }
 
         private static bool HasBeenSetOnce()
         {
-            return PlayerPrefs.HasKey("muteAudio");
+            return PlayerPrefs.HasKey("muteMusic");
         }
     }
 }

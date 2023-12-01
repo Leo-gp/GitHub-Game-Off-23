@@ -87,6 +87,30 @@ MonoBehaviour:
     m_Key: menu-exit
     m_Metadata:
       m_Items: []
+  - m_Id: 34462489418424320
+    m_Key: settings-menu-title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462524340199424
+    m_Key: settings-mute-music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462583437942784
+    m_Key: settings-mute-sounds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462618309386240
+    m_Key: settings-enable-camera-follow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34466130946711552
+    m_Key: settings-save-and-exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34466168540258304
+    m_Key: settings-reset
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
