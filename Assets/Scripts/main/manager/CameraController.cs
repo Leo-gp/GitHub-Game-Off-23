@@ -1,4 +1,5 @@
 using System;
+using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,8 @@ namespace main.manager
 
         private void FixedUpdate()
         {
+            if (!GameSettingsManager.enableCameraFollow) return;
+
             var mousePosition = Mouse.current.position.ReadValue();
             var inWorldPosition = _camera.ScreenToViewportPoint(mousePosition);
 

@@ -90,6 +90,30 @@ MonoBehaviour:
     m_Localized: Exit
     m_Metadata:
       m_Items: []
+  - m_Id: 34462489418424320
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462524340199424
+    m_Localized: Mute Music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462583437942784
+    m_Localized: Mute Sounds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34462618309386240
+    m_Localized: Enable Camera Follow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34466130946711552
+    m_Localized: Save & Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34466168540258304
+    m_Localized: Reset To Default
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
