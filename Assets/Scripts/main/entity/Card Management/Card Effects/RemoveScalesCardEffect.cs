@@ -11,18 +11,8 @@ namespace main.entity.Card_Management.Card_Effects
     {
         [SerializeField] private int amountOfScalesToRemove;
 
-        private int currentAmountOfScalesToRemove;
+        protected int currentAmountOfScalesToRemove;
 
-        private int CurrentAmountOfScalesToRemove
-        {
-            get => currentAmountOfScalesToRemove;
-            set
-            {
-                currentAmountOfScalesToRemove = value;
-                OnEffectUpdated?.Invoke();
-            }
-        }
-        
         public override event Action OnEffectUpdated;
 
         private FishService fishService;
@@ -40,28 +30,40 @@ namespace main.entity.Card_Management.Card_Effects
         
         public override void Execute()
         {
-            fishService.ScaleFish(CurrentAmountOfScalesToRemove);
+            fishService.ScaleFish(GetCurrentAmountOfScalesToRemove());
             ResetEffect();
         }
 
         public override void MultiplyEffect(int multiplier)
         {
-            CurrentAmountOfScalesToRemove *= multiplier;
+            var amount = GetCurrentAmountOfScalesToRemove() * multiplier;
+            SetCurrentAmountOfScalesToRemove(amount);
         }
 
         protected override void ResetEffect()
         {
-            CurrentAmountOfScalesToRemove = amountOfScalesToRemove;
+            SetCurrentAmountOfScalesToRemove(amountOfScalesToRemove);
         }
 
         public override string GetDescription()
         {
-            return $"Remove {CurrentAmountOfScalesToRemove} scales";
+            return $"Remove {GetCurrentAmountOfScalesToRemove()} scales";
         }
 
         public int PreviewAmount()
         {
-            return CurrentAmountOfScalesToRemove;
+            return GetCurrentAmountOfScalesToRemove();
+        }
+        
+        protected virtual int GetCurrentAmountOfScalesToRemove()
+        {
+            return currentAmountOfScalesToRemove;
+        }
+        
+        private void SetCurrentAmountOfScalesToRemove(int amount)
+        {
+            currentAmountOfScalesToRemove = amount;
+            OnEffectUpdated?.Invoke();
         }
     }
 }

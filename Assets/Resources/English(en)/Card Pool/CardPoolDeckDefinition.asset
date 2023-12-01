@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardCopiesList:
   - card: {fileID: 11400000, guid: f6ead009dadb3784d8e86a3102abb0ad, type: 2}
-    numberOfCopies: 8
+    numberOfCopies: 7
   - card: {fileID: 11400000, guid: 9facdf6f9a64d8a48a9198ea06675990, type: 2}
     numberOfCopies: 4
   - card: {fileID: 11400000, guid: f512c96b30b6dcf488d9b80a4eb67dbd, type: 2}
@@ -36,7 +36,7 @@ MonoBehaviour:
   - card: {fileID: 11400000, guid: b1829a43ada2be44684adb0026d62edd, type: 2}
     numberOfCopies: 10
   - card: {fileID: 11400000, guid: 0e9defadcf5eb284b9856a6842242c26, type: 2}
-    numberOfCopies: 9
+    numberOfCopies: 10
   - card: {fileID: 11400000, guid: d1f73b5abc92ad14288cc6177345943f, type: 2}
     numberOfCopies: 4
   - card: {fileID: 11400000, guid: cf36970083af52d42acda5a67d56dc34, type: 2}
