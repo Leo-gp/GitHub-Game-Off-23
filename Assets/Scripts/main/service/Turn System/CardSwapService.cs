@@ -75,8 +75,9 @@ namespace main.service.Turn_System
             var selectedCards = cardPoolService
                 .ToList()
                 .Distinct(new CardComparer())
-                .Where(card => card.Rarity <= maximumRarity - 1)
-                .OrderBy(_ => random.Next())
+                .Where(card => card.Rarity <= maximumRarity)
+                .OrderByDescending(card => card.Rarity)
+                .ThenBy(_ => random.Next())
                 .Take(3)
                 .ToList();
 
