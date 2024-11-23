@@ -66,7 +66,7 @@ namespace main.service.Fish_Management
         /// <param name="damage">the positive amount of damage to deal</param>
         public void ScaleFish(int damage)
         {
-            Assert.IsTrue(damage > 0, "Damage dealt should be positive");
+            Assert.IsFalse(damage < 0, "Damage dealt cannot be negative");
             Assert.IsFalse(fish is null || fish.RemainingScales is 0,
                 "Should not try to scale the fish if it does not exist yet or is already scaled");
 

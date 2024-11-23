@@ -27,7 +27,8 @@ namespace test.EditMode.Turn_System
             const int turnsInAGame = 20;
             const int turnToStartSwappingCards = 3;
             const int turnToStopSwappingCards = 17;
-            var game = new Game(turnsInAGame, turnToStartSwappingCards, turnToStopSwappingCards);
+            const int requiredAmountOfFishToScaleToWin = 50;
+            var game = new Game(turnsInAGame, turnToStartSwappingCards, turnToStopSwappingCards, requiredAmountOfFishToScaleToWin);
             var fish = new Fish(100);
             var fishService = new FishService(fish);
             var starterDeckResourceLoader = new ResourceLoader<DeckDefinition>(ResourcePath.StarterDeck);

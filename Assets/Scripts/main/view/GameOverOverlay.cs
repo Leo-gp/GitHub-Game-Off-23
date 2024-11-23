@@ -16,9 +16,7 @@ namespace main.view
         [SerializeField] private StudioEventEmitter _gameWinMusic;
         [SerializeField] private StudioEventEmitter _gameLossMusic;
 
-
         private GameService gameService;
-        
 
         private void Awake()
         {
@@ -27,8 +25,8 @@ namespace main.view
 
         private void Start()
         {
-            gameService.OnGameOver.AddListener(() => Render(false));
-            // TODO: OnGameWon -> Render(true)
+            gameService.OnGameWon.AddListener(() => Render(true));
+            gameService.OnGameLoss.AddListener(() => Render(false));
         }
 
         [Inject]
@@ -56,7 +54,5 @@ namespace main.view
             if (gameIsWon) _gameWinMusic.Play();
             else _gameLossMusic.Play();
         }
-
-     
     }
 }

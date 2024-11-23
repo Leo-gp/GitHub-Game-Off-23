@@ -10,6 +10,7 @@ namespace main.infrastructure
         [SerializeField] private int turnsInAGame;
         [SerializeField] private int turnToStartSwappingCards;
         [SerializeField] private int turnToStopSwappingCards;
+        [SerializeField] private int requiredAmountOfFishToScaleToWin;
         
         public override void InstallBindings()
         {
@@ -22,7 +23,7 @@ namespace main.infrastructure
 
         private Game CreateGame(InjectContext ctx)
         {
-            return new Game(turnsInAGame, turnToStartSwappingCards, turnToStopSwappingCards);
+            return new Game(turnsInAGame, turnToStartSwappingCards, turnToStopSwappingCards, requiredAmountOfFishToScaleToWin);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace main.entity.Turn_System
         ///     This amount is increased everytime a fish is scaled.
         ///     After the <see cref="TurnsInAGame" />, if this value is not reached, it is game over.
         /// </summary>
-        public const int RequiredAmountOfFishToScaleToWin = 50;
+        public readonly int RequiredAmountOfFishToScaleToWin;
 
         /// <summary>
         ///     Tracks the amount of fish that have been completely scaled by the player.
@@ -57,15 +57,12 @@ namespace main.entity.Turn_System
         /// </summary>
         public Card[] LastOfferedCards { get; set; }
         
-        public Game(int turnsInAGame, int turnToStartSwappingCards, int turnToStopSwappingCards)
+        public Game(int turnsInAGame, int turnToStartSwappingCards, int turnToStopSwappingCards, int requiredAmountOfFishToScaleToWin)
         {
             TurnsInAGame = turnsInAGame;
             TurnToStartSwappingCards = turnToStartSwappingCards;
             TurnToStopSwappingCards = turnToStopSwappingCards;
-        }
-
-        public int ScaledFishToWin(){
-            return RequiredAmountOfFishToScaleToWin;
+            RequiredAmountOfFishToScaleToWin = requiredAmountOfFishToScaleToWin;
         }
     }
 }

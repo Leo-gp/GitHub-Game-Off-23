@@ -26,7 +26,9 @@ namespace main.service.Turn_System
         ///     Triggered once the game is over because there have been two turns without scaling a fish,
         ///     or the round limit has been reached
         /// </summary>
-        public readonly UnityEvent OnGameOver = new();
+        public readonly UnityEvent OnGameWon = new();
+        
+        public readonly UnityEvent OnGameLoss = new();
 
         /// <summary>
         ///     Starts the current game by creating all required services (resetting the old ones if they existed
@@ -42,8 +44,9 @@ namespace main.service.Turn_System
             LogInfo("Successfully started the game, now waiting for player actions");
         }
         
-        // TODO: Remove after player selections are implemented 
         public bool GameIsRunningJustForTest => game.FishHasBeenScaledThisOrLastTurn && turn.CurrentTurnNumber <= game.TurnsInAGame;
+        
+        private bool HasScaledRequiredAmountOfFishToWin => game.currentAmountOfScaledFish >= RequiredAmountOfFishToScaleToWin();
 
         public void HandleGameOver()
         {
@@ -55,7 +58,14 @@ namespace main.service.Turn_System
             LogInfo("Game over. Now ending the game");
             game.IsGameOver = true;
             LogInfo("Now triggering the OnGameOver event");
-            OnGameOver.Invoke();
+            if (HasScaledRequiredAmountOfFishToWin)
+            {
+                OnGameWon.Invoke();
+            }
+            else
+            {
+                OnGameLoss.Invoke();
+            }
         }
 
         public bool IsGameOver()
@@ -93,12 +103,8 @@ namespace main.service.Turn_System
             return turn.CurrentTurnNumber >= game.TurnsInAGame;
         }
 
-        public int CurrentAmountOfScaledFish(){
-            return game.currentAmountOfScaledFish;
-        }
-
         public int RequiredAmountOfFishToScaleToWin(){
-            return game.ScaledFishToWin();
+            return game.RequiredAmountOfFishToScaleToWin;
         }
     }
 }

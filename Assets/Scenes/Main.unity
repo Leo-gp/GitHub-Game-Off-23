@@ -713,6 +713,7 @@ MonoBehaviour:
   turnsInAGame: 20
   turnToStartSwappingCards: 3
   turnToStopSwappingCards: 17
+  requiredAmountOfFishToScaleToWin: 50
 --- !u!114 &194847295
 MonoBehaviour:
   m_ObjectHideFlags: 0
