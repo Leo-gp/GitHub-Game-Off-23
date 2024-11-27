@@ -111,6 +111,14 @@ MonoBehaviour:
     m_Key: settings-reset
     m_Metadata:
       m_Items: []
+  - m_Id: 165575210097766400
+    m_Key: settings-skip-scale-animations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165580700206821376
+    m_Key: skip-animations-button
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

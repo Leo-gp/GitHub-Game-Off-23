@@ -16,4 +16,9 @@ public class RawFishReset : MonoBehaviour
     {
         _newFishSound.Play();
     }
+    
+    public void StopNewFishSound()
+    {
+        _newFishSound.Stop();
+    }
 }

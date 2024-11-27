@@ -26,11 +26,6 @@ namespace main.service.Fish_Management
         /// </summary>
         public readonly UnityEvent<int> OnFishHasReceivedDamage = new();
 
-        /// <summary>
-        ///     Triggered when the fish scale amount is changed
-        /// </summary>
-        public readonly UnityEvent<int> OnFishScalesHaveChanged = new();
-
         public FishService(Fish fish)
         {
             this.fish = fish;
@@ -48,9 +43,6 @@ namespace main.service.Fish_Management
             // Change this behaviour if there will be different fish types soon
             RestoreFishScales();
             LogInfo($"Spawned a new fish with a total amount of scales of '{fish.RemainingScales}");
-
-            LogInfo("Triggering the OnFishScalesHaveChanged event");
-            OnFishScalesHaveChanged.Invoke(fish.RemainingScales);
         }
 
         public int GetBaseScalesOfCurrentFish()
@@ -73,9 +65,6 @@ namespace main.service.Fish_Management
             fish.RemainingScales -= damage;
             OnFishHasReceivedDamage.Invoke(damage);
             LogInfo($"Damaged the current fish by '{damage}'");
-
-            LogInfo("Triggering the OnFishScalesHaveChanged event");
-            OnFishScalesHaveChanged.Invoke(fish.RemainingScales);
 
             LogInfo("Now checking if the fish has been scaled completely");
             if (fish.RemainingScales <= 0)

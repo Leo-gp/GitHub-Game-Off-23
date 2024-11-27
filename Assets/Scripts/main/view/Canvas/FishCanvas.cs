@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using main.service.Fish_Management;
 using main.service.Turn_System;
 using main.view.Panels;
@@ -17,13 +18,20 @@ namespace main.view.Canvas
         [SerializeField] private RemainingScalesView _remainingScalesView;
         [SerializeField] private RemainingFishView _remainingFishView;
         [SerializeField] private Animator _newFishAnimator;
+        [SerializeField] private RawFishReset _rawFishReset;
         private readonly Queue<EndOfTurnSegment> _endOfTurnQueue = new();
         private float _currentAlphaDamage;
         private EffectAssemblyService _effectAssemblyService;
         private FishService _fishService;
-
         private TurnService _turnService;
         private int damage;
+        private bool _shouldSkipCurrentAnimations;
+
+        private bool ShouldSkipCurrentAnimations
+        {
+            get => GameSettingsManager.skipScaleAnimations || _shouldSkipCurrentAnimations;
+            set => _shouldSkipCurrentAnimations = value;
+        }
 
         private void OnEnable()
         {
@@ -50,6 +58,15 @@ namespace main.view.Canvas
             _turnService = turnService;
         }
 
+        public void SkipCurrentAnimations()
+        {
+            ShouldSkipCurrentAnimations = true;
+            StopAllCoroutines();
+            _newFishAnimator.Play("New_Fish", 0, 1);
+            _rawFishReset.StopNewFishSound();
+            HandleNextSegment();
+        }
+
         private void EnqueueFishKill()
         {
             _endOfTurnQueue.Enqueue(new FishKillSegment());
@@ -67,6 +84,7 @@ namespace main.view.Canvas
         {
             if (_endOfTurnQueue.Count is 0)
             {
+                ShouldSkipCurrentAnimations = false;
                 _turnService.ProceedWithEndOfTurn();
             }
             else
@@ -93,11 +111,13 @@ namespace main.view.Canvas
         private IEnumerator HandleFishKill()
         {
             _currentAlphaDamage = 0f;
-            _newFishAnimator.Play("New_Fish");
             UpdateScalesView();
             _remainingFishView.IncrementAndRender();
-
-            yield return new WaitForSeconds(2.3f);
+            if (!ShouldSkipCurrentAnimations)
+            {
+                _newFishAnimator.Play("New_Fish");
+                yield return new WaitForSeconds(2.3f);
+            }
             HandleNextSegment();
         }
 
@@ -126,14 +146,17 @@ namespace main.view.Canvas
 
         private IEnumerator CreateSlash(int amountOfSlashes)
         {
+            if (ShouldSkipCurrentAnimations)
+            {
+                HandleNextSegment();
+                yield break;
+            }
             while (amountOfSlashes > 0)
             {
                 Instantiate(_slashPrefab, transform).Render();
                 amountOfSlashes--;
                 yield return new WaitForSeconds(0.2f);
             }
-
-            UpdateScalesView();
             HandleNextSegment();
         }
 

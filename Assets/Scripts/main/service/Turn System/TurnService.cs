@@ -25,6 +25,8 @@ namespace main.service.Turn_System
         
         public event Action OnTurnRemainingTimeChanged;
 
+        public int CurrentTurnNumber => turn.CurrentTurnNumber;
+
         public TurnService
         (
             Turn turn,

@@ -114,6 +114,14 @@ MonoBehaviour:
     m_Localized: Reset To Default
     m_Metadata:
       m_Items: []
+  - m_Id: 165575210097766400
+    m_Localized: Skip Scale Animations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165580700206821376
+    m_Localized: Skip Animations
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

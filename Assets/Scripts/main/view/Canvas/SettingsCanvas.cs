@@ -10,6 +10,7 @@ namespace main.view.Canvas
         [SerializeField] private Toggle _muteSoundsToggle;
         [SerializeField] private Toggle _muteMusicToggle;
         [SerializeField] private Toggle _enableCameraFollowToggle;
+        [SerializeField] private Toggle _skipScaleAnimations;
 
         public void Render(bool enabled)
         {
@@ -19,6 +20,7 @@ namespace main.view.Canvas
             _muteSoundsToggle.isOn = GameSettingsManager.muteSounds;
             _muteMusicToggle.isOn = GameSettingsManager.muteMusic;
             _enableCameraFollowToggle.isOn = GameSettingsManager.enableCameraFollow;
+            _skipScaleAnimations.isOn = GameSettingsManager.skipScaleAnimations;
         }
 
         public void OnResetSettingsButtonClick()
@@ -27,6 +29,7 @@ namespace main.view.Canvas
             _muteSoundsToggle.isOn = GameSettingsManager.muteSounds;
             _muteMusicToggle.isOn = GameSettingsManager.muteMusic;
             _enableCameraFollowToggle.isOn = GameSettingsManager.enableCameraFollow;
+            _skipScaleAnimations.isOn = GameSettingsManager.skipScaleAnimations;
         }
 
         public void OnSaveAndExitButtonClick()
@@ -34,6 +37,7 @@ namespace main.view.Canvas
             GameSettingsManager.muteMusic = _muteMusicToggle.isOn;
             GameSettingsManager.muteSounds = _muteSoundsToggle.isOn;
             GameSettingsManager.enableCameraFollow = _enableCameraFollowToggle.isOn;
+            GameSettingsManager.skipScaleAnimations = _skipScaleAnimations.isOn;
 
             GameSettingsManager.Save();
 

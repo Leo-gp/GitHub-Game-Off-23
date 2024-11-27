@@ -8,18 +8,14 @@ namespace main.service
     public abstract class Service
     {
         /// <summary>
-        ///     Defines whether the service is currently debugged or not.
-        ///     If it is, messages will be logged. If it is not, they will be ignored.
-        /// </summary>
-        public bool debugMode = true;
-
-        /// <summary>
         ///     If the debug mode is set to true, logs the message to the Unity console
         /// </summary>
         /// <param name="message">the message that should be logged</param>
         protected void LogInfo(string message)
         {
-            if (debugMode) Debug.Log($"({this}): {message}");
+#if UNITY_EDITOR
+            Debug.Log($"({this}): {message}");
+#endif
         }
     }
 }
