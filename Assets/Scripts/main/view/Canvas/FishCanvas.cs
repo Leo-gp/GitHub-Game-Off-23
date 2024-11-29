@@ -37,7 +37,7 @@ namespace main.view.Canvas
         {
             _fishService.OnFishHasReceivedDamage.AddListener(EnqueueFishScale);
             _fishService.OnFishHasBeenScaled.AddListener(EnqueueFishKill);
-            _effectAssemblyService.OnEffectsWereExecuted.AddListener(HandleNextSegment);
+            _effectAssemblyService.OnEffectsWereExecuted.AddListener(HandleEndOfTurn);
 
             UpdateScalesView();
         }
@@ -46,7 +46,7 @@ namespace main.view.Canvas
         {
             _fishService.OnFishHasReceivedDamage.RemoveListener(EnqueueFishScale);
             _fishService.OnFishHasBeenScaled.RemoveListener(EnqueueFishKill);
-            _effectAssemblyService.OnEffectsWereExecuted.RemoveListener(HandleNextSegment);
+            _effectAssemblyService.OnEffectsWereExecuted.RemoveListener(HandleEndOfTurn);
         }
 
         [Inject]
@@ -61,10 +61,8 @@ namespace main.view.Canvas
         public void SkipCurrentAnimations()
         {
             ShouldSkipCurrentAnimations = true;
-            StopAllCoroutines();
             _newFishAnimator.Play("New_Fish", 0, 1);
             _rawFishReset.StopNewFishSound();
-            HandleNextSegment();
         }
 
         private void EnqueueFishKill()
@@ -80,14 +78,14 @@ namespace main.view.Canvas
             });
         }
 
-        private void HandleNextSegment()
+        private void HandleEndOfTurn()
         {
-            if (_endOfTurnQueue.Count is 0)
-            {
-                ShouldSkipCurrentAnimations = false;
-                _turnService.ProceedWithEndOfTurn();
-            }
-            else
+            StartCoroutine(HandleEndOfTurnSegments());
+        }
+        
+        private IEnumerator HandleEndOfTurnSegments()
+        {
+            while (_endOfTurnQueue.Count > 0)
             {
                 var nextSegment = _endOfTurnQueue.Dequeue();
                 switch (nextSegment)
@@ -97,28 +95,47 @@ namespace main.view.Canvas
                         _rawFishImage.color = new Color(1f, 1f, 1f,
                             TranslateDamageToRawFishAlphaColour(damage));
                         UpdateScalesView();
-                        StartCoroutine(CreateSlash(TranslateDamageToSlashAmount(damage)));
+                        if (!ShouldSkipCurrentAnimations)
+                        {
+                            yield return StartCoroutine(CreateSlash(TranslateDamageToSlashAmount(damage)));
+                        }
                         break;
                     case FishKillSegment:
-                        StartCoroutine(HandleFishKill());
+                        HandleFishKill();
+                        if (!ShouldSkipCurrentAnimations)
+                        {
+                            yield return StartCoroutine(RunNewFishAnimation());
+                        }
                         break;
                     default:
                         throw new NotImplementedException("Segment is not implemented");
                 }
             }
+            ShouldSkipCurrentAnimations = false;
+            _turnService.ProceedWithEndOfTurn();
         }
 
-        private IEnumerator HandleFishKill()
+        private void HandleFishKill()
         {
             _currentAlphaDamage = 0f;
             UpdateScalesView();
             _remainingFishView.IncrementAndRender();
-            if (!ShouldSkipCurrentAnimations)
+        }
+        
+        private IEnumerator RunNewFishAnimation()
+        {
+            _newFishAnimator.Play("New_Fish");
+            var elapsedTime = 0f;
+            const float waitTime = 2.3f;
+            while (elapsedTime < waitTime)
             {
-                _newFishAnimator.Play("New_Fish");
-                yield return new WaitForSeconds(2.3f);
+                if (ShouldSkipCurrentAnimations)
+                {
+                    yield break;
+                }
+                elapsedTime += Time.deltaTime;
+                yield return null;
             }
-            HandleNextSegment();
         }
 
         private void UpdateScalesView()
@@ -146,18 +163,26 @@ namespace main.view.Canvas
 
         private IEnumerator CreateSlash(int amountOfSlashes)
         {
-            if (ShouldSkipCurrentAnimations)
-            {
-                HandleNextSegment();
-                yield break;
-            }
             while (amountOfSlashes > 0)
             {
+                if (ShouldSkipCurrentAnimations)
+                {
+                    yield break;
+                }
                 Instantiate(_slashPrefab, transform).Render();
                 amountOfSlashes--;
-                yield return new WaitForSeconds(0.2f);
+                var elapsedTime = 0f;
+                const float waitTime = 0.2f;
+                while (elapsedTime < waitTime)
+                {
+                    if (ShouldSkipCurrentAnimations)
+                    {
+                        yield break;
+                    }
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
             }
-            HandleNextSegment();
         }
 
         private abstract class EndOfTurnSegment
