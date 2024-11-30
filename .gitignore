@@ -88,6 +88,8 @@ crashlytics-build.properties
 # Log files can be ignored.
 fmod_editor.log
 
+/FMOD/*/.cache/
+
 ############################### Continuous Integration
 
 /[Aa]rtifacts/
