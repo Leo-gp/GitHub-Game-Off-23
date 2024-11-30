@@ -62,36 +62,42 @@ namespace main.service.Fish_Management
             Assert.IsFalse(fish is null || fish.RemainingScales is 0,
                 "Should not try to scale the fish if it does not exist yet or is already scaled");
 
-            fish.RemainingScales -= damage;
-            OnFishHasReceivedDamage.Invoke(damage);
-            LogInfo($"Damaged the current fish by '{damage}'");
+            var carryOverDamage = damage;
 
-            LogInfo("Now checking if the fish has been scaled completely");
-            if (fish.RemainingScales <= 0)
+            while (carryOverDamage > 0)
             {
-                LogInfo("The fish has been scaled");
+                fish.RemainingScales -= carryOverDamage;
+                OnFishHasReceivedDamage.Invoke(carryOverDamage);
+                LogInfo($"Damaged the current fish by '{carryOverDamage}'");
 
-                LogInfo("Triggering the successful scale event");
-                OnFishHasBeenScaled.Invoke();
+                LogInfo("Now checking if the fish has been scaled completely");
+                if (fish.RemainingScales <= 0)
+                {
+                    LogInfo("The fish has been scaled");
 
-                var carryOverDamage = Math.Abs(fish.RemainingScales);
-                LogInfo($"There is a carry over damage of '{carryOverDamage}'");
+                    LogInfo("Triggering the successful scale event");
+                    OnFishHasBeenScaled.Invoke();
 
-                // For nicer consistency in the program
-                fish.RemainingScales = 0;
+                    carryOverDamage = Math.Abs(fish.RemainingScales);
+                    LogInfo($"There is a carry over damage of '{carryOverDamage}'");
 
-                SpawnNewFish();
+                    // For nicer consistency in the program
+                    fish.RemainingScales = 0;
 
-                if (carryOverDamage is 0) return;
+                    SpawnNewFish();
 
-                LogInfo("Because there is carry over damage, the method will call itself recursively " +
-                        $"to scale the next fish. Carry over is {carryOverDamage}");
-                ScaleFish(carryOverDamage);
-            }
-            else
-            {
-                LogInfo("Fish has not been scaled entirely, yet. It still has " +
-                        $"'{fish.RemainingScales}' remaining scales");
+                    if (carryOverDamage > 0)
+                    {
+                        LogInfo("Because there is carry over damage, the loop will process the next fish " +
+                                $"to scale it. Carry over is {carryOverDamage}");
+                    }
+                }
+                else
+                {
+                    LogInfo("Fish has not been scaled entirely, yet. It still has " +
+                            $"'{fish.RemainingScales}' remaining scales");
+                    carryOverDamage = 0;
+                }
             }
         }
 

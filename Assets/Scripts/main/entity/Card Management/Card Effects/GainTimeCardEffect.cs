@@ -1,5 +1,6 @@
 using System;
 using main.entity.Card_Management.Card_Data;
+using main.infrastructure;
 using main.service.Turn_System;
 using UnityEngine;
 using Zenject;
@@ -46,7 +47,7 @@ namespace main.entity.Card_Management.Card_Effects
 
         public override void MultiplyEffect(int multiplier)
         {
-            CurrentAmountOfTimeToGain *= multiplier;
+            CurrentAmountOfTimeToGain = MathUtil.SafeMultiply(CurrentAmountOfTimeToGain, multiplier);
         }
 
         protected override void ResetEffect()

@@ -1,5 +1,6 @@
 using System;
 using main.entity.Card_Management.Card_Data;
+using main.infrastructure;
 using main.service.Fish_Management;
 using UnityEngine;
 using Zenject;
@@ -36,7 +37,7 @@ namespace main.entity.Card_Management.Card_Effects
 
         public override void MultiplyEffect(int multiplier)
         {
-            var amount = GetCurrentAmountOfScalesToRemove() * multiplier;
+            var amount = MathUtil.SafeMultiply(GetCurrentAmountOfScalesToRemove(), multiplier);
             SetCurrentAmountOfScalesToRemove(amount);
         }
 

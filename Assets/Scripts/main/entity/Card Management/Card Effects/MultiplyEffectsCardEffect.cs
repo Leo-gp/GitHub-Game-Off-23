@@ -1,5 +1,6 @@
 using System;
 using main.entity.Card_Management.Card_Data;
+using main.infrastructure;
 using Zenject;
 
 namespace main.entity.Card_Management.Card_Effects
@@ -35,7 +36,7 @@ namespace main.entity.Card_Management.Card_Effects
 
         public override void MultiplyEffect(int multiplier)
         {
-            Multiplier *= multiplier;
+            Multiplier = MathUtil.SafeMultiply(Multiplier, multiplier);
         }
 
         protected override void ResetEffect()

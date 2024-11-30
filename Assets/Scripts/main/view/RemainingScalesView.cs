@@ -47,7 +47,7 @@ namespace main.view
 
         private void UpdatePreview(int incrementedScaleAmount)
         {
-            _previewAmount += incrementedScaleAmount;
+            _previewAmount = _previewAmount > int.MaxValue - incrementedScaleAmount ? int.MaxValue : _previewAmount + incrementedScaleAmount;
             _previewContainer.SetActive(true);
             _previewAmountText.text = _previewAmount.ToString();
         }
