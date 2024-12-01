@@ -63,6 +63,7 @@ namespace main.view.Canvas
             ShouldSkipCurrentAnimations = true;
             _newFishAnimator.Play("New_Fish", 0, 1);
             _rawFishReset.StopNewFishSound();
+            _rawFishReset.ResetAlpha();
         }
 
         private void EnqueueFishKill()
@@ -120,6 +121,10 @@ namespace main.view.Canvas
             _currentAlphaDamage = 0f;
             UpdateScalesView();
             _remainingFishView.IncrementAndRender();
+            if (ShouldSkipCurrentAnimations)
+            {
+                _rawFishReset.ResetAlpha();
+            }
         }
         
         private IEnumerator RunNewFishAnimation()
