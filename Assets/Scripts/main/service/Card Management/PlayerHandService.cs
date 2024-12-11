@@ -29,6 +29,8 @@ namespace main.service.Card_Management
 
         public event Action<Card> OnCardPlayed;
 
+        public int AmountOfCardsInHand => playerHand.HandCards.Count;
+
         public PlayerHandService
         (
             PlayerHand playerHand, 

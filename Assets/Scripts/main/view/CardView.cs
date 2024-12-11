@@ -42,7 +42,8 @@ namespace main.view
         private float _bezierTargetCount;
         private bool _isBeingDiscarded, _isBeingDrawn;
 
-        private Transform _transform, _parent;
+        private Transform _transform;
+        private CardInHandContainer _parent;
         public Card Card { get; private set; }
         public RectTransform RectTransform => _transform as RectTransform;
 
@@ -65,7 +66,7 @@ namespace main.view
             card.OnDescriptionUpdated += UpdateCardDescriptionText;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             Card.OnDescriptionUpdated -= UpdateCardDescriptionText;
         }
@@ -89,7 +90,7 @@ namespace main.view
 
         private IEnumerator ReparentSelf()
         {
-            _transform.SetParent(_parent);
+            _transform.SetParent(_parent.transform);
             yield return new WaitForEndOfFrame();
             RectTransform.anchoredPosition = Vector3.zero;
         }
@@ -128,7 +129,7 @@ namespace main.view
                               Vector3.up * DISCARD_CURVE_HEIGHT;
         }
 
-        public void HandleDraw([NotNull] Transform parent)
+        public void HandleDraw([NotNull] CardInHandContainer parent)
         {
             _parent = parent;
 
@@ -140,7 +141,7 @@ namespace main.view
 
             _bezierNodes = new Vector3[3];
             _bezierNodes[0] = drawOriginPosition;
-            _bezierNodes[2] = parent.position;
+            _bezierNodes[2] = parent.transform.position;
             _bezierNodes[1] = _bezierNodes[0] + (_bezierNodes[2] - _bezierNodes[0]) / 2 +
                               Vector3.up * DRAW_CURVE_HEIGHT;
         }

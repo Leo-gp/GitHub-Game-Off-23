@@ -162,7 +162,7 @@ namespace main.view
             PlayerHandCanvas.Instance.SetAsDirectChild(newCardView.transform);
 
             newCardView.Initialize(cardToContain);
-            newCardView.HandleDraw(transform);
+            newCardView.HandleDraw(this);
             SetUsabilityColourOfCardView();
 
             _playState = CardPlayState.IDLE;

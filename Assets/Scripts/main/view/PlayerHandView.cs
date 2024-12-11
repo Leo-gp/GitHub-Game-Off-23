@@ -19,12 +19,14 @@ namespace main.view
         [SerializeField] private CardInHandContainer _cardViewContainerPrefab;
         [SerializeField] private HorizontalLayoutGroup _playerHandLayout;
         [SerializeField] private StudioEventEmitter _cardDrawEvent;
+        [SerializeField] private PlayerHandViewPagination playerHandViewPagination;
 
-        private readonly List<CardInHandContainer> cardInHandContainers = new();
         private int _drawOffset;
 
         private PlayerHandService playerHandService;
         private DiscardPileService discardPileService;
+        
+        public List<CardInHandContainer> CardInHandContainers { get; } = new();
 
         [Inject]
         public void Construct(PlayerHandService playerHandService, DiscardPileService discardPileService)
@@ -65,7 +67,7 @@ namespace main.view
         private void RenderNewCard([NotNull] Card cardEntity)
         {
             var newCardViewContainer = Instantiate(_cardViewContainerPrefab, transform);
-            cardInHandContainers.Add(newCardViewContainer);
+            CardInHandContainers.Add(newCardViewContainer);
             StartCoroutine(CreateCardAfterTime(newCardViewContainer, cardEntity));
         }
 
@@ -81,13 +83,14 @@ namespace main.view
 
             _cardDrawEvent.Play();
             container.CreateChild(cardEntity, this);
+            playerHandViewPagination.ShiftRightmost();
         }
 
         private void RemoveCard(Card card)
         {
-            var cardInHandContainer = cardInHandContainers.Find(container => container.CardView.Card == card);
+            var cardInHandContainer = CardInHandContainers.Find(container => container.CardView.Card == card);
             cardInHandContainer.CardView.Discard();
-            cardInHandContainers.Remove(cardInHandContainer);
+            CardInHandContainers.Remove(cardInHandContainer);
             Destroy(cardInHandContainer.gameObject);
         }
     }
